@@ -9,6 +9,7 @@
 
 # Git Commit Message Guide
 Use the following prefixes to maintain consistency in commit messages:
+ 
 
 feat: – For new features
 Example: feat: add user profile page
