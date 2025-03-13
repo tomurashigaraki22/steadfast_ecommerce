@@ -1,11 +1,65 @@
-## SteadFast International 
+## SteadFast International eCommerce PWA
 
+# Project Architecture
+## Frontend (Next.js)
+- Progressive Web App (PWA)
+- Admin Dashboard
+- Affiliate Marketing Portal
+ 
 # Development Tools:
-- Next.js
+## Frontend
+- Next.js 14 (App Router)
 - Tailwind CSS
-- Lucide React (Icon)
+- Lucide React (Icons)
 - js-cookie (Storage Management)
+- Redux Toolkit (State Management)
+- React Query (API Data Fetching)
+- Axios (HTTP Client)
+- NextAuth.js (Authentication)
+- Zod (Validation)
+- React Hook Form
 
+## Payment Integration
+- Paystack
+  - Payment Processing
+  - Transaction Verification
+  - Recurring Billing
+  - Split Payments (for Affiliates)
+  - Payment Analytics
+
+## PWA Features
+- Offline Support
+- Push Notifications
+- App Installation
+- Service Workers
+- Background Sync
+- Cache Management
+
+# Testing
+- Jest
+- React Testing Library
+- Postman (API Testing)
+
+# Context & State
+- Auth Context
+- Theme Context
+- Cart State
+- Payment State
+
+# API Integration
+- RESTful Endpoints
+- Error Handling
+- Request/Response Interceptors
+- API Rate Limiting
+- Data Caching
+- Retry Logic
+
+# Security
+- CORS Configuration
+- API Authentication
+- Input Sanitization
+- XSS Protection
+- CSRF Protection
 
 # Git Commit Message Guide
 Use the following prefixes to maintain consistency in commit messages:
