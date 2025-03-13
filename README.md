@@ -61,6 +61,39 @@
 - XSS Protection
 - CSRF Protection
 
+
+
+
+
+# Naming Conventions
+
+## Folders
+- PascalCase for component folders: `Components/`, `Pages/`, `Layouts/`
+- camelCase for utility folders: `utils/`, `hooks/`, `contexts/`
+- kebab-case for configuration files: `next-config/`
+
+## Components
+- PascalCase for component files: `ProductCard.tsx`, `NavBar.tsx`
+- PascalCase for component names: `export default function ProductCard()`
+
+## Files
+- camelCase for utility files: `useAuth.ts`, `formatPrice.ts`
+- kebab-case for configuration files: `tailwind-config.js`
+- kebab-case for style files: `global-styles.css`
+
+## Variables & Functions
+- camelCase for variables: `productPrice`, `userDetails`
+- camelCase for functions: `handleSubmit`, `calculateTotal`
+- PascalCase for types and interfaces: `interface ProductType`
+
+## Constants
+- SCREAMING_SNAKE_CASE for constants: `MAX_PRICE`, `API_URL`
+
+## CSS Classes
+- kebab-case for custom classes: `product-grid`, `nav-item`
+- Follow Tailwind CSS conventions for utility classes
+
+
 # Git Commit Message Guide
 Use the following prefixes to maintain consistency in commit messages:
  
