@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Montserrat, Roboto } from 'next/font/google'
+import { Montserrat } from 'next/font/google'
 
-const roboto = Roboto({
-  weight: '400',
-  subsets: ['latin'],
-})
+// const roboto = Roboto({
+//   weight: '400',
+//   subsets: ['latin'],
+// })
 
 const montserrat = Montserrat({
   weight: ['400', '500', '600', '700'],
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description: "Your one-stop shop for all your needs - PWA eCommerce platform by Steadfast International",
   keywords: "ecommerce, online shopping, PWA, affiliate marketing",
   authors: [{ name: "Robinson Honour" }],
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
   themeColor: "#ffffff",
   manifest: "/manifest.json",
 };

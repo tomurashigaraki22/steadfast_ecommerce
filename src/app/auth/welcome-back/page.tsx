@@ -1,14 +1,38 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { AuthWrapper } from '@/components/auth/AuthWrapper';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { Modal } from '@/components/ui/Modal';
 import Image from 'next/image';
 import Link from 'next/link';
 
 export default function WelcomeBackPage() {
     const [isLoading, setIsLoading] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const router = useRouter();
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
+        try {
+            // TODO: Add authentication logic here
+
+            // Show success modal
+            setShowSuccessModal(true);
+
+            // Redirect after 2 seconds
+            setTimeout(() => {
+                router.push('/dashboard');
+            }, 2000);
+        } catch (error) {
+            console.error('Login failed:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <AuthWrapper>
@@ -21,12 +45,12 @@ export default function WelcomeBackPage() {
                         height={80}
                         className="mx-auto rounded-full border-4 border-white shadow-lg"
                     />
-                    <h1 className="text-xl font-semibold">
+                    <h1 className="text-lg md:text-xl font-semibold">
                         Welcome Back, Jessica! 👋
                     </h1>
                 </div>
 
-                <form className="space-y-6 ">
+                <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="relative">
                         <Input
                             type={"password"}
@@ -51,6 +75,16 @@ export default function WelcomeBackPage() {
                     </div>
                 </form>
             </div>
+
+            <Modal
+                isOpen={showSuccessModal}
+                onClose={() => setShowSuccessModal(false)}
+                type="success"
+                title="Welcome Back!"
+                message="Login successful. Redirecting to dashboard..."
+                autoClose
+                autoCloseTime={2000}
+            />
         </AuthWrapper>
     );
 }

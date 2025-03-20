@@ -1,20 +1,45 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { AuthWrapper } from '@/components/auth/AuthWrapper';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { Modal } from '@/components/ui/Modal';
 import { SocialButton } from '@/components/auth/SocialButton';
+import Link from 'next/link';
 
 export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const router = useRouter();
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
+        try {
+            // TODO: Add authentication logic here
+
+            // Show success modal
+            setShowSuccessModal(true);
+
+            // Redirect after 2 seconds
+            setTimeout(() => {
+                router.push('/auth/welcome-back');
+            }, 2000);
+        } catch (error) {
+            console.error('Login failed:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <AuthWrapper
             title="Log in to your account"
             subtitle="Sign into your user account to continue ✨"
         >
-            <form className="mt-8 space-y-6">
+            <form onSubmit={handleSubmit} className="mt-8 space-y-6">
                 <Input
                     label="Email Address"
                     type="email"
@@ -33,9 +58,12 @@ export default function LoginPage() {
                         <input type="checkbox" className="h-4 w-4 text-blue-600" />
                         <span className="ml-2 text-xs text-gray-600">Remember Me</span>
                     </label>
-                    <a href="#" className="text-xs text-blue-600 hover:text-blue-500">
+                    <Link
+                        href="/auth/forgot-password"
+                        className="text-xs text-blue-600 hover:text-blue-500"
+                    >
                         Forgot Password?
-                    </a>
+                    </Link>
                 </div>
 
                 <Button type="submit" isLoading={isLoading}>
@@ -57,13 +85,26 @@ export default function LoginPage() {
                     <SocialButton provider="apple" label="Sign in with Apple" />
                 </div>
 
-                <p className="text-center text-xs text-gray-600">
-                    Don't have an account?{' '}
-                    <a href="#" className="text-blue-600 hover:text-blue-500">
+                <p className="text-center text-sm text-gray-600">
+                    Don&lsquo;t have an account?{' '}
+                    <Link
+                        href="/auth/signup"
+                        className="text-blue-600 hover:text-blue-500"
+                    >
                         Create an account
-                    </a>
+                    </Link>
                 </p>
             </form>
+
+            <Modal
+                isOpen={showSuccessModal}
+                onClose={() => setShowSuccessModal(false)}
+                type="success"
+                title="Authentication Successful"
+                message="Verifying your credentials..."
+                autoClose
+                autoCloseTime={2000}
+            />
         </AuthWrapper>
     );
 }
