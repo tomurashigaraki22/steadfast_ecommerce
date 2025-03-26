@@ -124,7 +124,7 @@ export default function TestPage() {
                     <SocialButton provider="apple" label="Continue with Apple" />
                 </div>
             </section>
-            <section className="space-y-4 px-[2rem]">
+            <section className="space-y-4 md:px-[2rem]">
                 <div className="flex justify-between items-center">
                     <h2 className="text-xl font-semibold">Explore Products</h2>
                     <a href="/products" className="text-sm text-gray-600 hover:text-gray-900 flex items-center">
@@ -134,7 +134,7 @@ export default function TestPage() {
                         </svg>
                     </a>
                 </div>
-                <div className="grid grid-cols-3 md:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-[2rem] md:gap-6">
                     <ProductCard
                         title="Chilliwack black Bomber"
                         brand="HUMANATURE"
