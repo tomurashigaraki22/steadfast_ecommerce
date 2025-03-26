@@ -6,7 +6,7 @@ import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 export const Footer = () => {
     return (
         <footer className="bg-gray-100">
-            <div className="container mx-auto text-sm px-6 py-8">
+            <div className="container mx-auto text-sm md:text-xs px-6 py-8">
                 <div className="flex flex-col items-center space-y-8 md:flex-row md:justify-between md:space-y-0">
                     <div className="md:flex md:items-center md:gap-5 md:justify-center text-center">
                         <Link href="/" className="text-2xl md:text-lg  font-semibold block mb-5 md:mb-0">
@@ -16,7 +16,7 @@ export const Footer = () => {
                         <span className="text-gray-600">Lightening Store</span>
                     </div>
 
-                    <nav className="flex flex-col space-y-6 items-center text-sm md:flex-row md:space-y-0 md:space-x-6">
+                    <nav className="flex flex-col space-y-6 items-center text-sm md:text-xs md:flex-row md:space-y-0 md:space-x-6">
                         <Link href="/" className="text-gray-900 hover:text-gray-700">
                             Home
                         </Link>
@@ -31,7 +31,7 @@ export const Footer = () => {
 
                 <hr className="my-8 border-gray-200" />
 
-                 <div className="flex flex-col items-center md:flex-row md:justify-between md:items-center space-y-8 md:space-y-0">
+                <div className="flex flex-col items-center md:flex-row md:justify-between md:items-center space-y-8 md:space-y-0">
                     <div className="flex flex-col items-center md:flex-row md:items-center space-y-4 md:space-y-0">
                         <p className="text-gray-600 text-center md:mr-6">
                             Copyright © 2025 Steadfast. All rights reserved

@@ -5,6 +5,7 @@ import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { SocialButton } from '@/components/auth/SocialButton';
+import { ProductCard } from '@/components/product/ProductCard';
 
 type ModalType = 'info' | 'warning' | 'success';
 
@@ -121,6 +122,77 @@ export default function TestPage() {
                     <SocialButton provider="google" label="Continue with Google" />
                     <SocialButton provider="facebook" label="Continue with Facebook" />
                     <SocialButton provider="apple" label="Continue with Apple" />
+                </div>
+            </section>
+            <section className="space-y-4 px-[2rem]">
+                <div className="flex justify-between items-center">
+                    <h2 className="text-xl font-semibold">Explore Products</h2>
+                    <a href="/products" className="text-sm text-gray-600 hover:text-gray-900 flex items-center">
+                        View All
+                        <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+                <div className="grid grid-cols-3 md:grid-cols-4 gap-6">
+                    <ProductCard
+                        title="Chilliwack black Bomber"
+                        brand="HUMANATURE"
+                        price={95000}
+                        rating={4}
+                        image="/product.png"
+                        isNew={true}
+                        discount={{
+                            amount: 10000,
+                            percentage: 5
+                        }}
+                    />
+                    <ProductCard
+                        title="Chilliwack black Bomber"
+                        brand="HUMANATURE"
+                        price={95000}
+                        rating={4}
+                        image="/product.png"
+                        isNew={true}
+                        discount={{
+                            amount: 10000,
+                            percentage: 5
+                        }}
+                    />
+                    <ProductCard
+                        title="Chilliwack black Bomber"
+                        brand="HUMANATURE"
+                        price={95000}
+                        rating={4}
+                        image="/product.png"
+                        discount={{
+                            amount: 10000,
+                            percentage: 5
+                        }}
+                    />
+                    <ProductCard
+                        title="Chilliwack black Bomber"
+                        brand="HUMANATURE"
+                        price={95000}
+                        rating={4}
+                        image="/product.png"
+                        discount={{
+                            amount: 10000,
+                            percentage: 5
+                        }}
+                    />
+                    <ProductCard
+                        title="Chilliwack black Bomber"
+                        brand="HUMANATURE"
+                        price={95000}
+                        rating={4}
+                        image="/product.png"
+                        isNew={true}
+                        discount={{
+                            amount: 10000,
+                            percentage: 5
+                        }}
+                    />
                 </div>
             </section>
 
