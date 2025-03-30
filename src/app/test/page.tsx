@@ -4,8 +4,11 @@ import { useState } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { SocialButton } from '@/components/auth/SocialButton';
-import { ProductCard } from '@/components/product/ProductCard';
+import { SocialButton } from '@/components/auth/SocialButton'; 
+import { WhyShopWithUs } from '@/components/sections/WhyShopWithUs';
+import { ProductGrid } from '@/components/product/ProductGrid';
+import { DealOfMonth } from '@/components/sections/DealOfMonth';
+import ShopByCategory from '@/components/category/ShopByCategory';
 
 type ModalType = 'info' | 'warning' | 'success';
 
@@ -22,6 +25,15 @@ interface ModalConfig {
     }>;
 }
 
+// Add this after the ModalConfig interface
+interface FilterOption {
+    id: string;
+    label: string;
+    type: 'checkbox' | 'radio' | 'range';
+    options?: Array<{ value: string; label: string }>;
+    range?: { min: number; max: number };
+}
+
 export default function TestPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalConfig, setModalConfig] = useState<ModalConfig>({
@@ -31,11 +43,152 @@ export default function TestPage() {
         autoClose: false,
         bottomText: '',
     });
+    const DemoTitle = ({ text }: { text: string }) => {
+        return (
 
+            <div className="bg-black mt-[10rem]">
+                <h5 className='text-white text-center py-5'>#test-section - {text}</h5>
+            </div>
+        )
+    }
     const showModal = (config: ModalConfig) => {
         setModalConfig(config);
         setIsModalOpen(true);
     };
+
+    const productFilters: FilterOption[] = [
+        {
+            id: 'category',
+            label: 'Category',
+            type: 'checkbox',
+            options: [
+                { value: 'adidas', label: 'Adidas' },
+                { value: 'armani', label: 'Armani' },
+                { value: 'geneva', label: 'Geneva' },
+                { value: 'gucci', label: 'Gucci' },
+                { value: 'nike', label: 'Nike' },
+            ],
+        },
+        {
+            id: 'rating',
+            label: 'Rating',
+            type: 'checkbox',
+        },
+        {
+            id: 'price',
+            label: 'Pricing',
+            type: 'range',
+        }
+    ];
+
+
+    const products = [
+        {
+            productId: '1',
+            title: "Chilliwack black Bomber",
+            brand: "HUMANATURE",
+            price: 95000,
+            rating: 4,
+            image: "/product.png",
+            isNew: true,
+            discount: {
+                amount: 10000,
+                percentage: 5
+            }
+        },
+        {
+            productId: '2',
+            title: "Chilliwack black Bomber",
+            brand: "HUMANATURE",
+            price: 95000,
+            rating: 4,
+            image: "/product.png",
+            isNew: true,
+            discount: {
+                amount: 10000,
+                percentage: 5
+            }
+        },
+        {
+            productId: '3',
+            title: "Chilliwack black Bomber",
+            brand: "HUMANATURE",
+            price: 95000,
+            rating: 4,
+            image: "/product.png",
+            isNew: true,
+            discount: {
+                amount: 10000,
+                percentage: 5
+            }
+        },
+        {
+            productId: '4',
+            title: "Chilliwack black Bomber",
+            brand: "HUMANATURE",
+            price: 95000,
+            rating: 4,
+            image: "/product.png",
+            discount: {
+                amount: 10000,
+                percentage: 5
+            }
+        },
+        {
+            productId: '5',
+            title: "Chilliwack black Bomber",
+            brand: "HUMANATURE",
+            price: 95000,
+            rating: 4,
+            image: "/product.png",
+            discount: {
+                amount: 10000,
+                percentage: 5
+            }
+        },
+        {
+            productId: '6',
+            title: "Chilliwack black Bomber",
+            brand: "HUMANATURE",
+            price: 95000,
+            rating: 4,
+            image: "/product.png",
+            isNew: true,
+            discount: {
+                amount: 10000,
+                percentage: 5
+            }
+        }
+    ];
+
+
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [filteredProducts, setFilteredProducts] = useState(products);
+
+    const handleFilterChange = async (filters: Record<string, any>) => {
+        setIsLoading(true);
+        console.log(filters);
+        try {
+            // Here you would typically make an API call with the filters
+            // For now, we'll simulate an API call with setTimeout
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            // Filter products based on the filters
+            const newProducts = products.filter(product => {
+                // Add your filter logic here
+                console.log(product)
+                return true;
+            });
+
+            setFilteredProducts(newProducts);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+
+
 
     return (
         <div className="min-h-screen p-8 space-y-8">
@@ -116,6 +269,8 @@ export default function TestPage() {
                 </div>
             </section>
 
+
+
             <section className="space-y-4">
                 <h2 className="text-xl font-semibold">Social Buttons</h2>
                 <div className="space-y-3 max-w-md">
@@ -124,77 +279,40 @@ export default function TestPage() {
                     <SocialButton provider="apple" label="Continue with Apple" />
                 </div>
             </section>
-            <section className="space-y-4 md:px-[2rem]">
-                <div className="flex justify-between items-center">
-                    <h2 className="text-xl font-semibold">Explore Products</h2>
-                    <a href="/products" className="text-sm text-gray-600 hover:text-gray-900 flex items-center">
-                        View All
-                        <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                    </a>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-[2rem] md:gap-6">
-                    <ProductCard
-                        title="Chilliwack black Bomber"
-                        brand="HUMANATURE"
-                        price={95000}
-                        rating={4}
-                        image="/product.png"
-                        isNew={true}
-                        discount={{
-                            amount: 10000,
-                            percentage: 5
-                        }}
-                    />
-                    <ProductCard
-                        title="Chilliwack black Bomber"
-                        brand="HUMANATURE"
-                        price={95000}
-                        rating={4}
-                        image="/product.png"
-                        isNew={true}
-                        discount={{
-                            amount: 10000,
-                            percentage: 5
-                        }}
-                    />
-                    <ProductCard
-                        title="Chilliwack black Bomber"
-                        brand="HUMANATURE"
-                        price={95000}
-                        rating={4}
-                        image="/product.png"
-                        discount={{
-                            amount: 10000,
-                            percentage: 5
-                        }}
-                    />
-                    <ProductCard
-                        title="Chilliwack black Bomber"
-                        brand="HUMANATURE"
-                        price={95000}
-                        rating={4}
-                        image="/product.png"
-                        discount={{
-                            amount: 10000,
-                            percentage: 5
-                        }}
-                    />
-                    <ProductCard
-                        title="Chilliwack black Bomber"
-                        brand="HUMANATURE"
-                        price={95000}
-                        rating={4}
-                        image="/product.png"
-                        isNew={true}
-                        discount={{
-                            amount: 10000,
-                            percentage: 5
-                        }}
-                    />
-                </div>
-            </section>
+
+
+            <DemoTitle text="Shop with Us" />
+
+            <WhyShopWithUs />
+
+            <DemoTitle text="Shop by Category" />
+
+            <ShopByCategory />
+
+            <DemoTitle text="Deals of the month" />
+            <DealOfMonth />
+
+            <DemoTitle text="Product Grid without filter" />
+
+            <ProductGrid
+                title="New Arrivals"
+                subtitle="Check out our latest products"
+                viewAllLink="/new-arrivals"
+                products={products.slice(0, 4)} 
+            />
+
+
+
+            <DemoTitle text="Product Grid with filter" />
+            <ProductGrid
+                title="Explore Products with Filters"
+                subtitle="Find the perfect product for you"
+                viewAllLink="/products"
+                products={filteredProducts}
+                filters={productFilters}
+                onFilterChange={handleFilterChange}
+                isLoading={isLoading}
+            />
 
             <Modal
                 isOpen={isModalOpen}
@@ -204,3 +322,4 @@ export default function TestPage() {
         </div>
     );
 }
+

@@ -9,11 +9,10 @@ export const Footer = () => {
             <div className="container mx-auto text-sm md:text-xs px-6 py-8">
                 <div className="flex flex-col items-center space-y-8 md:flex-row md:justify-between md:space-y-0">
                     <div className="md:flex md:items-center md:gap-5 md:justify-center text-center">
-                        <Link href="/" className="text-2xl md:text-lg  font-semibold block mb-5 md:mb-0">
+                        <Link href="/" className="text-lg md:text-lg  font-semibold block  md:mb-0">
                             Steadfast
                         </Link>
-                        <span className="text-gray-600 hidden md:flex">|</span>
-                        <span className="text-gray-600">Lightening Store</span>
+
                     </div>
 
                     <nav className="flex flex-col space-y-6 items-center text-sm md:text-xs md:flex-row md:space-y-0 md:space-x-6">
@@ -22,6 +21,9 @@ export const Footer = () => {
                         </Link>
                         <Link href="/product" className="text-gray-900 hover:text-gray-700">
                             Product
+                        </Link>
+                        <Link href="/padi" className="text-gray-900 hover:text-gray-700">
+                            Steadfast Padi
                         </Link>
                         <Link href="/contact-us" className="text-gray-900 hover:text-gray-700">
                             Contact Us

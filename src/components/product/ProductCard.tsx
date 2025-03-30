@@ -1,7 +1,10 @@
 import Image from 'next/image';
 import { StarRating } from '@/components/ui/StarRating';
 import { ActionButton } from '../ui/ActionButton';
+import { HeartIcon } from '@/components/icons/Heart';
+import { useState } from 'react';
 
+// Add to interface ProductCardProps
 interface ProductCardProps {
     title: string;
     brand: string;
@@ -13,6 +16,7 @@ interface ProductCardProps {
         amount: number;
         percentage: number;
     };
+    productId: string;
 }
 
 export const ProductCard = ({
@@ -24,6 +28,28 @@ export const ProductCard = ({
     isNew,
     discount
 }: ProductCardProps) => {
+    const [isWishlisted, setIsWishlisted] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isAdded, setIsAdded] = useState(false);
+
+    const toggleWishlist = async () => {
+        try {
+            setIsLoading(true);
+
+            setIsWishlisted(!isWishlisted);
+        } catch (error) {
+            console.error('Error updating wishlist:', error);
+            // Optionally show error toast/notification
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleAddToCart = () => {
+        setIsAdded(!isAdded);
+        console.log('Added to cart');
+    };
+
     return (
         <div className="flex flex-col">
             <div className="relative group">
@@ -32,50 +58,54 @@ export const ProductCard = ({
                         src={image}
                         alt={title}
                         fill
-                        className="object-cover"
+                        className="object-cover transition-transform duration-300 ease-out group-hover:scale-110"
                     />
                 </div>
 
                 {isNew && (
-                    <span className="absolute top-2 right-2 bg-white px-2 py-1 text-xs font-medium rounded">
+                    <span className="absolute top-3 right-3 bg-white px-2 py-1 text-xs font-medium rounded">
                         NEW
                     </span>
                 )}
-
-
             </div>
 
             <div className="mt-4 space-y-2">
                 <div className="flex justify-between">
                     <StarRating rating={rating} />
                     <button
-                        className=" p-2 rounded-full hover:bg-gray-100/80"
+                        className={`p-2 rounded-full hover:bg-gray-100/80 transition-colors ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                         aria-label="Add to wishlist"
+                        onClick={toggleWishlist}
+                        disabled={isLoading}
                     >
-                        <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5 1C2.7912 1 1 2.73964 1 4.88594C1 6.61852 1.7 10.7305 8.5904 14.8873C8.71383 14.961 8.85552 15 9 15C9.14448 15 9.28617 14.961 9.4096 14.8873C16.3 10.7305 17 6.61852 17 4.88594C17 2.73964 15.2088 1 13 1C10.7912 1 9 3.35511 9 3.35511C9 3.35511 7.2088 1 5 1Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-
+                        <HeartIcon
+                            className={isWishlisted ? 'text-red-500' : 'text-black'}
+                            isFilled={isWishlisted}
+                        />
                     </button>
                 </div>
                 <div className="space-y-1">
-                    <h3 className="font-medium">{title}</h3>
-                    <p className="text-gray-600 text-sm">{brand}</p>
+                    <h3 className="font-medium line-clamp-1">{title}</h3>
+                    <p className="text-gray-600 text-xs line-clamp-1">{brand}</p>
                 </div>
 
-                <div className="flex items-start gap-2 mb-[2rem] flex-col justify-center">
+                <div className="flex items-start gap-2 mb-[1.5rem] flex-col justify-center">
                     <span className="font-semibold">NGN {price.toLocaleString()}</span>
                     {discount && (
                         <div className="flex items-center space-x-1 text-xs">
-                            <span className="bg-[#38CB89] text-xs font-bold text-white px-1.5 py-0.5 rounded">SALE</span>
-                            <span className="text-black text-[.7rem] font-bold">Save NGN {discount.amount.toLocaleString()}</span>
-                            <span className="text-black text-[.7rem] font-bold">• {discount.percentage}%</span>
+                            <span className="bg-[#38CB89] text-[.6rem] font-bold text-white px-1.5 py-0.5 rounded">SALE</span>
+                            <span className="text-black text-[.7rem] font-semibold">Save NGN {discount.amount.toLocaleString()}</span>
+                            <span className="text-black text-[.7rem] font-semibold">• {discount.percentage}%</span>
                         </div>
                     )}
                 </div>
-
-                <ActionButton fullWidth onClick={() => console.log('clicked')}>
-                    ADD TO CART
+                <ActionButton 
+                    variant={isAdded ? 'outline' : 'primary'} 
+                    fullWidth 
+                    isCart 
+                    onClick={handleAddToCart}
+                >
+                    {isAdded ? 'ADDED TO CART' : 'ADD TO CART'}
                 </ActionButton>
             </div>
         </div>

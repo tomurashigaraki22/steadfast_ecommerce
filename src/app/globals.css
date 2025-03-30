@@ -1,2 +1,45 @@
 @import "tailwindcss";
 
+button {
+    cursor: pointer;
+}
+
+@keyframes slide-right {
+    0% {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.animate-slide-right {
+    animation: slide-right 0.5s ease-out forwards;
+}
+
+.font-inter {
+    font-family: var(--font-inter) !important;
+}
+
+.swiper-pagination-bullet {
+    width: 8px !important;
+    height: 8px !important;
+    background: #D9D9D9 !important;
+    opacity: 1 !important;
+    margin-bottom: 1rem!important;
+
+}
+
+.mySwiper {
+    padding-bottom: 3rem!important;
+}
+
+.swiper-pagination-bullet-active {
+    width: 24px !important;
+    background: #184193 !important;
+    border-radius: 4px !important;
+    transition: width 0.3s ease;
+}
