@@ -116,7 +116,7 @@ export default function CategoryPage() {
             <Header />
             <ProductGrid
                 title={`${category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ')}`}
-                subtitle={`Explore our ${category.replace('-', ' ')} collection`}
+                // subtitle={`Explore our ${category.replace('-', ' ')} collection`}
                 products={products}
                 filters={productFilters}
                 onFilterChange={handleFilterChange}

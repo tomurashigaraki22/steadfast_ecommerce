@@ -309,7 +309,13 @@ export default function TestPage() {
                 subtitle="Find the perfect product for you"
                 viewAllLink="/products"
                 products={filteredProducts}
-                filters={productFilters}
+                filters={productFilters.map(filter => ({
+                    ...filter,
+                    options: filter.options?.map(option => ({
+                        ...option,
+                        amount: 0 // Adding the required amount property
+                    }))
+                }))}
                 onFilterChange={handleFilterChange}
                 isLoading={isLoading}
             />

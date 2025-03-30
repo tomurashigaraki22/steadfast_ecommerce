@@ -1,12 +1,17 @@
-export const demoProducts = [
+
+export const originalDemoProducts = [
     {
         productId: '1',
         title: "Modern Crystal Chandelier",
         brand: "LuxeLight",
+        categoryId: 'cat_7f9a2b3c4d5e', // Chanderliers
         price: 125000,
-        rating: 5,
         image: "/product.png",
         isNew: true,
+        dateCreated: "2023-06-15T08:00:00Z",
+        dateUpdated: "2023-11-20T15:30:00Z",
+        stock: 12,
+        soldOut: false,
         discount: {
             amount: 15000,
             percentage: 12
@@ -16,8 +21,8 @@ export const demoProducts = [
         productId: '2',
         title: "LED Surface Panel Light",
         brand: "BrightTech",
+        categoryId: 'cat_1a2b3c4d5e6f', // Surface Lights
         price: 45000,
-        rating: 4,
         image: "/product.png",
         isNew: true,
         discount: {
@@ -29,8 +34,8 @@ export const demoProducts = [
         productId: '3',
         title: "Pendant Drop Light Gold",
         brand: "LuxeLight",
+        categoryId: 'cat_4n5o6p7q8r9s', // Pendant Lights
         price: 78000,
-        rating: 5,
         image: "/product.png",
         isNew: true,
         discount: {
@@ -42,8 +47,8 @@ export const demoProducts = [
         productId: '4',
         title: "Track Light System",
         brand: "BrightTech",
+        categoryId: 'cat_1a2b3c4d5e6f', // Surface Lights
         price: 65000,
-        rating: 4,
         image: "/product.png",
         discount: {
             amount: 7500,
@@ -54,8 +59,8 @@ export const demoProducts = [
         productId: '5',
         title: "LED Rope Light 5M",
         brand: "FlexiLight",
+        categoryId: 'cat_9z0a1b2c3d4e', // Smart Lights
         price: 25000,
-        rating: 4,
         image: "/product.png",
         discount: {
             amount: 3000,
@@ -66,8 +71,8 @@ export const demoProducts = [
         productId: '6',
         title: "Solar Garden Lights Set",
         brand: "OutdoorPro",
+        categoryId: 'cat_8h9i0j1k2l3m', // Outdoor Lights
         price: 45000,
-        rating: 4,
         image: "/product.png",
         isNew: true,
         discount: {
@@ -79,8 +84,8 @@ export const demoProducts = [
         productId: '7',
         title: "Bedside Table Lamp",
         brand: "HomeComfort",
+        categoryId: 'cat_5f6g7h8i9j0k', // Table Lamps
         price: 35000,
-        rating: 5,
         image: "/product.png",
         discount: {
             amount: 4000,
@@ -92,7 +97,6 @@ export const demoProducts = [
         title: "Smart LED Bulb Pack",
         brand: "SmartHome",
         price: 28000,
-        rating: 4,
         image: "/product.png",
         isNew: true,
         discount: {
@@ -105,7 +109,6 @@ export const demoProducts = [
         title: "Vintage Edison Bulb Set",
         brand: "RetroLight",
         price: 32000,
-        rating: 4,
         image: "/product.png",
         discount: {
             amount: 4000,
@@ -116,8 +119,8 @@ export const demoProducts = [
         productId: '10',
         title: "Modern Wall Sconce",
         brand: "LuxeLight",
+        categoryId: 'cat_2t3u4v5w6x7y', // Wall Lights
         price: 55000,
-        rating: 5,
         image: "/product.png",
         isNew: true,
         discount: {
@@ -129,8 +132,8 @@ export const demoProducts = [
         productId: '11',
         title: "Ceiling Fan with Light",
         brand: "HomeComfort",
+        categoryId: 'cat_1a2b3c4d5e6f', // Surface Lights
         price: 85000,
-        rating: 4,
         image: "/product.png",
         discount: {
             amount: 10000,
@@ -141,8 +144,8 @@ export const demoProducts = [
         productId: '12',
         title: "Motion Sensor Light",
         brand: "SmartHome",
+        categoryId: 'cat_9z0a1b2c3d4e', // Smart Lights
         price: 42000,
-        rating: 4,
         image: "/product.png",
         isNew: true,
         discount: {
@@ -154,8 +157,8 @@ export const demoProducts = [
         productId: '13',
         title: "LED Strip Light Kit",
         brand: "FlexiLight",
+        categoryId: 'cat_9z0a1b2c3d4e', // Smart Lights
         price: 38000,
-        rating: 4,
         image: "/product.png",
         discount: {
             amount: 4000,
@@ -166,8 +169,8 @@ export const demoProducts = [
         productId: '14',
         title: "Bathroom Vanity Light",
         brand: "BrightTech",
+        categoryId: 'cat_2t3u4v5w6x7y', // Wall Lights
         price: 48000,
-        rating: 4,
         image: "/product.png",
         isNew: true,
         discount: {
@@ -179,8 +182,8 @@ export const demoProducts = [
         productId: '15',
         title: "Crystal Wall Light",
         brand: "LuxeLight",
+        categoryId: 'cat_2t3u4v5w6x7y', // Wall Lights
         price: 65000,
-        rating: 5,
         image: "/product.png",
         discount: {
             amount: 8000,
@@ -191,8 +194,8 @@ export const demoProducts = [
         productId: '16',
         title: "Industrial Pendant Light",
         brand: "RetroLight",
+        categoryId: 'cat_4n5o6p7q8r9s', // Pendant Lights
         price: 58000,
-        rating: 4,
         image: "/product.png",
         isNew: true,
         discount: {
@@ -204,8 +207,8 @@ export const demoProducts = [
         productId: '17',
         title: "LED Recessed Downlight",
         brand: "BrightTech",
+        categoryId: 'cat_1a2b3c4d5e6f', // Surface Lights
         price: 22000,
-        rating: 5,
         image: "/product.png",
         discount: {
             amount: 2500,
@@ -216,8 +219,8 @@ export const demoProducts = [
         productId: '18',
         title: "Smart WiFi Light Switch",
         brand: "SmartHome",
+        categoryId: 'cat_9z0a1b2c3d4e', // Smart Lights
         price: 18000,
-        rating: 4,
         image: "/product.png",
         isNew: true,
         discount: {
@@ -229,8 +232,8 @@ export const demoProducts = [
         productId: '19',
         title: "Decorative Floor Lamp",
         brand: "HomeComfort",
+        categoryId: 'cat_5f6g7h8i9j0k', // Table Lamps
         price: 75000,
-        rating: 5,
         image: "/product.png",
         discount: {
             amount: 9000,
@@ -241,8 +244,8 @@ export const demoProducts = [
         productId: '20',
         title: "LED Mirror Light",
         brand: "BrightTech",
+        categoryId: 'cat_2t3u4v5w6x7y', // Wall Lights
         price: 42000,
-        rating: 4,
         image: "/product.png",
         isNew: true,
         discount: {
@@ -254,8 +257,8 @@ export const demoProducts = [
         productId: '21',
         title: "Outdoor Wall Lantern",
         brand: "OutdoorPro",
+        categoryId: 'cat_8h9i0j1k2l3m', // Outdoor Lights
         price: 48000,
-        rating: 4,
         image: "/product.png",
         discount: {
             amount: 6000,
@@ -266,8 +269,8 @@ export const demoProducts = [
         productId: '22',
         title: "RGB LED Strip Controller",
         brand: "SmartHome",
+        categoryId: 'cat_9z0a1b2c3d4e', // Smart Lights
         price: 15000,
-        rating: 4,
         image: "/product.png",
         isNew: true,
         discount: {
@@ -279,8 +282,8 @@ export const demoProducts = [
         productId: '23',
         title: "Crystal Dining Chandelier",
         brand: "LuxeLight",
+        categoryId: 'cat_7f9a2b3c4d5e', // Chanderliers
         price: 145000,
-        rating: 5,
         image: "/product.png",
         isNew: true,
         discount: {
@@ -292,8 +295,8 @@ export const demoProducts = [
         productId: '24',
         title: "USB LED Reading Light",
         brand: "HomeComfort",
+        categoryId: 'cat_5f6g7h8i9j0k', // Table Lamps
         price: 12000,
-        rating: 4,
         image: "/product.png",
         discount: {
             amount: 1500,
@@ -304,8 +307,8 @@ export const demoProducts = [
         productId: '25',
         title: "Waterproof LED Strip",
         brand: "FlexiLight",
+        categoryId: 'cat_9z0a1b2c3d4e', // Smart Lights
         price: 32000,
-        rating: 4,
         image: "/product.png",
         isNew: true,
         discount: {
@@ -317,8 +320,8 @@ export const demoProducts = [
         productId: '26',
         title: "Vintage Wall Sconce",
         brand: "RetroLight",
+        categoryId: 'cat_2t3u4v5w6x7y', // Wall Lights
         price: 52000,
-        rating: 5,
         image: "/product.png",
         discount: {
             amount: 6500,
@@ -329,8 +332,8 @@ export const demoProducts = [
         productId: '27',
         title: "Solar Path Lights Set",
         brand: "OutdoorPro",
+        categoryId: 'cat_8h9i0j1k2l3m', // Outdoor Lights
         price: 38000,
-        rating: 4,
         image: "/product.png",
         isNew: true,
         discount: {
@@ -342,8 +345,8 @@ export const demoProducts = [
         productId: '28',
         title: "LED Cabinet Light Kit",
         brand: "FlexiLight",
+        categoryId: 'cat_1a2b3c4d5e6f', // Surface Lights
         price: 28000,
-        rating: 4,
         image: "/product.png",
         discount: {
             amount: 3500,
@@ -354,8 +357,8 @@ export const demoProducts = [
         productId: '29',
         title: "Smart Dimmer Switch",
         brand: "SmartHome",
+        categoryId: 'cat_9z0a1b2c3d4e', // Smart Lights
         price: 15000,
-        rating: 4,
         image: "/product.png",
         isNew: true,
         discount: {
@@ -367,8 +370,8 @@ export const demoProducts = [
         productId: '30',
         title: "Outdoor Garden Spotlight",
         brand: "OutdoorPro",
+        categoryId: 'cat_8h9i0j1k2l3m', // Outdoor Lights
         price: 35000,
-        rating: 5,
         image: "/product.png",
         discount: {
             amount: 5000,
@@ -379,45 +382,75 @@ export const demoProducts = [
 
 export const categories = [
     {
-        id: 'chanderliers',
+        id: 'cat_7f9a2b3c4d5e',
         name: 'Chanderliers',
         slug: 'chanderliers',
         description: 'Elegant crystal and modern chanderliers for your home',
     },
     {
-        id: 'surface-lights',
+        id: 'cat_1a2b3c4d5e6f',
         name: 'Surface Lights',
         slug: 'surface-lights',
         description: 'LED surface and panel lights for efficient illumination',
     },
     {
-        id: 'outdoor-lights',
+        id: 'cat_8h9i0j1k2l3m',
         name: 'Outdoor Lights',
         slug: 'outdoor-lights',
         description: 'Weather-resistant lights for gardens and outdoor spaces',
     },
     {
-        id: 'pendant-lights',
+        id: 'cat_4n5o6p7q8r9s',
         name: 'Pendant Lights',
         slug: 'pendant-lights',
         description: 'Stylish hanging lights for dining and living areas',
     },
     {
-        id: 'wall-lights',
+        id: 'cat_2t3u4v5w6x7y',
         name: 'Wall Lights',
         slug: 'wall-lights',
         description: 'Decorative wall sconces and ambient lighting',
     },
     {
-        id: 'smart-lights',
+        id: 'cat_9z0a1b2c3d4e',
         name: 'Smart Lights',
         slug: 'smart-lights',
         description: 'WiFi-enabled smart lighting solutions',
     },
     {
-        id: 'table-lamps',
+        id: 'cat_5f6g7h8i9j0k',
         name: 'Table Lamps',
         slug: 'table-lamps',
         description: 'Bedside and decorative table lamps',
     }
 ];
+
+// Helper functions
+const getRandomDate = (start: Date, end: Date) => {
+    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())).toISOString();
+};
+
+const getRandomRating = () => {
+    // Generate ratings between 3 and 5, with higher probability for 4 and 5
+    const ratings = [3, 4, 4, 4, 5, 5];
+    return ratings[Math.floor(Math.random() * ratings.length)];
+};
+
+// Update all products with new fields
+export const demoProducts = originalDemoProducts.map(product => {
+    const stock = Math.floor(Math.random() * 50) + 1;
+    const soldOut = Math.random() < 0.1;
+    const totalSold = soldOut ? stock : Math.floor(Math.random() * stock);
+
+    return {
+        ...product,
+        rating: getRandomRating(),
+        dateCreated: product.isNew 
+            ? getRandomDate(new Date('2023-10-01'), new Date())
+            : getRandomDate(new Date('2022-01-01'), new Date('2023-09-30')),
+        dateUpdated: getRandomDate(new Date('2023-10-01'), new Date()),
+        stock,
+        soldOut,
+        totalSold
+    };
+});

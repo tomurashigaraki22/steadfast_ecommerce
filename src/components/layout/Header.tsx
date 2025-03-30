@@ -3,12 +3,24 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Search, ShoppingBag, Heart, Menu, User, SearchIcon } from 'lucide-react';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 export const Header = () => {
+    const router = useRouter();
+    const searchParams = useSearchParams();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            router.push(`/products?q=${encodeURIComponent(searchQuery.trim())}`);
+        }
+    };
 
     return (
-        <header className={' bg-white shadow-sm'}>
+        <header className="bg-white shadow-sm">
             {/* Desktop Header */}
             <div className="hidden md:block">
                 <div className="container mx-auto px-4 py-4">
@@ -18,19 +30,24 @@ export const Header = () => {
                         </Link>
 
                         <div className="flex-1 max-w-xl mx-8">
-                            <div className="relative flex">
+                            <form onSubmit={handleSearch} className="relative flex">
                                 <div className="absolute flex flex-col h-full px-5 items-center justify-center">
                                     <SearchIcon className='w-4 h-4' />
                                 </div>
                                 <input
                                     type="text"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
                                     placeholder="Search product, category"
                                     className="w-full pl-13 pr-24 py-2.5 border bg-[#F0F0F0] text-black placeholder:text-black border-gray-200 rounded-[2rem] focus:outline-none text-sm"
                                 />
-                                <button className="absolute right-0 top-0 h-full px-6 bg-[#184193] text-white rounded-r-[2rem] text-sm font-medium">
+                                <button
+                                    type="submit"
+                                    className="absolute right-0 top-0 h-full px-6 bg-[#184193] text-white rounded-r-[2rem] text-sm font-medium"
+                                >
                                     Search
                                 </button>
-                            </div>
+                            </form>
                         </div>
 
                         <div className="flex items-center gap-8">
@@ -98,16 +115,21 @@ export const Header = () => {
                 </div>
 
                 <div className="px-4 pb-3">
-                    <div className="relative">
+                    <form onSubmit={handleSearch} className="relative">
                         <input
                             type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Search a product, category"
                             className="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-1 focus:ring-blue-500"
                         />
-                        <button className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+                        <button
+                            type="submit"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                        >
                             <Search size={20} />
                         </button>
-                    </div>
+                    </form>
                 </div>
 
                 {/* Mobile Menu */}
