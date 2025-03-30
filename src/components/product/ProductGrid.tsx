@@ -48,7 +48,7 @@ export const ProductGrid = ({
 
     return (
         <section className="space-y-4 py-[2rem] relative">
-            <div className="container mx-auto  px-5 md:px-0 ">
+            <div className="container mx-auto  px-3 md:px-0 ">
 
                 {isLoading && (
                     <div className="absolute inset-0 bg-white/50 z-10 flex items-center justify-center">
@@ -83,7 +83,7 @@ export const ProductGrid = ({
                     )}
 
                     <div className="flex-1">
-                        <div className={`grid grid-cols-1 ${filters ? 'md:grid-cols-3' : 'md:grid-cols-4'} gap-[2rem] md:gap-6`}>
+                        <div className={`grid grid-cols-2 ${filters ? 'md:grid-cols-3' : 'md:grid-cols-4'} gap-4 space-y-2 md:space-y-0 md:gap-6`}>
                             {products.map((product) => (
                                 <ProductCard key={product.productId} {...product} />
                             ))}

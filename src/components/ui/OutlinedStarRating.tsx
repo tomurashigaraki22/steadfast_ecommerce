@@ -2,17 +2,17 @@ interface OutlinedStarRatingProps {
     rating: number;
 }
 
-export const StarRating = ({ rating }: OutlinedStarRatingProps) => {
+export const OutlinedStarRating = ({ rating }: OutlinedStarRatingProps) => {
     return (
         <div className="flex items-center">
             {[1, 2, 3, 4, 5].map((star) => (
                 <svg
                     key={star}
-                    className={`w-5 h-5 ${
-                        star <= rating ? 'text-[#E2A03F]' : 'text-gray-300'
+                    className={`w-4 h-4 ${
+                        star <= rating ? 'text-yellow-400' : 'text-gray-300'
                     }`}
-                    fill="currentColor"
                     stroke="currentColor"
+                    fill="none"
                     viewBox="0 0 24 24"
                 >
                     <path

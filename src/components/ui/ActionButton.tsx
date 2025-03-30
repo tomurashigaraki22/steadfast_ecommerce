@@ -1,6 +1,5 @@
-import { Loader2, ShoppingCart } from 'lucide-react';
-import { useState } from 'react';
-
+import { Loader2, Plus } from 'lucide-react';
+ 
 interface ActionButtonProps {
     children: React.ReactNode;
     variant?: 'primary' | 'outline' | 'grey';
@@ -24,9 +23,8 @@ export const ActionButton = ({
     disabled = false,
     isCart = false
 }: ActionButtonProps) => {
-    const [showCart, setShowCart] = useState(false);
-
-    const baseStyles = "py-3 px-3 text-sm rounded-[2rem] font-medium transition-all duration-300 flex items-center justify-center relative overflow-hidden";
+ 
+    const baseStyles = "py-3 px-3 text-base md:text-sm rounded-[2rem] font-medium transition-all duration-300 flex items-center justify-center relative overflow-hidden";
     const widthStyles = fullWidth ? 'w-full' : 'w-auto';
 
     const variants = {
@@ -37,8 +35,7 @@ export const ActionButton = ({
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         if (isCart && variant === 'primary') {
-            setShowCart(true);
-            const button = document.createElement('div');
+             const button = document.createElement('div');
             button.className = 'fixed z-50';
             button.innerHTML = `<div class="text-white"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div>`;
             
@@ -81,9 +78,9 @@ export const ActionButton = ({
                 </>
             ) : (
                 <>
-                    {isCart && variant === 'primary' && showCart && (
-                        <ShoppingCart 
-                            className="w-4 h-4 mr-2 transition-transform duration-500 animate-slide-right" 
+                    {isCart && (
+                        <Plus 
+                            className="md:hidden w-4 h-4 mr-2 transition-transform duration-500 animate-slide-right" 
                         />
                     )}
                     {children}

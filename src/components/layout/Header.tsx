@@ -36,7 +36,7 @@ export const Header = () => {
                         <div className="flex items-center gap-8">
                             <div className="flex items-center gap-2">
                                 <User size={20} />
-                                <Link href="/login" className="text-sm font-semibold">Login / Register</Link>
+                                <Link href="/auth/login" className="text-sm font-semibold">Login / Register</Link>
                             </div>
                             <div className="flex items-center gap-4">
                                 <Link href="/cart" className="relative  bg-[#EDF0F8] p-3 rounded-[50%]">
@@ -66,15 +66,15 @@ export const Header = () => {
                             <nav className="flex-1">
                                 <ul className="flex gap-8">
                                     <li>
-                                        <Link href="/category/chandeliers"
+                                        <Link href="/products/category/chandeliers"
                                             className="text-sm py-1.5 px-4">
                                             Chandeliers
                                         </Link>
                                     </li>
-                                    <li><Link href="/category/pop-spotlight" className="text-sm">POP Spotlight</Link></li>
-                                    <li><Link href="/category/outdoor-light" className="text-sm">Outdoor Light</Link></li>
-                                    <li><Link href="/category/rope-light" className="text-sm">Rope Light</Link></li>
-                                    <li><Link href="/category/switch-socket" className="text-sm">Switch & Socket</Link></li>
+                                    <li><Link href="/products/category/pop-spotlight" className="text-sm">POP Spotlight</Link></li>
+                                    <li><Link href="/products/category/outdoor-light" className="text-sm">Outdoor Light</Link></li>
+                                    <li><Link href="/products/category/rope-light" className="text-sm">Rope Light</Link></li>
+                                    <li><Link href="/products/category/switch-socket" className="text-sm">Switch & Socket</Link></li>
                                 </ul>
                             </nav>
                         </div>
@@ -121,11 +121,11 @@ export const Header = () => {
                         </div>
                         <nav className="p-4">
                             <ul className="space-y-4">
-                                <li><Link href="/category/chandeliers" className="block py-2">Chandeliers</Link></li>
-                                <li><Link href="/category/pop-spotlight" className="block py-2">POP Spotlight</Link></li>
-                                <li><Link href="/category/outdoor-light" className="block py-2">Outdoor Light</Link></li>
-                                <li><Link href="/category/rope-light" className="block py-2">Rope Light</Link></li>
-                                <li><Link href="/category/switch-socket" className="block py-2">Switch & Socket</Link></li>
+                                <li><Link href="/products/category/chandeliers" className="block py-2">Chandeliers</Link></li>
+                                <li><Link href="/products/category/pop-spotlight" className="block py-2">POP Spotlight</Link></li>
+                                <li><Link href="/products/category/outdoor-light" className="block py-2">Outdoor Light</Link></li>
+                                <li><Link href="/products/category/rope-light" className="block py-2">Rope Light</Link></li>
+                                <li><Link href="/products/category/switch-socket" className="block py-2">Switch & Socket</Link></li>
                             </ul>
                         </nav>
                     </div>

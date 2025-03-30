@@ -376,3 +376,48 @@ export const demoProducts = [
         }
     }
 ];
+
+export const categories = [
+    {
+        id: 'chanderliers',
+        name: 'Chanderliers',
+        slug: 'chanderliers',
+        description: 'Elegant crystal and modern chanderliers for your home',
+    },
+    {
+        id: 'surface-lights',
+        name: 'Surface Lights',
+        slug: 'surface-lights',
+        description: 'LED surface and panel lights for efficient illumination',
+    },
+    {
+        id: 'outdoor-lights',
+        name: 'Outdoor Lights',
+        slug: 'outdoor-lights',
+        description: 'Weather-resistant lights for gardens and outdoor spaces',
+    },
+    {
+        id: 'pendant-lights',
+        name: 'Pendant Lights',
+        slug: 'pendant-lights',
+        description: 'Stylish hanging lights for dining and living areas',
+    },
+    {
+        id: 'wall-lights',
+        name: 'Wall Lights',
+        slug: 'wall-lights',
+        description: 'Decorative wall sconces and ambient lighting',
+    },
+    {
+        id: 'smart-lights',
+        name: 'Smart Lights',
+        slug: 'smart-lights',
+        description: 'WiFi-enabled smart lighting solutions',
+    },
+    {
+        id: 'table-lamps',
+        name: 'Table Lamps',
+        slug: 'table-lamps',
+        description: 'Bedside and decorative table lamps',
+    }
+];

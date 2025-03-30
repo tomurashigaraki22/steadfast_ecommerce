@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { StarRating } from '@/components/ui/StarRating';
 import { ActionButton } from '../ui/ActionButton';
 import { HeartIcon } from '@/components/icons/Heart';
@@ -20,6 +21,7 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({
+    productId,
     title,
     brand,
     price,
@@ -28,9 +30,14 @@ export const ProductCard = ({
     isNew,
     discount
 }: ProductCardProps) => {
+    const router = useRouter();
     const [isWishlisted, setIsWishlisted] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isAdded, setIsAdded] = useState(false);
+
+    const handleProductClick = () => {
+        router.push(`/product/${productId}`);
+    };
 
     const toggleWishlist = async () => {
         try {
@@ -52,13 +59,17 @@ export const ProductCard = ({
 
     return (
         <div className="flex flex-col">
-            <div className="relative group">
+            <div
+                className="relative group cursor-pointer"
+                onClick={handleProductClick}
+            >
                 <div className="relative w-full h-[250px] rounded-lg overflow-hidden">
                     <Image
                         src={image}
                         alt={title}
                         fill
                         className="object-cover transition-transform duration-300 ease-out group-hover:scale-110"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                 </div>
 
@@ -84,9 +95,9 @@ export const ProductCard = ({
                         />
                     </button>
                 </div>
-                <div className="space-y-1">
-                    <h3 className="font-medium line-clamp-1">{title}</h3>
-                    <p className="text-gray-600 text-xs line-clamp-1">{brand}</p>
+                <div className="space-y-1  h-12 md:h-auto cursor-pointer " onClick={handleProductClick}>
+                    <h3 className="font-medium line-clamp-2 md:line-clamp-1">{title}</h3>
+                    <p className="hidden md:flex text-gray-600 text-xs line-clamp-1">{brand}</p>
                 </div>
 
                 <div className="flex items-start gap-2 mb-[1.5rem] flex-col justify-center">
@@ -99,10 +110,10 @@ export const ProductCard = ({
                         </div>
                     )}
                 </div>
-                <ActionButton 
-                    variant={isAdded ? 'outline' : 'primary'} 
-                    fullWidth 
-                    isCart 
+                <ActionButton
+                    variant={isAdded ? 'outline' : 'primary'}
+                    fullWidth
+                    isCart
                     onClick={handleAddToCart}
                 >
                     {isAdded ? 'ADDED TO CART' : 'ADD TO CART'}

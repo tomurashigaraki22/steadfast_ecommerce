@@ -8,68 +8,68 @@ const categories = [
     {
         title: "Chanderliers",
         image: "/category.png",
-        href: "/category/chanderliers"
+        href: "/products/category/chanderliers"
     },
     {
         title: "POP/Surface Lights",
         image: "/category.png",
-        href: "/category/surface-lights"
+        href: "/products/category/surface-lights"
     },
     {
         title: "Outdoor Lights",
         image: "/category.png",
-        href: "/category/outdoor-lights"
+        href: "/products/category/outdoor-lights"
     },
     {
         title: "Solar Lights",
         image: "/category.png",
-        href: "/category/solar-lights"
+        href: "/products/category/solar-lights"
     },
     {
         title: "Indoor Lights",
         image: "/category.png",
-        href: "/category/indoor-lights"
+        href: "/products/category/indoor-lights"
     },
     {
         title: "Ceiling Fittings",
         image: "/category.png",
-        href: "/category/ceiling-fittings"
+        href: "/products/category/ceiling-fittings"
     },
     {
         title: "Rope Light",
         image: "/category.png",
-        href: "/category/rope-light"
+        href: "/products/category/rope-light"
     },
     {
         title: "Track Light",
         image: "/category.png",
-        href: "/category/track-light"
+        href: "/products/category/track-light"
     },
     {
         title: "Pendant/Drop Lights",
         image: "/category.png",
-        href: "/category/pendant-lights"
+        href: "/products/category/pendant-lights"
     },
     {
         title: "Switch & Sockets",
         image: "/category.png",
-        href: "/category/switches"
+        href: "/products/category/switches"
     },
     {
         title: "Electrical accessories",
         image: "/category.png",
-        href: "/category/accessories"
+        href: "/products/category/accessories"
     },
     {
         title: "Bedside and Table Lamp",
         image: "/category.png",
-        href: "/category/table-lamp"
+        href: "/products/category/table-lamp"
     }
 ];
 
 const ShopByCategory = () => {
     return (
-        <section className="space-y-4 py-[5rem] md:py-[2rem]">
+        <section className="space-y-4 py-[1rem] md:py-[2rem]">
             <div className="container mx-auto px-4 md:px-[5rem]">
                 <h2 className="text-lg md:text-xl font-semibold text-center mb-8">Shop by Categories</h2>
 
