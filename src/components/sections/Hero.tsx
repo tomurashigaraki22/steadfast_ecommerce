@@ -15,7 +15,7 @@ export const Hero = () => {
             </div>
 
             <div className="relative h-full flex items-center">
-                <div className="container mx-auto flex items-center justify-center text-center  px-4">
+                <div className="container mx-auto flex items-center justify-center text-center px-[1.5rem] md:px-4">
                     <div className="max-w-2xl " >
                         <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 ">
                             Transform Your Space with the Perfect Glow
@@ -34,10 +34,10 @@ export const Hero = () => {
                 </div>
             </div>
 
-            <button className="absolute left-4 top-1/2 -translate-y-1/2  flex items-center justify-center text-white hover:bg-white/30 transition-colors">
+            <button className="absolute left-0 md:left-4 top-1/2 -translate-y-1/2  flex items-center justify-center text-white hover:bg-white/30 transition-colors">
                 <ChevronLeft size={50} />
             </button>
-            <button className="absolute right-4 top-1/2 -translate-y-1/2  flex items-center justify-center text-white hover:bg-white/30 transition-colors">
+            <button className="absolute right-0 md:right-4 top-1/2 -translate-y-1/2  flex items-center justify-center text-white hover:bg-white/30 transition-colors">
                 <ChevronRight size={50} />
             </button>
         </section>
