@@ -119,11 +119,9 @@ export default function ProductsPage() {
     const handleFilterChange = async (filters: Record<string, FilterValue>) => {
         setIsLoading(true);
         try {
-            // Here you would make an API call with the filters
-            await new Promise(resolve => setTimeout(resolve, 500));
+             await new Promise(resolve => setTimeout(resolve, 500));
 
-            // Filter products based on the filters
-            const filteredProducts = products.filter(product => {
+             const filteredProducts = products.filter(product => {
                 console.log('Filters:', filters);
                 console.log('Product:', product);
                 return true;
@@ -145,7 +143,7 @@ export default function ProductsPage() {
                 filters={productFilters as import('@/components/product/ProductFilter').FilterOption[]}
                 onFilterChange={handleFilterChange}
                 isLoading={isLoading}
-                maxRecord={20}
+                maxRecord={4}
             />
         </>
     );

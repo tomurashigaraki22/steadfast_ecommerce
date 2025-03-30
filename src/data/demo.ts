@@ -432,7 +432,7 @@ const getRandomDate = (start: Date, end: Date) => {
 
 const getRandomRating = () => {
     // Generate ratings between 3 and 5, with higher probability for 4 and 5
-    const ratings = [3, 4, 4, 4, 5, 5];
+    const ratings = [1,1,2,2,3,3, 4, 4, 4, 5, 5];
     return ratings[Math.floor(Math.random() * ratings.length)];
 };
 
