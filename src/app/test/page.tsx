@@ -166,15 +166,15 @@ export default function TestPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [filteredProducts, setFilteredProducts] = useState(products);
 
-    const handleFilterChange = async (filters: Record<string, any>) => {
+    // Add this type definition near the top of the file with other interfaces
+    type FilterValue = string[] | number[] | { min?: number; max?: number };
+
+    const handleFilterChange = async (filters: Record<string, FilterValue>) => {
         setIsLoading(true);
         console.log(filters);
         try {
-            // Here you would typically make an API call with the filters
-            // For now, we'll simulate an API call with setTimeout
             await new Promise(resolve => setTimeout(resolve, 500));
 
-            // Filter products based on the filters
             const newProducts = products.filter(product => {
                 // Add your filter logic here
                 console.log(product)
