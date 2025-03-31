@@ -41,7 +41,11 @@ export const ProductCard = ({
     const [isWishlisted, setIsWishlisted] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isAdded, setIsAdded] = useState(false);
+    console.log(image)
 
+    // Generate deterministic image number based on productId
+    const imageNumber = parseInt(productId) % 10 + 1;
+    const imagePath = `/product${imageNumber}.png`;
     useEffect(() => {
         setIsWishlisted(FavoritesHelper.isProductFavorite(productId));
     }, [productId]);
@@ -53,13 +57,13 @@ export const ProductCard = ({
     const toggleWishlist = async () => {
         try {
             setIsLoading(true);
-            
+
             if (isWishlisted) {
                 FavoritesHelper.removeFromFavorites(productId);
             } else {
                 FavoritesHelper.addToFavorites(productId);
             }
-            
+
             setIsWishlisted(!isWishlisted);
         } catch (error) {
             console.error('Error updating wishlist:', error);
@@ -79,9 +83,9 @@ export const ProductCard = ({
                 className="relative group cursor-pointer"
                 onClick={handleProductClick}
             >
-                <div className="relative w-full h-[250px] rounded-lg overflow-hidden">
+                <div className="relative w-full aspect-square rounded-lg overflow-hidden">
                     <Image
-                        src={image}
+                        src={imagePath}
                         alt={title}
                         fill
                         className="object-cover transition-transform duration-300 ease-out group-hover:scale-110"
@@ -97,7 +101,7 @@ export const ProductCard = ({
             </div>
 
             <div className="mt-4 space-y-2">
-                <div className="flex justify-between">
+                <div className="flex justify-between px-1">
                     <StarRating rating={rating} />
                     <button
                         className={`p-2 rounded-full hover:bg-gray-100/80 transition-colors ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -111,18 +115,18 @@ export const ProductCard = ({
                         />
                     </button>
                 </div>
-                <div className="space-y-1  h-12 md:h-auto cursor-pointer " onClick={handleProductClick}>
-                    <h3 className="font-medium line-clamp-2 md:line-clamp-1">{title}</h3>
+                <div className="space-y-1  h-12 md:h-auto cursor-pointer px-1 " onClick={handleProductClick}>
+                    <h3 className="font-medium text-[15px] line-clamp-2 md:line-clamp-1">{title}</h3>
                     <p className="hidden md:flex text-gray-600 text-xs line-clamp-1">{brand}</p>
                 </div>
 
-                <div className="flex items-start gap-2 mb-[1.5rem] flex-col justify-center">
+                <div className="flex items-start gap-2 mb-2 md:mb-[1.5rem]  px-1 flex-col justify-center">
                     <span className="font-semibold">NGN {price.toLocaleString()}</span>
                     {discount && (
-                        <div className="flex items-center space-x-1 text-xs">
+                        <div className="hidden md:flex items-center space-x-1 text-xs">
                             <span className="bg-[#38CB89] text-[.6rem] font-bold text-white px-1.5 py-0.5 rounded">SALE</span>
-                            <span className="text-black text-[.7rem] font-semibold">Save NGN {discount.amount.toLocaleString()}</span>
-                            <span className="text-black text-[.7rem] font-semibold">• {discount.percentage}%</span>
+                            <span className="text-black text-[15px] font-semibold">Save NGN {discount.amount.toLocaleString()}</span>
+                            <span className="text-black text-[15px] font-semibold">• {discount.percentage}%</span>
                         </div>
                     )}
                 </div>

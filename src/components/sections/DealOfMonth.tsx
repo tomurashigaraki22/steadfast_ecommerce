@@ -38,7 +38,7 @@ export const DealOfMonth = () => {
             brand: "HUMANATURE",
             price: 95000,
             rating: 4,
-            image: "/product.png",
+            image: "/product2.png",
             discount: {
                 amount: 30000,
                 percentage: 5
@@ -50,7 +50,7 @@ export const DealOfMonth = () => {
             brand: "HUMANATURE",
             price: 95000,
             rating: 3,
-            image: "/product.png",
+            image: "/product3.png",
             discount: {
                 amount: 30000,
                 percentage: 5
@@ -62,7 +62,7 @@ export const DealOfMonth = () => {
             brand: "HUMANATURE",
             price: 95000,
             rating: 4,
-            image: "/product.png",
+            image: "/product4.png",
             discount: {
                 amount: 30000,
                 percentage: 5
@@ -74,7 +74,7 @@ export const DealOfMonth = () => {
             brand: "HUMANATURE",
             price: 95000,
             rating: 4,
-            image: "/product.png",
+            image: "/product5.png",
             discount: {
                 amount: 30000,
                 percentage: 5

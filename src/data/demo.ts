@@ -6,7 +6,7 @@ export const originalDemoProducts = [
         brand: "LuxeLight",
         categoryId: 'cat_7f9a2b3c4d5e', // Chanderliers
         price: 125000,
-        image: "/product.png",
+
         isNew: true,
         dateCreated: "2023-06-15T08:00:00Z",
         dateUpdated: "2023-11-20T15:30:00Z",
@@ -23,7 +23,7 @@ export const originalDemoProducts = [
         brand: "BrightTech",
         categoryId: 'cat_1a2b3c4d5e6f', // Surface Lights
         price: 45000,
-        image: "/product.png",
+
         isNew: true,
         discount: {
             amount: 5000,
@@ -36,7 +36,7 @@ export const originalDemoProducts = [
         brand: "LuxeLight",
         categoryId: 'cat_4n5o6p7q8r9s', // Pendant Lights
         price: 78000,
-        image: "/product.png",
+
         isNew: true,
         discount: {
             amount: 8000,
@@ -49,7 +49,7 @@ export const originalDemoProducts = [
         brand: "BrightTech",
         categoryId: 'cat_1a2b3c4d5e6f', // Surface Lights
         price: 65000,
-        image: "/product.png",
+
         discount: {
             amount: 7500,
             percentage: 12
@@ -61,7 +61,7 @@ export const originalDemoProducts = [
         brand: "FlexiLight",
         categoryId: 'cat_9z0a1b2c3d4e', // Smart Lights
         price: 25000,
-        image: "/product.png",
+
         discount: {
             amount: 3000,
             percentage: 12
@@ -73,7 +73,7 @@ export const originalDemoProducts = [
         brand: "OutdoorPro",
         categoryId: 'cat_8h9i0j1k2l3m', // Outdoor Lights
         price: 45000,
-        image: "/product.png",
+
         isNew: true,
         discount: {
             amount: 5000,
@@ -86,7 +86,7 @@ export const originalDemoProducts = [
         brand: "HomeComfort",
         categoryId: 'cat_5f6g7h8i9j0k', // Table Lamps
         price: 35000,
-        image: "/product.png",
+
         discount: {
             amount: 4000,
             percentage: 11
@@ -97,7 +97,7 @@ export const originalDemoProducts = [
         title: "Smart LED Bulb Pack",
         brand: "SmartHome",
         price: 28000,
-        image: "/product.png",
+
         isNew: true,
         discount: {
             amount: 3000,
@@ -109,7 +109,7 @@ export const originalDemoProducts = [
         title: "Vintage Edison Bulb Set",
         brand: "RetroLight",
         price: 32000,
-        image: "/product.png",
+
         discount: {
             amount: 4000,
             percentage: 12
@@ -121,7 +121,7 @@ export const originalDemoProducts = [
         brand: "LuxeLight",
         categoryId: 'cat_2t3u4v5w6x7y', // Wall Lights
         price: 55000,
-        image: "/product.png",
+
         isNew: true,
         discount: {
             amount: 6000,
@@ -134,7 +134,7 @@ export const originalDemoProducts = [
         brand: "HomeComfort",
         categoryId: 'cat_1a2b3c4d5e6f', // Surface Lights
         price: 85000,
-        image: "/product.png",
+
         discount: {
             amount: 10000,
             percentage: 12
@@ -146,7 +146,7 @@ export const originalDemoProducts = [
         brand: "SmartHome",
         categoryId: 'cat_9z0a1b2c3d4e', // Smart Lights
         price: 42000,
-        image: "/product.png",
+
         isNew: true,
         discount: {
             amount: 5000,
@@ -159,7 +159,7 @@ export const originalDemoProducts = [
         brand: "FlexiLight",
         categoryId: 'cat_9z0a1b2c3d4e', // Smart Lights
         price: 38000,
-        image: "/product.png",
+
         discount: {
             amount: 4000,
             percentage: 11
@@ -171,7 +171,7 @@ export const originalDemoProducts = [
         brand: "BrightTech",
         categoryId: 'cat_2t3u4v5w6x7y', // Wall Lights
         price: 48000,
-        image: "/product.png",
+
         isNew: true,
         discount: {
             amount: 6000,
@@ -184,7 +184,7 @@ export const originalDemoProducts = [
         brand: "LuxeLight",
         categoryId: 'cat_2t3u4v5w6x7y', // Wall Lights
         price: 65000,
-        image: "/product.png",
+
         discount: {
             amount: 8000,
             percentage: 12
@@ -196,7 +196,7 @@ export const originalDemoProducts = [
         brand: "RetroLight",
         categoryId: 'cat_4n5o6p7q8r9s', // Pendant Lights
         price: 58000,
-        image: "/product.png",
+
         isNew: true,
         discount: {
             amount: 7000,
@@ -209,7 +209,7 @@ export const originalDemoProducts = [
         brand: "BrightTech",
         categoryId: 'cat_1a2b3c4d5e6f', // Surface Lights
         price: 22000,
-        image: "/product.png",
+
         discount: {
             amount: 2500,
             percentage: 11
@@ -221,7 +221,7 @@ export const originalDemoProducts = [
         brand: "SmartHome",
         categoryId: 'cat_9z0a1b2c3d4e', // Smart Lights
         price: 18000,
-        image: "/product.png",
+
         isNew: true,
         discount: {
             amount: 2000,
@@ -234,7 +234,7 @@ export const originalDemoProducts = [
         brand: "HomeComfort",
         categoryId: 'cat_5f6g7h8i9j0k', // Table Lamps
         price: 75000,
-        image: "/product.png",
+
         discount: {
             amount: 9000,
             percentage: 12
@@ -246,7 +246,7 @@ export const originalDemoProducts = [
         brand: "BrightTech",
         categoryId: 'cat_2t3u4v5w6x7y', // Wall Lights
         price: 42000,
-        image: "/product.png",
+
         isNew: true,
         discount: {
             amount: 5000,
@@ -259,7 +259,7 @@ export const originalDemoProducts = [
         brand: "OutdoorPro",
         categoryId: 'cat_8h9i0j1k2l3m', // Outdoor Lights
         price: 48000,
-        image: "/product.png",
+
         discount: {
             amount: 6000,
             percentage: 12
@@ -271,7 +271,7 @@ export const originalDemoProducts = [
         brand: "SmartHome",
         categoryId: 'cat_9z0a1b2c3d4e', // Smart Lights
         price: 15000,
-        image: "/product.png",
+
         isNew: true,
         discount: {
             amount: 2000,
@@ -284,7 +284,7 @@ export const originalDemoProducts = [
         brand: "LuxeLight",
         categoryId: 'cat_7f9a2b3c4d5e', // Chanderliers
         price: 145000,
-        image: "/product.png",
+
         isNew: true,
         discount: {
             amount: 18000,
@@ -297,7 +297,7 @@ export const originalDemoProducts = [
         brand: "HomeComfort",
         categoryId: 'cat_5f6g7h8i9j0k', // Table Lamps
         price: 12000,
-        image: "/product.png",
+
         discount: {
             amount: 1500,
             percentage: 12
@@ -309,7 +309,7 @@ export const originalDemoProducts = [
         brand: "FlexiLight",
         categoryId: 'cat_9z0a1b2c3d4e', // Smart Lights
         price: 32000,
-        image: "/product.png",
+
         isNew: true,
         discount: {
             amount: 4000,
@@ -322,7 +322,7 @@ export const originalDemoProducts = [
         brand: "RetroLight",
         categoryId: 'cat_2t3u4v5w6x7y', // Wall Lights
         price: 52000,
-        image: "/product.png",
+
         discount: {
             amount: 6500,
             percentage: 12
@@ -334,7 +334,7 @@ export const originalDemoProducts = [
         brand: "OutdoorPro",
         categoryId: 'cat_8h9i0j1k2l3m', // Outdoor Lights
         price: 38000,
-        image: "/product.png",
+
         isNew: true,
         discount: {
             amount: 4500,
@@ -347,7 +347,7 @@ export const originalDemoProducts = [
         brand: "FlexiLight",
         categoryId: 'cat_1a2b3c4d5e6f', // Surface Lights
         price: 28000,
-        image: "/product.png",
+
         discount: {
             amount: 3500,
             percentage: 12
@@ -359,7 +359,7 @@ export const originalDemoProducts = [
         brand: "SmartHome",
         categoryId: 'cat_9z0a1b2c3d4e', // Smart Lights
         price: 15000,
-        image: "/product.png",
+
         isNew: true,
         discount: {
             amount: 2000,
@@ -372,7 +372,7 @@ export const originalDemoProducts = [
         brand: "OutdoorPro",
         categoryId: 'cat_8h9i0j1k2l3m', // Outdoor Lights
         price: 35000,
-        image: "/product.png",
+
         discount: {
             amount: 5000,
             percentage: 14
@@ -383,18 +383,18 @@ export const originalDemoProducts = [
 
 
 
-export const categories = [
+export const initialcategories = [
     {
         id: 'cat_7f9a2b3c4d5e',
         name: 'Chanderliers',
-        image: "/category.png",
+        image: `/product${Math.floor(Math.random() * 10) + 1}.png`,
         slug: 'chanderliers',
         description: 'Elegant crystal and modern chanderliers for your home',
     },
     {
         id: 'cat_1a2b3c4d5e6f',
         name: 'Surface Lights',
-        image: "/category.png",
+        image: `/product${Math.floor(Math.random() * 10) + 1}.png`,
         slug: 'surface-lights',
         description: 'LED surface and panel lights for efficient illumination',
     },
@@ -504,7 +504,7 @@ export const categories = [
         description: 'Artistic and accent lighting pieces'
     }
 ];
- 
+
 
 const getRandomRating = () => {
     // Use a deterministic pattern instead of random
@@ -515,20 +515,32 @@ const getRandomRating = () => {
 
 // Update all products with new fields
 export const demoProducts = originalDemoProducts.map((product, index) => {
-    const baseStock = 20; // Use fixed base numbers
+    const baseStock = 20;
     const stock = baseStock + (index % 30);
-    const soldOut = index % 10 === 0; // Every 10th item is sold out
+    const soldOut = index % 10 === 0;
     const totalSold = soldOut ? stock : Math.floor(stock * 0.7);
+    const randomImageNumber = Math.floor(Math.random() * 10) + 1; // Random number between 1-10
 
     return {
         ...product,
+        image: `/product${randomImageNumber}.png`,
         rating: getRandomRating(),
         dateCreated: product.isNew
-            ? "2023-11-01T00:00:00Z" // Use fixed dates
+            ? "2023-11-01T00:00:00Z"
             : "2023-01-01T00:00:00Z",
         dateUpdated: "2023-11-20T00:00:00Z",
         stock,
         soldOut,
         totalSold
+    };
+});
+
+
+export const categories = initialcategories.map((category, index) => {
+    const randomImageNumber = Math.floor(Math.random() * 10) + 1;
+    console.log(index)
+    return {
+        ...category,
+        image: `/product${randomImageNumber}.png`
     };
 });
