@@ -1,25 +1,18 @@
 "use client"
+import { Suspense } from 'react';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, ShoppingBag, Heart, Menu, User, SearchIcon } from 'lucide-react';
+import {  ShoppingBag, Heart, Menu, User, SearchIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import { categories } from '@/data/demo';
 import { FavoritesHelper } from '@/lib/favorites';
 
-export const Header = () => {
-    const router = useRouter();
+const SearchComponent = () => {
     const searchParams = useSearchParams();
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [showCategories, setShowCategories] = useState(false);  // Add this line
+    const router = useRouter();
     const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
-    const [wishlistCount, setWishlistCount] = useState(0);
-
-    useEffect(() => {
-        const favorites = FavoritesHelper.getAllFavorites();
-        setWishlistCount(favorites.length);
-    }, []);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -27,6 +20,39 @@ export const Header = () => {
             router.push(`/products?q=${encodeURIComponent(searchQuery.trim())}`);
         }
     };
+
+    return (
+        <form onSubmit={handleSearch} className="relative flex">
+            <div className="absolute flex flex-col h-full px-5 items-center justify-center">
+                <SearchIcon className='w-4 h-4' />
+            </div>
+            <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search product, category"
+                className="w-full pl-13 pr-24 py-2.5 border bg-[#F0F0F0] text-black placeholder:text-black border-gray-200 rounded-[2rem] focus:outline-none text-sm"
+            />
+            <button
+                type="submit"
+                className="absolute right-0 top-0 h-full px-6 bg-[#184193] text-white rounded-r-[2rem] text-sm font-medium"
+            >
+                Search
+            </button>
+        </form>
+    );
+};
+
+export const Header = () => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [showCategories, setShowCategories] = useState(false);
+    const [wishlistCount, setWishlistCount] = useState(0);
+
+    useEffect(() => {
+        const favorites = FavoritesHelper.getAllFavorites();
+        setWishlistCount(favorites.length);
+    }, []);
+
 
     useEffect(() => {
         if (isMenuOpen) {
@@ -50,24 +76,11 @@ export const Header = () => {
                         </Link>
 
                         <div className="flex-1 max-w-xl mx-8">
-                            <form onSubmit={handleSearch} className="relative flex">
-                                <div className="absolute flex flex-col h-full px-5 items-center justify-center">
-                                    <SearchIcon className='w-4 h-4' />
-                                </div>
-                                <input
-                                    type="text"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    placeholder="Search product, category"
-                                    className="w-full pl-13 pr-24 py-2.5 border bg-[#F0F0F0] text-black placeholder:text-black border-gray-200 rounded-[2rem] focus:outline-none text-sm"
-                                />
-                                <button
-                                    type="submit"
-                                    className="absolute right-0 top-0 h-full px-6 bg-[#184193] text-white rounded-r-[2rem] text-sm font-medium"
-                                >
-                                    Search
-                                </button>
-                            </form>
+                            <Suspense fallback={
+                                <div className="w-full h-10 bg-gray-100 animate-pulse rounded-[2rem]" />
+                            }>
+                                <SearchComponent />
+                            </Suspense>
                         </div>
 
                         <div className="flex items-center gap-8">
@@ -130,28 +143,23 @@ export const Header = () => {
                     <Link href="/" className="flex-shrink-0">
                         <Image src="/logo.png" alt="Steadfast" width={120} height={32} />
                     </Link>
-                    <Link href="/cart" className="relative p-2">
-                        <ShoppingBag size={24} />
-                        <span className="absolute top-0 right-0 bg-[#184193] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
-                    </Link>
+                    <div className="flex">
+                        <Link href="/profile" className="relative p-2">
+                            <User size={24} />
+                         </Link>
+                        <Link href="/cart" className="relative p-2">
+                            <ShoppingBag size={24} />
+                            <span className="absolute top-0 right-0 bg-[#184193] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                        </Link>
+                    </div>
                 </div>
 
                 <div className="px-4 pb-3">
-                    <form onSubmit={handleSearch} className="relative">
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Search a product, category"
-                            className="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-1 focus:ring-blue-500"
-                        />
-                        <button
-                            type="submit"
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                        >
-                            <Search size={20} />
-                        </button>
-                    </form>
+                    <Suspense fallback={
+                        <div className="w-full h-10 bg-gray-100 animate-pulse rounded-full" />
+                    }>
+                        <SearchComponent />
+                    </Suspense>
                 </div>
 
                 {/* Mobile Menu */}
@@ -210,7 +218,7 @@ export const Header = () => {
                                                         </svg>
                                                     </button>
                                                 </li>
-                                              
+
                                             </ul>
                                         </div>
 

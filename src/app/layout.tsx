@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import "./globals.css";
 import { Inter, Montserrat } from 'next/font/google'
 
@@ -19,14 +18,18 @@ const inter = Inter({
   variable: '--font-inter',
 })
 
-export const metadata: Metadata = {
-  title: "Steadfast International eCommerce",
-  description: "Your one-stop shop for all your needs - PWA eCommerce platform by Steadfast International",
+export const metadata = {
+  title: 'Steadfast International',
+  description: 'Your trusted source for quality products',
   keywords: "ecommerce, online shopping, PWA, affiliate marketing",
   authors: [{ name: "Robinson Honour" }],
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
-  themeColor: "#ffffff",
-  manifest: "/manifest.json",
+  themeColor: "#184193",
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#184193'
 };
 
 export default function RootLayout({
