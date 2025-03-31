@@ -1,4 +1,5 @@
 "use client";
+import { Suspense } from 'react';
 import ShopByCategory from "@/components/category/ShopByCategory";
 import { CTASection } from "@/components/home/CTASection";
 import { Footer } from "@/components/layout/Footer";
@@ -14,7 +15,9 @@ export default function Home() {
   return (
     <>
       <TopBanner theme={'dark'} />
-      <Header />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Header />
+      </Suspense>
       <Hero />
       <DealOfMonth />
       <ShopByCategory />
@@ -36,3 +39,10 @@ export default function Home() {
     </>
   );
 }
+
+// Create a separate viewport.ts file in the same directory
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#184193'
+};
