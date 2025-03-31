@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import Image from 'next/image';
 
 export const Footer = () => {
     return (
@@ -9,8 +10,8 @@ export const Footer = () => {
             <div className="container mx-auto text-sm md:text-xs px-6 py-8">
                 <div className="flex flex-col items-center space-y-8 md:flex-row md:justify-between md:space-y-0">
                     <div className="md:flex md:items-center md:gap-5 md:justify-center text-center">
-                        <Link href="/" className="text-lg md:text-lg  font-semibold block  md:mb-0">
-                            Steadfast
+                        <Link href="/" className="flex-shrink-0">
+                            <Image src="/logo-transparent.png" alt="Steadfast" width={150} height={40} />
                         </Link>
 
                     </div>
@@ -31,7 +32,7 @@ export const Footer = () => {
                     </nav>
                 </div>
 
-                <hr className="my-8 border-gray-200" />
+                <hr className="my-8 border-gray-400" />
 
                 <div className="flex flex-col items-center md:flex-row md:justify-between md:items-center space-y-8 md:space-y-0">
                     <div className="flex flex-col items-center md:flex-row md:items-center space-y-4 md:space-y-0">
