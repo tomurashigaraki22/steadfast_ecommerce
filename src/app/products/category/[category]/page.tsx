@@ -1,12 +1,22 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { ProductGrid } from '@/components/product/ProductGrid';
-import { Header } from '@/components/layout/Header';
 import { TopBanner } from '@/components/layout/TopBanner';
+import { Header } from '@/components/layout/Header';
+import { NoProducts } from '@/components/ui/NoProducts';
+import { demoProducts, categories } from '@/data/demo';
+ 
+ type FilterValue = string[] | number[] | { min?: number; max?: number };
 
-type FilterValue = string[] | number[] | { min?: number; max?: number };
+interface FilterOption {
+    id: string;
+    label: string;
+    type: 'checkbox' | 'radio' | 'range' | 'rating';
+    options?: Array<{ value: string; label: string; amount?: number }>;
+    range?: { min: number; max: number };
+}
 
 interface Product {
     productId: string;
@@ -16,91 +26,113 @@ interface Product {
     rating: number;
     image: string;
     isNew?: boolean;
+    dateCreated: string;
+    dateUpdated: string;
+    stock: number;
+    totalSold: number;
     discount?: {
         amount: number;
         percentage: number;
     };
 }
 
-// Add FilterOption interface
-interface FilterOption {
-    id: string;
-    label: string;
-    type: 'checkbox' | 'radio' | 'range';
-    options?: Array<{ value: string; label: string }>;
-    range?: { min: number; max: number };
-}
-
 export default function CategoryPage() {
     const params = useParams();
-    const category = params.category as string;
-    const [isLoading, setIsLoading] = useState(false);
+    const categorySlug = params.category as string;
+    const [isLoading, setIsLoading] = useState(true);
     const [products, setProducts] = useState<Product[]>([]);
-
-    const productFilters: FilterOption[] = [
-        {
-            id: 'price',
-            label: 'Price Range',
-            type: 'range',
-            range: { min: 0, max: 100000 }
-        },
-        {
-            id: 'rating',
-            label: 'Rating',
-            type: 'checkbox',
-            options: [
-                { value: '4', label: '4★ & above' },
-                { value: '3', label: '3★ & above' },
-                { value: '2', label: '2★ & above' },
-            ],
-        },
-    ];
+    const [productFilters, setProductFilters] = useState<FilterOption[]>([]);
+    const [categoryInfo, setCategoryInfo] = useState<typeof categories[0] | null>(null);
 
     useEffect(() => {
-        const fetchCategoryProducts = async () => {
-            setIsLoading(true);
-            try {
-                // Here you would make an API call to fetch products for this category
-                await new Promise(resolve => setTimeout(resolve, 500));
+        // Find category info
+        const currentCategory = categories.find(cat => cat.slug === categorySlug);
+        setCategoryInfo(currentCategory || null);
 
-                // Simulate products data
-                const categoryProducts = [
+
+        // Filter products by category
+        const filteredProducts = currentCategory
+            ? demoProducts.filter(product => product.categoryId === currentCategory.id)
+            : [];
+
+        const prices = filteredProducts.map(p => p.price);
+        const ratings = Array.from(new Set(filteredProducts.map(p => p.rating))).sort((a, b) => b - a);
+
+        const dynamicFilters: FilterOption[] = [
+            {
+                id: 'popularity',
+                label: 'Most Popular',
+                type: 'radio',
+                options: [
                     {
-                        productId: '1',
-                        title: "Category Product",
-                        brand: "HUMANATURE",
-                        price: 95000,
-                        rating: 4,
-                        image: "/product.png",
-                        isNew: true,
-                        discount: {
-                            amount: 10000,
-                            percentage: 5
-                        }
+                        value: 'most-popular',
+                        label: 'Most Popular',
+                        amount: demoProducts.filter(p =>
+                            p.rating >= 4 &&
+                            (p.totalSold / p.stock) >= 0.7
+                        ).length
                     },
-                    // ... more products
-                ];
-
-                setProducts(categoryProducts);
-            } finally {
-                setIsLoading(false);
+                    {
+                        value: 'least-popular',
+                        label: 'Least Popular',
+                        amount: demoProducts.filter(p =>
+                            p.rating < 4 ||
+                            (p.totalSold / p.stock) < 0.3
+                        ).length
+                    },
+                    {
+                        value: 'newest', label: 'Newest', amount: demoProducts.filter(p => {
+                            const createDate = new Date(p.dateCreated);
+                            const threeMonthsAgo = new Date();
+                            threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+                            return createDate > threeMonthsAgo;
+                        }).length
+                    },
+                    {
+                        value: 'oldest', label: 'Oldest', amount: demoProducts.filter(p => {
+                            const createDate = new Date(p.dateCreated);
+                            const sixMonthsAgo = new Date();
+                            sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+                            return createDate <= sixMonthsAgo;
+                        }).length
+                    },
+                    { value: 'highest-rated', label: 'Highest Rated', amount: demoProducts.filter(p => p.rating >= 4).length }
+                ]
+            },
+            {
+                id: 'price',
+                label: 'Price Range',
+                type: 'range',
+                range: {
+                    min: Math.min(...(prices.length ? prices : [0])),
+                    max: Math.max(...(prices.length ? prices : [0]))
+                }
+            },
+            {
+                id: 'rating',
+                label: 'Rating',
+                type: 'rating',
+                options: ratings.map(rating => ({
+                    value: rating.toString(),
+                    label: `${rating}★ & above`,
+                    amount: filteredProducts.filter(p => p.rating >= rating).length
+                }))
             }
-        };
+        ];
 
-        fetchCategoryProducts();
-    }, [category]);
+        setProducts(filteredProducts);
+        setProductFilters(dynamicFilters);
+        setIsLoading(false);
+    }, [categorySlug]);
 
     const handleFilterChange = async (filters: Record<string, FilterValue>) => {
         setIsLoading(true);
         try {
-            // Here you would make an API call with the filters
             await new Promise(resolve => setTimeout(resolve, 500));
 
-            // Filter products based on the filters
             const filteredProducts = products.filter(product => {
                 console.log('Filters:', filters);
                 console.log('Product:', product);
-                // Implement your filtering logic here
                 return true;
             });
 
@@ -110,17 +142,35 @@ export default function CategoryPage() {
         }
     };
 
+    if (!categoryInfo) {
+        return (
+            <>
+                <TopBanner theme={'dark'} />
+                <Header />
+                <NoProducts />
+            </>
+        );
+    }
+
     return (
         <>
             <TopBanner theme={'dark'} />
             <Header />
+          
             <ProductGrid
-                title={`${category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ')}`}
-                // subtitle={`Explore our ${category.replace('-', ' ')} collection`}
+                title={categoryInfo.name}
+                subtitle={categoryInfo.description}
                 products={products}
-                filters={productFilters}
+                filters={productFilters as import('@/components/product/ProductFilter').FilterOption[]}
                 onFilterChange={handleFilterChange}
                 isLoading={isLoading}
+                maxRecord={12}
+                emptyState={<NoProducts />}
+                breadCrumb={[
+                    { label: 'Home', href: '/' },
+                    { label: 'Categories', href: '/categories' },
+                    { label: categoryInfo?.name || '' }
+                ]}
             />
         </>
     );

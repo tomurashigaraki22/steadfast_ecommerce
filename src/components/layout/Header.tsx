@@ -1,16 +1,25 @@
 "use client"
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Search, ShoppingBag, Heart, Menu, User, SearchIcon } from 'lucide-react';
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
+import { categories } from '@/data/demo';
+import { FavoritesHelper } from '@/lib/favorites';
 
 export const Header = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [showCategories, setShowCategories] = useState(false);  // Add this line
     const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
+    const [wishlistCount, setWishlistCount] = useState(0);
+
+    useEffect(() => {
+        const favorites = FavoritesHelper.getAllFavorites();
+        setWishlistCount(favorites.length);
+    }, []);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -18,6 +27,17 @@ export const Header = () => {
             router.push(`/products?q=${encodeURIComponent(searchQuery.trim())}`);
         }
     };
+
+    useEffect(() => {
+        if (isMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isMenuOpen]);
 
     return (
         <header className="bg-white shadow-sm">
@@ -62,7 +82,9 @@ export const Header = () => {
                                 </Link>
                                 <Link href="/wishlist" className="relative bg-[#EDF0F8] p-3 rounded-[50%]">
                                     <Heart size={20} strokeWidth={1.5} />
-                                    <span className="absolute top-0 -right-2 border-2 border-white bg-[#184193] text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                                    <span className="absolute top-0 -right-2 border-2 border-white bg-[#184193] text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center">
+                                        {wishlistCount}
+                                    </span>
                                 </Link>
 
                             </div>
@@ -72,7 +94,7 @@ export const Header = () => {
                     <div className="flex flex-col items-center justify-center gap-8 mt-4">
                         <div className="flex flex-row items-center justify-center gap-8 mt-4">
                             <div className="relative group">
-                                <button className="flex items-center gap-2 text-sm py-3 px-4  border border-[#184193] rounded-[2rem]">
+                                <button className="flex items-center gap-2 text-sm py-3 px-4 border border-[#184193] rounded-[2rem]">
                                     All Categories
                                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -82,16 +104,16 @@ export const Header = () => {
 
                             <nav className="flex-1">
                                 <ul className="flex gap-8">
-                                    <li>
-                                        <Link href="/products/category/chandeliers"
-                                            className="text-sm py-1.5 px-4">
-                                            Chandeliers
-                                        </Link>
-                                    </li>
-                                    <li><Link href="/products/category/pop-spotlight" className="text-sm">POP Spotlight</Link></li>
-                                    <li><Link href="/products/category/outdoor-light" className="text-sm">Outdoor Light</Link></li>
-                                    <li><Link href="/products/category/rope-light" className="text-sm">Rope Light</Link></li>
-                                    <li><Link href="/products/category/switch-socket" className="text-sm">Switch & Socket</Link></li>
+                                    {categories.slice(0, 4).map(category => (
+                                        <li key={category.id}>
+                                            <Link
+                                                href={`/products/category/${category.slug}`}
+                                                className="text-sm py-1.5 px-4 line-clamp-1"
+                                            >
+                                                {category.name}
+                                            </Link>
+                                        </li>
+                                    ))}
                                 </ul>
                             </nav>
                         </div>
@@ -134,22 +156,105 @@ export const Header = () => {
 
                 {/* Mobile Menu */}
                 {isMenuOpen && (
-                    <div className="fixed inset-0 bg-white z-50">
+                    <div className="fixed inset-0 bg-white z-50 flex flex-col">
                         <div className="flex justify-between items-center p-4 border-b">
-                            <h2 className="text-lg font-semibold">Menu</h2>
-                            <button onClick={() => setIsMenuOpen(false)} className="p-2">
-                                ✕
+                            <h2 className="text-lg font-semibold">
+                                {showCategories ? 'Categories' : 'Menu'}
+                            </h2>
+                            <button
+                                onClick={() => showCategories ? setShowCategories(false) : setIsMenuOpen(false)}
+                                className="p-2"
+                            >
+                                {showCategories ? '←' : '✕'}
                             </button>
                         </div>
-                        <nav className="p-4">
-                            <ul className="space-y-4">
-                                <li><Link href="/products/category/chandeliers" className="block py-2">Chandeliers</Link></li>
-                                <li><Link href="/products/category/pop-spotlight" className="block py-2">POP Spotlight</Link></li>
-                                <li><Link href="/products/category/outdoor-light" className="block py-2">Outdoor Light</Link></li>
-                                <li><Link href="/products/category/rope-light" className="block py-2">Rope Light</Link></li>
-                                <li><Link href="/products/category/switch-socket" className="block py-2">Switch & Socket</Link></li>
-                            </ul>
-                        </nav>
+                        <div className="flex-1 overflow-y-auto">
+                            <nav className="p-4">
+                                {!showCategories ? (
+                                    <div className="space-y-6">
+                                        <div>
+                                            <h3 className="text-sm font-bold text-black mb-3">MENU</h3>
+                                            <ul className="space-y-4">
+                                                <li>
+                                                    <Link
+                                                        href="/"
+                                                        className="flex items-center justify-between py-2 text-[15px]"
+                                                        onClick={() => setIsMenuOpen(false)}
+                                                    >
+                                                        Home
+                                                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
+                                                            <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                        </svg>
+                                                    </Link>
+                                                </li>
+                                                <li>
+                                                    <Link
+                                                        href="/products"
+                                                        className="flex items-center justify-between py-2 text-[15px]"
+                                                        onClick={() => setIsMenuOpen(false)}
+                                                    >
+                                                        All Products
+                                                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
+                                                            <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                        </svg>
+                                                    </Link>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        onClick={() => setShowCategories(true)}
+                                                        className="flex items-center justify-between py-2 text-[15px] w-full"
+                                                    >
+                                                        Categories
+                                                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
+                                                            <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                        </svg>
+                                                    </button>
+                                                </li>
+                                              
+                                            </ul>
+                                        </div>
+
+                                        <div>
+                                            <h3 className="text-sm font-bold text-black mb-3">ACCOUNT</h3>
+                                            <ul className="space-y-4">
+                                                <li>
+                                                    <Link
+                                                        href="/auth/login"
+                                                        className="flex items-center justify-between py-2 text-[15px]"
+                                                        onClick={() => setIsMenuOpen(false)}
+                                                    >
+                                                        Login / Register
+                                                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
+                                                            <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                        </svg>
+                                                    </Link>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <ul className="space-y-4">
+                                        {categories.map(category => (
+                                            <li key={category.id}>
+                                                <Link
+                                                    href={`/products/category/${category.slug}`}
+                                                    className="flex items-center justify-between py-2 text-[15px]"
+                                                    onClick={() => {
+                                                        setShowCategories(false);
+                                                        setIsMenuOpen(false);
+                                                    }}
+                                                >
+                                                    {category.name}
+                                                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
+                                                        <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                    </svg>
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </nav>
+                        </div>
                     </div>
                 )}
             </div>

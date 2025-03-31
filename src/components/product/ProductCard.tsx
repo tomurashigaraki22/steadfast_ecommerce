@@ -1,9 +1,15 @@
+
+'use client';
+
+import { useEffect } from 'react';
+
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { StarRating } from '@/components/ui/StarRating';
 import { ActionButton } from '../ui/ActionButton';
 import { HeartIcon } from '@/components/icons/Heart';
 import { useState } from 'react';
+import { FavoritesHelper } from '@/lib/favorites';
 
 // Add to interface ProductCardProps
 interface ProductCardProps {
@@ -20,6 +26,7 @@ interface ProductCardProps {
     productId: string;
 }
 
+
 export const ProductCard = ({
     productId,
     title,
@@ -35,18 +42,27 @@ export const ProductCard = ({
     const [isLoading, setIsLoading] = useState(false);
     const [isAdded, setIsAdded] = useState(false);
 
+    useEffect(() => {
+        setIsWishlisted(FavoritesHelper.isProductFavorite(productId));
+    }, [productId]);
+
     const handleProductClick = () => {
-        router.push(`/product/${productId}`);
+        router.push(`/products/v/${productId}`);
     };
 
     const toggleWishlist = async () => {
         try {
             setIsLoading(true);
-
+            
+            if (isWishlisted) {
+                FavoritesHelper.removeFromFavorites(productId);
+            } else {
+                FavoritesHelper.addToFavorites(productId);
+            }
+            
             setIsWishlisted(!isWishlisted);
         } catch (error) {
             console.error('Error updating wishlist:', error);
-            // Optionally show error toast/notification
         } finally {
             setIsLoading(false);
         }

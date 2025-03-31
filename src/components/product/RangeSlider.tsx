@@ -24,15 +24,15 @@ export default function PriceRangeSlider({
   const [localMin, setLocalMin] = useState(minValue ?? min)
   const [localMax, setLocalMax] = useState(maxValue ?? max)
   const rangeRef = useRef<HTMLDivElement>(null)
-  
-  // Calculate the percentage for styling
-  const getPercent = (value: number) => {
-    return Math.round(((value - min) / (max - min)) * 100)
-  }
 
   // Update the range progress bar
   useEffect(() => {
     if (rangeRef.current) {
+      // Moved getPercent inside useEffect
+      const getPercent = (value: number) => {
+        return Math.round(((value - min) / (max - min)) * 100)
+      }
+
       const minPercent = getPercent(localMin)
       const maxPercent = getPercent(localMax)
       

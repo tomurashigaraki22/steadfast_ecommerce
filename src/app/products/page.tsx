@@ -143,7 +143,7 @@ export default function ProductsPage() {
                 filters={productFilters as import('@/components/product/ProductFilter').FilterOption[]}
                 onFilterChange={handleFilterChange}
                 isLoading={isLoading}
-                maxRecord={4}
+                maxRecord={12}
             />
         </>
     );

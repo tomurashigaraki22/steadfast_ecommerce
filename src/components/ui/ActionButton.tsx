@@ -24,7 +24,7 @@ export const ActionButton = ({
     isCart = false
 }: ActionButtonProps) => {
  
-    const baseStyles = "py-3 px-3 text-base md:text-sm rounded-[2rem] font-medium transition-all duration-300 flex items-center justify-center relative overflow-hidden";
+    const baseStyles = "py-3 px-3 text-sm md:text-sm rounded-[2rem] font-medium transition-all duration-300 flex items-center justify-center relative overflow-hidden";
     const widthStyles = fullWidth ? 'w-full' : 'w-auto';
 
     const variants = {

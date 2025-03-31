@@ -19,8 +19,8 @@ export const Footer = () => {
                         <Link href="/" className="text-gray-900 hover:text-gray-700">
                             Home
                         </Link>
-                        <Link href="/product" className="text-gray-900 hover:text-gray-700">
-                            Product
+                        <Link href="/products" className="text-gray-900 hover:text-gray-700">
+                            Products
                         </Link>
                         <Link href="/padi" className="text-gray-900 hover:text-gray-700">
                             Steadfast Padi

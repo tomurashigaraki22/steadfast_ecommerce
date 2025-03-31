@@ -1,15 +1,21 @@
+'use client';
+
 interface OutlinedStarRatingProps {
     rating: number;
 }
 
 export const StarRating = ({ rating }: OutlinedStarRatingProps) => {
+    // Ensure rating is a stable number between 1-5
+    const normalizedRating = Math.max(1, Math.min(5, Math.floor(rating)));
+    const stars = [1, 2, 3, 4, 5];
+    
     return (
         <div className="flex items-center">
-            {[1, 2, 3, 4, 5].map((star) => (
+            {stars.map((star) => (
                 <svg
                     key={star}
                     className={`w-5 h-5 ${
-                        star <= rating ? 'text-[#E2A03F]' : 'text-gray-300'
+                        star <= normalizedRating ? 'text-[#E2A03F]' : 'text-gray-300'
                     }`}
                     fill="currentColor"
                     stroke="currentColor"

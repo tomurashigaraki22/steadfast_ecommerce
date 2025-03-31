@@ -8,7 +8,7 @@ export interface FilterOption {
     id: string;
     label: string;
     type: 'checkbox' | 'radio' | 'range' | 'rating';
-    options?: Array<{ value: string; label: string; amount: Number }>;
+    options?: Array<{ value: string; label: string; amount: number }>;
     range?: { min: number; max: number };
 }
 

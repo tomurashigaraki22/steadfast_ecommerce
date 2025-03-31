@@ -380,75 +380,153 @@ export const originalDemoProducts = [
     }
 ];
 
+
+
+
 export const categories = [
     {
         id: 'cat_7f9a2b3c4d5e',
         name: 'Chanderliers',
+        image: "/category.png",
         slug: 'chanderliers',
         description: 'Elegant crystal and modern chanderliers for your home',
     },
     {
         id: 'cat_1a2b3c4d5e6f',
         name: 'Surface Lights',
+        image: "/category.png",
         slug: 'surface-lights',
         description: 'LED surface and panel lights for efficient illumination',
     },
     {
         id: 'cat_8h9i0j1k2l3m',
         name: 'Outdoor Lights',
+        image: "/category.png",
         slug: 'outdoor-lights',
         description: 'Weather-resistant lights for gardens and outdoor spaces',
     },
     {
         id: 'cat_4n5o6p7q8r9s',
         name: 'Pendant Lights',
+        image: "/category.png",
         slug: 'pendant-lights',
         description: 'Stylish hanging lights for dining and living areas',
     },
     {
         id: 'cat_2t3u4v5w6x7y',
         name: 'Wall Lights',
+        image: "/category.png",
         slug: 'wall-lights',
         description: 'Decorative wall sconces and ambient lighting',
     },
     {
         id: 'cat_9z0a1b2c3d4e',
         name: 'Smart Lights',
+        image: "/category.png",
         slug: 'smart-lights',
         description: 'WiFi-enabled smart lighting solutions',
     },
     {
         id: 'cat_5f6g7h8i9j0k',
         name: 'Table Lamps',
+        image: "/category.png",
         slug: 'table-lamps',
         description: 'Bedside and decorative table lamps',
+    },
+    {
+        id: 'cat_6',
+        name: 'Wall Lights',
+        slug: 'wall-lights',
+        image: '/category.png',
+        description: 'Decorative wall-mounted lighting fixtures'
+    },
+    {
+        id: 'cat_7',
+        name: 'Table Lamps',
+        slug: 'table-lamps',
+        image: '/category.png',
+        description: 'Versatile lighting for desks and tables'
+    },
+    {
+        id: 'cat_8',
+        name: 'Floor Lamps',
+        slug: 'floor-lamps',
+        image: '/category.png',
+        description: 'Standing lamps for ambient lighting'
+    },
+    {
+        id: 'cat_9',
+        name: 'Bathroom Lights',
+        slug: 'bathroom-lights',
+        image: '/category.png',
+        description: 'Moisture-resistant bathroom lighting'
+    },
+    {
+        id: 'cat_10',
+        name: 'Kitchen Lights',
+        slug: 'kitchen-lights',
+        image: '/category.png',
+        description: 'Task and ambient lighting for kitchens'
+    },
+    {
+        id: 'cat_11',
+        name: 'Track Lights',
+        slug: 'track-lights',
+        image: '/category-11.png',
+        description: 'Adjustable track lighting systems'
+    },
+    {
+        id: 'cat_12',
+        name: 'LED Strips',
+        slug: 'led-strips',
+        image: '/category-12.png',
+        description: 'Flexible LED strip lighting solutions'
+    },
+    {
+        id: 'cat_13',
+        name: 'Cabinet Lights',
+        slug: 'cabinet-lights',
+        image: '/category-13.png',
+        description: 'Under-cabinet and display lighting'
+    },
+    {
+        id: 'cat_14',
+        name: 'Emergency Lights',
+        slug: 'emergency-lights',
+        image: '/category-14.png',
+        description: 'Backup and safety lighting systems'
+    },
+    {
+        id: 'cat_15',
+        name: 'Decorative Lights',
+        slug: 'decorative-lights',
+        image: '/category-15.png',
+        description: 'Artistic and accent lighting pieces'
     }
 ];
-
-// Helper functions
-const getRandomDate = (start: Date, end: Date) => {
-    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())).toISOString();
-};
+ 
 
 const getRandomRating = () => {
-    // Generate ratings between 3 and 5, with higher probability for 4 and 5
-    const ratings = [1,1,2,2,3,3, 4, 4, 4, 5, 5];
-    return ratings[Math.floor(Math.random() * ratings.length)];
+    // Use a deterministic pattern instead of random
+    const productIndex = originalDemoProducts.length;
+    const ratings = [3, 4, 4, 5, 5]; // Maintain higher ratings distribution
+    return ratings[productIndex % ratings.length];
 };
 
 // Update all products with new fields
-export const demoProducts = originalDemoProducts.map(product => {
-    const stock = Math.floor(Math.random() * 50) + 1;
-    const soldOut = Math.random() < 0.1;
-    const totalSold = soldOut ? stock : Math.floor(Math.random() * stock);
+export const demoProducts = originalDemoProducts.map((product, index) => {
+    const baseStock = 20; // Use fixed base numbers
+    const stock = baseStock + (index % 30);
+    const soldOut = index % 10 === 0; // Every 10th item is sold out
+    const totalSold = soldOut ? stock : Math.floor(stock * 0.7);
 
     return {
         ...product,
         rating: getRandomRating(),
-        dateCreated: product.isNew 
-            ? getRandomDate(new Date('2023-10-01'), new Date())
-            : getRandomDate(new Date('2022-01-01'), new Date('2023-09-30')),
-        dateUpdated: getRandomDate(new Date('2023-10-01'), new Date()),
+        dateCreated: product.isNew
+            ? "2023-11-01T00:00:00Z" // Use fixed dates
+            : "2023-01-01T00:00:00Z",
+        dateUpdated: "2023-11-20T00:00:00Z",
         stock,
         soldOut,
         totalSold

@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { X, Filter } from 'lucide-react';
+import { X } from 'lucide-react';
 import { ProductCard } from './ProductCard';
 import { ProductFilter, FilterOption } from './ProductFilter';
+import { Pagination } from '@/components/common/Pagination';
+import { Breadcrumb } from '../ui/Breadcrumb';
 
 type FilterValue = string[] | number[] | { min?: number; max?: number };
 
@@ -26,6 +28,12 @@ interface ProductGridProps {
     onFilterChange?: (filters: Record<string, FilterValue>) => void;
     isLoading?: boolean;
     maxRecord?: number;
+    emptyState?: React.ReactNode;
+    breadCrumb?: {
+        label: string;
+        href?: string;
+    }[];
+
 }
 
 export const ProductGrid = ({
@@ -34,6 +42,7 @@ export const ProductGrid = ({
     viewAllLink,
     products,
     filters,
+    breadCrumb,
     onFilterChange,
     isLoading = false,
     maxRecord = 12
@@ -61,7 +70,12 @@ export const ProductGrid = ({
 
     return (
         <section className="space-y-4 py-[2rem] relative">
-            <div className="container mx-auto px-3 md:px-0">
+            <div className="container mx-auto px-3 pt-5  md:pt-0 md:px-0">
+                {breadCrumb &&
+                    <Breadcrumb
+                        items={breadCrumb}
+                    />
+                }
                 {isLoading && (
                     <div className="absolute inset-0 bg-white/50 z-10 flex items-center justify-center">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
@@ -151,59 +165,18 @@ export const ProductGrid = ({
                     )}
 
                     <div className="flex-1">
-                        <div className={`grid grid-cols-2 ${filters && isFilterOpen ? 'md:grid-cols-3' : 'md:grid-cols-4'} gap-4 space-y-2 md:space-y-0 md:gap-6`}>
+                        <div className={`grid grid-cols-2 ${filters && isFilterOpen ? 'md:grid-cols-3' : 'md:grid-cols-4'} gap-3 space-y-2 md:space-y-0 md:gap-6`}>
                             {currentProducts.map((product) => (
                                 <ProductCard key={product.productId} {...product} />
                             ))}
                         </div>
 
-                        {/* Pagination */}
                         {totalPages > 1 && (
-                            <div className="flex items-center justify-center space-x-2 mt-8">
-                                <button
-                                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                    disabled={currentPage === 1}
-                                    className="px-3 py-1 rounded-md border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    Previous
-                                </button>
-
-                                {[...Array(totalPages)].map((_, index) => {
-                                    const pageNumber = index + 1;
-                                    const isCurrentPage = pageNumber === currentPage;
-                                    const isNearCurrent = Math.abs(pageNumber - currentPage) <= 1;
-                                    const isEndPage = pageNumber === 1 || pageNumber === totalPages;
-
-                                    if (isNearCurrent || isEndPage) {
-                                        return (
-                                            <button
-                                                key={pageNumber}
-                                                onClick={() => setCurrentPage(pageNumber)}
-                                                className={`px-3 py-1 rounded-md ${isCurrentPage
-                                                    ? 'bg-blue-600 text-white'
-                                                    : 'border border-gray-300 hover:bg-gray-50'
-                                                    }`}
-                                            >
-                                                {pageNumber}
-                                            </button>
-                                        );
-                                    } else if (
-                                        (pageNumber === currentPage - 2 && currentPage > 3) ||
-                                        (pageNumber === currentPage + 2 && currentPage < totalPages - 2)
-                                    ) {
-                                        return <span key={pageNumber}>...</span>;
-                                    }
-                                    return null;
-                                })}
-
-                                <button
-                                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                                    disabled={currentPage === totalPages}
-                                    className="px-3 py-1 rounded-md border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    Next
-                                </button>
-                            </div>
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={setCurrentPage}
+                            />
                         )}
                     </div>
                 </div>

@@ -3,71 +3,16 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
-
-const categories = [
-    {
-        title: "Chanderliers",
-        image: "/category.png",
-        href: "/products/category/chanderliers"
-    },
-    {
-        title: "POP/Surface Lights",
-        image: "/category.png",
-        href: "/products/category/surface-lights"
-    },
-    {
-        title: "Outdoor Lights",
-        image: "/category.png",
-        href: "/products/category/outdoor-lights"
-    },
-    {
-        title: "Solar Lights",
-        image: "/category.png",
-        href: "/products/category/solar-lights"
-    },
-    {
-        title: "Indoor Lights",
-        image: "/category.png",
-        href: "/products/category/indoor-lights"
-    },
-    {
-        title: "Ceiling Fittings",
-        image: "/category.png",
-        href: "/products/category/ceiling-fittings"
-    },
-    {
-        title: "Rope Light",
-        image: "/category.png",
-        href: "/products/category/rope-light"
-    },
-    {
-        title: "Track Light",
-        image: "/category.png",
-        href: "/products/category/track-light"
-    },
-    {
-        title: "Pendant/Drop Lights",
-        image: "/category.png",
-        href: "/products/category/pendant-lights"
-    },
-    {
-        title: "Switch & Sockets",
-        image: "/category.png",
-        href: "/products/category/switches"
-    },
-    {
-        title: "Electrical accessories",
-        image: "/category.png",
-        href: "/products/category/accessories"
-    },
-    {
-        title: "Bedside and Table Lamp",
-        image: "/category.png",
-        href: "/products/category/table-lamp"
-    }
-];
+import { categories as demoCategories } from '@/data/demo';
+import { useState, useEffect } from 'react';
 
 const ShopByCategory = () => {
+    const [categories, setCategories] = useState(demoCategories);
+
+    useEffect(() => {
+        setCategories(demoCategories);
+    }, []);
+
     return (
         <section className="space-y-4 py-[1rem] md:py-[2rem]">
             <div className="container mx-auto px-4 md:px-[5rem]">
@@ -85,8 +30,8 @@ const ShopByCategory = () => {
                             }}
                             className="mySwiper pb-10"
                         >
-                            {categories.map((category, index) => (
-                                <SwiperSlide key={index}>
+                            {categories.slice(0,12).map((category) => (
+                                <SwiperSlide key={category.id}>
                                     <CategoryCard {...category} />
                                 </SwiperSlide>
                             ))}
@@ -95,8 +40,8 @@ const ShopByCategory = () => {
 
                     {/* Desktop View */}
                     <div className="hidden md:grid md:grid-cols-6 gap-6">
-                        {categories.map((category, index) => (
-                            <CategoryCard key={index} {...category} />
+                        {categories.slice(0,12).map((category) => (
+                            <CategoryCard key={category.id} {...category} />
                         ))}
                     </div>
                 </div>
