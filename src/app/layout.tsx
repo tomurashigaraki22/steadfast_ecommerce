@@ -1,16 +1,6 @@
 import "./globals.css";
 import { Inter, Montserrat } from 'next/font/google'
 
-// const roboto = Roboto({
-//   weight: '400',
-//   subsets: ['latin'],
-// })
- 
-// const roboto = Roboto({
-//   weight: '400',
-//   subsets: ['latin'],
-// })
-
 const montserrat = Montserrat({
   weight: ['400', '500', '600', '700'],
   subsets: ['latin'],
