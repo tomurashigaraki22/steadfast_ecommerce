@@ -30,7 +30,7 @@ const ShopByCategory = () => {
                             }}
                             className="mySwiper pb-10"
                         >
-                            {categories.slice(0,12).map((category) => (
+                            {categories.slice(0, 12).map((category) => (
                                 <SwiperSlide key={category.id}>
                                     <CategoryCard {...category} />
                                 </SwiperSlide>
@@ -38,9 +38,8 @@ const ShopByCategory = () => {
                         </Swiper>
                     </div>
 
-                    {/* Desktop View */}
                     <div className="hidden md:grid md:grid-cols-6 gap-6">
-                        {categories.slice(0,12).map((category) => (
+                        {categories.slice(0, 12).map((category) => (
                             <CategoryCard key={category.id} {...category} />
                         ))}
                     </div>

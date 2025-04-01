@@ -120,13 +120,21 @@ export const ProductCard = ({
                     <p className="hidden md:flex text-gray-600 text-xs line-clamp-1">{brand}</p>
                 </div>
 
-                <div className="flex items-start gap-2 mb-2 md:mb-[1.5rem]  px-1 flex-col justify-center">
+                <div className="flex items-start gap-2 mb-2 md:mb-[1rem]  px-1 flex-col justify-center">
                     <span className="font-semibold">NGN {price.toLocaleString()}</span>
                     {discount && (
                         <div className="hidden md:flex items-center space-x-1 text-xs">
                             <span className="bg-[#38CB89] text-[.6rem] font-bold text-white px-1.5 py-0.5 rounded">SALE</span>
-                            <span className="text-black text-xs font-semibold">Save NGN {discount.amount.toLocaleString()}</span>
-                            <span className="text-black text-xs font-semibold">• {discount.percentage}%</span>
+                            <span className="text-black text-xs font-semibold"><svg width="4" height="5" viewBox="0 0 4 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="2" cy="2.5" r="2" fill="#38CB89" />
+                            </svg>
+                            </span>
+                            <span className="text-black text-[.7rem] font-[600]">Save NGN {discount.amount.toLocaleString()}</span>
+                            <span className="text-black text-xs font-semibold"><svg width="4" height="5" viewBox="0 0 4 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="2" cy="2.5" r="2" fill="#38CB89" />
+                            </svg>
+                            </span>
+                            <span className="text-black text-[.7rem] font-[600]">{discount.percentage}%</span>
                         </div>
                     )}
                 </div>
