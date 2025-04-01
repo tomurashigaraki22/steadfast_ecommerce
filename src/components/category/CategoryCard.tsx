@@ -16,15 +16,14 @@ export const CategoryCard = ({ name, image, slug, className = '', id }: Category
 
     return (
         <Link href={'/products/category/' + slug} className={`flex flex-col  items-center justify-center relative ${className}`}>
-            <div className="relative  rounded-full overflow-hidden mb-3">
+            <div className="relative w-full h-full rounded-full overflow-hidden mb-3">
                 <Image
                     src={imagePath}
                     alt={name}
                     width={450}
                     height={450}
                     className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110"
-                    sizes="450px"
-                />
+                 />
             </div>
             <h3 className="text-sm font-medium">{name}</h3>
         </Link>
