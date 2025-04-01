@@ -125,8 +125,8 @@ export const ProductCard = ({
                     {discount && (
                         <div className="hidden md:flex items-center space-x-1 text-xs">
                             <span className="bg-[#38CB89] text-[.6rem] font-bold text-white px-1.5 py-0.5 rounded">SALE</span>
-                            <span className="text-black text-[15px] font-semibold">Save NGN {discount.amount.toLocaleString()}</span>
-                            <span className="text-black text-[15px] font-semibold">• {discount.percentage}%</span>
+                            <span className="text-black text-xs font-semibold">Save NGN {discount.amount.toLocaleString()}</span>
+                            <span className="text-black text-xs font-semibold">• {discount.percentage}%</span>
                         </div>
                     )}
                 </div>
