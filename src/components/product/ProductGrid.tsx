@@ -11,6 +11,7 @@ interface ProductGridProps {
     title?: string;
     subtitle?: string;
     viewAllLink?: string;
+    enableSales?: boolean;
     products: Array<{
         productId: string;
         title: string;
@@ -41,6 +42,7 @@ export const ProductGrid = ({
     subtitle,
     viewAllLink,
     products,
+    enableSales = true,
     filters,
     breadCrumb,
     onFilterChange,
@@ -51,7 +53,6 @@ export const ProductGrid = ({
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
 
-    // Calculate pagination
     const totalPages = Math.ceil(products.length / maxRecord);
     const startIndex = (currentPage - 1) * maxRecord;
     const endIndex = startIndex + maxRecord;
@@ -167,7 +168,7 @@ export const ProductGrid = ({
                     <div className="flex-1">
                         <div className={`grid grid-cols-2 ${filters && isFilterOpen ? 'md:grid-cols-3' : 'md:grid-cols-4'} gap-3 space-y-2 md:space-y-0 md:gap-6`}>
                             {currentProducts.map((product) => (
-                                <ProductCard key={product.productId} {...product} />
+                                <ProductCard key={product.productId} enableSales={enableSales} {...product} />
                             ))}
                         </div>
 

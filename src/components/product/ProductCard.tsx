@@ -18,6 +18,7 @@ interface ProductCardProps {
     price: number;
     rating: number;
     image: string;
+    enableSales?: boolean;
     isNew?: boolean;
     discount?: {
         amount: number;
@@ -33,6 +34,7 @@ export const ProductCard = ({
     brand,
     price,
     rating,
+    enableSales = true,
     image,
     isNew,
     discount
@@ -43,7 +45,6 @@ export const ProductCard = ({
     const [isAdded, setIsAdded] = useState(false);
     console.log(image)
 
-    // Generate deterministic image number based on productId
     const imageNumber = parseInt(productId) % 10 + 1;
     const imagePath = `/product${imageNumber}.png`;
     useEffect(() => {
@@ -122,7 +123,7 @@ export const ProductCard = ({
 
                 <div className="flex items-start gap-2 mb-2 md:mb-[1rem]  px-1 flex-col justify-center">
                     <span className="font-semibold">NGN {price.toLocaleString()}</span>
-                    {discount && (
+                    {enableSales && discount && (
                         <div className="hidden md:flex items-center space-x-1 text-xs">
                             <span className="bg-[#38CB89] text-[.6rem] font-bold text-white px-1.5 py-0.5 rounded">SALE</span>
                             <span className="text-black text-xs font-semibold"><svg width="4" height="5" viewBox="0 0 4 5" fill="none" xmlns="http://www.w3.org/2000/svg">

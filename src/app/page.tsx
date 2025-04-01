@@ -30,6 +30,7 @@ export default function Home() {
         subtitle=""
         viewAllLink="/products/new"
         products={demoProducts.slice(0, 8)}
+        enableSales={false}
       />
       <CTASection />
       <Footer />
