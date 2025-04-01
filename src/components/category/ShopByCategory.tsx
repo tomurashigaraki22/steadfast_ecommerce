@@ -15,7 +15,7 @@ const ShopByCategory = () => {
 
     return (
         <section className="space-y-4 py-[1rem] md:py-[2rem]">
-            <div className="container mx-auto px-4 md:px-[5rem]">
+            <div className="container mx-auto px-4 lg:px-[5rem]">
                 <h2 className="text-lg md:text-xl font-semibold text-center mb-8">Shop by Categories</h2>
 
                 <div className="">
@@ -38,7 +38,7 @@ const ShopByCategory = () => {
                         </Swiper>
                     </div>
 
-                    <div className="hidden md:grid md:grid-cols-6 gap-6">
+                    <div className="hidden md:grid sm:grid-cols-4 lg:grid-cols-6 gap-6">
                         {categories.slice(0, 12).map((category) => (
                             <CategoryCard key={category.id} {...category} />
                         ))}
