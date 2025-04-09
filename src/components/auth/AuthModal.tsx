@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { X } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
@@ -20,18 +20,31 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const router = useRouter();
 
+    // Disable body scrolling when modal is open
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+
+        // Cleanup to restore scrolling when component unmounts
+        return () => {
+            document.body.style.overflow = 'auto';
+        };
+    }, [isOpen]);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         try {
-            // TODO: Add authentication logic here
             setShowSuccessModal(true);
             setTimeout(() => {
-                onClose(true); // Pass success status
+                onClose(true);
             }, 2000);
         } catch (error) {
             console.error('Auth failed:', error);
-            onClose(false); // Pass failure status
+            onClose(false);
         } finally {
             setIsLoading(false);
         }
@@ -39,10 +52,10 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
     return (
         <div
-            className={`fixed inset-0 z-50 ${isOpen ? 'block' : 'hidden'}`}
+            className={`fixed inset-0 z-[100] ${isOpen ? 'block' : 'hidden'}`}
         >
-            <div className="fixed inset-0 bg-black/50" onClick={() => onClose(false)} />
-            <div className="fixed inset-x-0 bottom-0 md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-full md:w-[480px] bg-white md:rounded-2xl md:max-h-[80vh] overflow-y-auto">
+            <div className="fixed inset-0 bg-black/50 touch-none z-[101]" onClick={() => onClose(false)} />
+            <div className="fixed inset-x-0 bottom-0 top-0 md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-full md:w-[480px] bg-white md:rounded-2xl md:max-h-[80vh] h-full md:h-auto overflow-y-auto z-[102]">
                 <div className="p-6 md:p-8">
                     <button
                         onClick={() => onClose(false)}
@@ -52,7 +65,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                     </button>
 
                     <div className="text-center mb-8">
-                        <h2 className="text-base md:text-lg  font-semibold mb-2">
+                        <h2 className="text-base md:text-lg font-semibold mb-2">
                             {isLogin ? "Log in to your account" : "Create Account"}
                         </h2>
                         <p className="text-sm md:text-base text-gray-600">
@@ -144,19 +157,20 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                         </p>
                     </form>
                 </div>
+                <Modal
+                    isOpen={showSuccessModal}
+                    onClose={() => setShowSuccessModal(false)}
+                    type="success"
+                    title={isLogin ? "Authentication Successful" : "Account Created!"}
+                    message={isLogin
+                        ? "Verifying your credentials..."
+                        : "Your account has been created successfully. Redirecting to verification..."}
+                    autoClose
+                    autoCloseTime={2000}
+                />
             </div>
 
-            <Modal
-                isOpen={showSuccessModal}
-                onClose={() => setShowSuccessModal(false)}
-                type="success"
-                title={isLogin ? "Authentication Successful" : "Account Created!"}
-                message={isLogin
-                    ? "Verifying your credentials..."
-                    : "Your account has been created successfully. Redirecting to verification..."}
-                autoClose
-                autoCloseTime={2000}
-            />
+
         </div>
     );
 };

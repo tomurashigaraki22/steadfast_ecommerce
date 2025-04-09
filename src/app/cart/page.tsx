@@ -181,7 +181,7 @@ export default function CartPage() {
             <main className="container mx-auto px-4 py-8">
                 <div className="bg-white rounded-xl px-2 pb-3 md:px-6">
                     <Breadcrumb items={breadcrumbItems} className='pb-0  md:py-0' />
-                    <h1 className="text-lg md:text-2xl font-semibold mt-4">Shopping cart</h1>
+                    <h1 className="text-lg md:text-2xl font-semibold mt-2 md:mt-4">Shopping cart</h1>
                     <div className="my-4">
                         <div className="flex items-center gap-1 text-sm mb-3">
                             <span>Buy</span>
@@ -198,7 +198,7 @@ export default function CartPage() {
                     <div className="lg:w-2/3">
 
                         <div className="bg-white rounded-xl px-2 md:px-6">
-                            <div className="relative h-1 bg-[#E0E5EB]  rounded-full ">
+                            <div className="relative h-1 mb-5 md:mb-0 bg-[#E0E5EB]  rounded-full ">
                                 <div
                                     className="absolute left-0 top-0 h-full bg-[#FF8A65] rounded-full transition-all duration-300"
                                     style={{ width: `${progressPercentage}%` }}
@@ -210,7 +210,7 @@ export default function CartPage() {
                                     )}
                                 </div>
                             </div>
-                            <div className="hidden md:grid grid-cols-12 gap-4 py-[1.5rem] text-sm text-gray-500 border-b border-[#E0E5EB]">
+                            <div className="hidden md:grid grid-cols-12 gap-4  py-[1.5rem] text-sm text-gray-500 border-b border-[#E0E5EB]">
                                 <div className="col-span-5">Product</div>
                                 <div className="col-span-2 text-right">Price</div>
                                 <div className="col-span-2 text-center">Quantity</div>
