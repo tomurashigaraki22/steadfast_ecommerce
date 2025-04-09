@@ -7,16 +7,16 @@ export const PickupSection = () => {
 
     return (
         <div className="bg-white max-w-xl mx-auto">
-            <h2 className="text-lg text-center font-semibold mb-8">Pick Up Point</h2>
+            <h2 className="md:text-lg text-center font-semibold mb-8">Pick Up Point</h2>
 
             <div className="space-y-8">
                 <div>
-                    <h3 className="text-lg mb-4">Abia State</h3>
+                    <h3 className="px-2 md:text-lg mb-2 md:mb-4">Abia State</h3>
                     <div className="relative">
                         <select
                             value={selectedState}
                             onChange={(e) => setSelectedState(e.target.value)}
-                            className="w-full p-4 text-gray-500 bg-white border border-gray-200 rounded-lg text-center appearance-none focus:outline-none"
+                            className="w-full px-4 py-3 text-gray-500 bg-white border border-gray-200 rounded-lg text-center appearance-none focus:outline-none"
                         >
                             <option value="">Select your pick up point</option>
                             <option value="point1">Aba Main Branch</option>

@@ -7,7 +7,6 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { Button } from '@/components/ui/Button';
-import { StarIcon } from '@/components/icons/ShopIcons';
 import { demoProducts } from '@/data/demo';
 import { Minus, Plus } from 'lucide-react';
 import { StarRating } from '@/components/ui/StarRating';

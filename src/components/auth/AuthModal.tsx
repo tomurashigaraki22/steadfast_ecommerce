@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { X } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -18,18 +17,15 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     const [isLogin, setIsLogin] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
-    const router = useRouter();
-
-    // Disable body scrolling when modal is open
-    useEffect(() => {
+ 
+     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = 'auto';
         }
 
-        // Cleanup to restore scrolling when component unmounts
-        return () => {
+         return () => {
             document.body.style.overflow = 'auto';
         };
     }, [isOpen]);

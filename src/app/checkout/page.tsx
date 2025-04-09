@@ -14,6 +14,7 @@ export default function CheckoutPage() {
     const [currentStep, setCurrentStep] = useState(1);
 
     const handleBack = () => {
+        window.scrollTo(0, 0);
         if (currentStep === 1) {
             router.push('/cart');
         } else {
@@ -22,6 +23,7 @@ export default function CheckoutPage() {
     };
 
     const handleContinue = () => {
+        window.scrollTo(0, 0);
         if (currentStep < 3) {
             setCurrentStep(currentStep + 1);
         } else {
@@ -34,7 +36,7 @@ export default function CheckoutPage() {
             <TopBanner theme="dark" />
             <Header />
             <div className="container mx-auto px-4 py-8 ">
-                <div className="container mx-auto px-4 py-8 max-w-3xl">
+                <div className="container mx-auto px-4 md:py-8 max-w-3xl">
                     <div className="flex justify-between mb-8">
                         <div className="flex flex-col items-center">
                             <div className="w-8 h-8 bg-[#184193] rounded-full flex items-center justify-center text-white text-sm font-medium mb-2">
@@ -71,7 +73,7 @@ export default function CheckoutPage() {
                         {currentStep === 3 && <PaymentSection />}
                     </div>
 
-                    <div className="flex flex-col md:flex-row gap-5  justify-between items-center mt-5">
+                    <div className="flex px-2 md:flex-row gap-5  justify-between items-center mt-5">
                         {currentStep === 1 && (
                             <Button
                                 onClick={handleBack}

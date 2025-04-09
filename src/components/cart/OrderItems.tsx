@@ -104,13 +104,6 @@ export default function OrderItems() {
     const [itemToRemove, setItemToRemove] = useState<string | null>(null);
     const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const freeShippingThreshold = 53000;
-    const [showAuthModal, setShowAuthModal] = useState(false);
-    const progressPercentage = Math.min(100, (subtotal / freeShippingThreshold) * 100);
-    const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
-    const breadcrumbItems = [
-        { label: 'Home', href: '/' },
-        { label: 'Cart' }
-    ];
     const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
     const [couponError, setCouponError] = useState('');
 

@@ -2,22 +2,16 @@
 
 import { Button } from '@/components/ui/Button';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import { TopBanner } from '@/components/layout/TopBanner';
+ import { TopBanner } from '@/components/layout/TopBanner';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { Breadcrumb } from '@/components/ui/Breadcrumb';
-import { ProductGrid } from '@/components/product/ProductGrid';
+ import { ProductGrid } from '@/components/product/ProductGrid';
 import { demoProducts } from '@/data/demo';
 
 export default function PaymentSuccessfulPage() {
     const router = useRouter();
 
-    const breadcrumbItems = [
-        { label: 'Home', href: '/' },
-        { label: 'Cart', href: '/cart' },
-        { label: 'Payment Successful' }
-    ];
+ 
 
     return (
         <>
