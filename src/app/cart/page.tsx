@@ -309,10 +309,10 @@ export default function CartPage() {
 
                     <div className="lg:w-1/3">
 
-                        <div className="bg-white rounded-xl md:p-6">
+                        <div className="bg-white flex flex-col-reverse md:flex-col  rounded-xl gap-6 md:p-6">
                             <button
                                 onClick={() => setShowPromoInput(!showPromoInput)}
-                                className="w-full flex items-center justify-between py-3 px-4 bg-[#EDF0F8] rounded-xl mb-3"
+                                className="w-full flex items-center justify-between py-3 px-4 bg-[#EDF0F8] rounded-xl"
                             >
                                 <div className="flex gap-5">
                                     <span className='font-bold flex flex-col items-center justify-center'>
@@ -324,14 +324,14 @@ export default function CartPage() {
                             </button>
 
                             {showPromoInput && (
-                                <div className="mb-3 space-y-2">
+                                <div className="mb-3  space-y-2">
                                     <div className="flex gap-2">
                                         <input
                                             type="text"
                                             value={promoCode}
                                             onChange={(e) => setPromoCode(e.target.value)}
                                             placeholder="Enter promo code"
-                                            className="flex-1 p-3 border-2 border-[#EDF0F8] outline-0 rounded-xl"
+                                            className="flex-1 p-2 border-2 border-[#EDF0F8] outline-0 rounded-xl"
                                         />
                                         <button
                                             onClick={handleApplyCoupon}

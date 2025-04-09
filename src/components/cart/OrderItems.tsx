@@ -1,0 +1,374 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { Percent, X } from 'lucide-react';
+import { ConfirmationModal } from '@/components/ui/ConfirmationModal';
+import { Button } from '@/components/ui/Button';
+import { useRouter } from 'next/navigation';
+
+interface CartItem {
+    productId: string;
+    title: string;
+    price: number;
+    image: string;
+    quantity: number;
+    wattage?: string;
+    color?: string;
+}
+interface Coupon {
+    code: string;
+    type: 'percentage' | 'fixed';
+    value: number;
+    minAmount?: number;
+    description: string;
+}
+
+const demoCoupons: Coupon[] = [
+    {
+        code: 'SAVE10',
+        type: 'percentage',
+        value: 10,
+        minAmount: 50000,
+        description: '10% off on orders above ₦50,000'
+    },
+    {
+        code: 'FLAT5K',
+        type: 'fixed',
+        value: 5000,
+        minAmount: 30000,
+        description: '₦5,000 off on orders above ₦30,000'
+    },
+    {
+        code: 'NEW2024',
+        type: 'percentage',
+        value: 15,
+        description: '15% off on all orders'
+    }
+];
+
+export default function OrderItems() {
+    const router = useRouter();
+    const [cartItems, setCartItems] = useState<CartItem[]>([]);
+    const [promoCode, setPromoCode] = useState('');
+    const [showPromoInput, setShowPromoInput] = useState(false);
+
+    useEffect(() => {
+        // Demo data - replace with actual cart data
+        setCartItems([
+            {
+                productId: '1',
+                title: 'Cantilever Light',
+                price: 8990,
+                image: '/product1.png',
+                quantity: 1,
+                wattage: '36 WATT',
+                color: 'White'
+            },
+            {
+                productId: '2',
+                title: 'Tablet Apple iPad Pro M2',
+                price: 8900,
+                image: '/product2.png',
+                quantity: 1,
+                color: 'Black',
+                wattage: '256 GB'
+            },
+            {
+                productId: '3',
+                title: 'Smart Watch Series 7',
+                price: 4250,
+                image: '/product3.png',
+                quantity: 2,
+                color: 'White',
+                wattage: '44 mm'
+            },
+            {
+                productId: '4',
+                title: 'Cantilever Light',
+                price: 8990,
+                image: '/product4.png',
+                quantity: 1,
+                wattage: '36 WATT',
+                color: 'Black'
+            }
+        ]);
+    }, []);
+
+
+
+    const handlePayment = () => {
+        router.push('/payment');
+    };
+
+    const [itemToRemove, setItemToRemove] = useState<string | null>(null);
+    const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const freeShippingThreshold = 53000;
+    const [showAuthModal, setShowAuthModal] = useState(false);
+    const progressPercentage = Math.min(100, (subtotal / freeShippingThreshold) * 100);
+    const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
+    const breadcrumbItems = [
+        { label: 'Home', href: '/' },
+        { label: 'Cart' }
+    ];
+    const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
+    const [couponError, setCouponError] = useState('');
+
+    const updateQuantity = (productId: string, newQuantity: number) => {
+        setCartItems(items =>
+            items.map(item =>
+                item.productId === productId
+                    ? { ...item, quantity: Math.max(1, newQuantity) }
+                    : item
+            )
+        );
+    };
+    const handleApplyCoupon = () => {
+        setCouponError('');
+        const coupon = demoCoupons.find(c => c.code.toLowerCase() === promoCode.toLowerCase());
+
+        if (!coupon) {
+            setCouponError('Invalid coupon code');
+            return;
+        }
+
+        if (coupon.minAmount && subtotal < coupon.minAmount) {
+            setCouponError(`This coupon requires a minimum purchase of ₦${coupon.minAmount.toLocaleString()}`);
+            return;
+        }
+
+        setAppliedCoupon(coupon);
+        setShowPromoInput(false);
+        setPromoCode('');
+    };
+    const calculateDiscount = () => {
+        if (!appliedCoupon) return 0;
+        return appliedCoupon.type === 'percentage'
+            ? (subtotal * appliedCoupon.value) / 100
+            : appliedCoupon.value;
+    };
+
+
+    const handleRemoveClick = (productId: string) => {
+        setItemToRemove(productId);
+    };
+
+    const handleRemoveConfirm = () => {
+        if (itemToRemove) {
+            setCartItems(items => items.filter(item => item.productId !== itemToRemove));
+            setItemToRemove(null);
+        }
+    };
+    const discount = calculateDiscount();
+    const estimatedTotal = subtotal - discount;
+
+    const shippingSaving = subtotal >= freeShippingThreshold ? freeShippingThreshold : 0;
+    const totalSaving = discount + shippingSaving;
+
+
+    return (
+        <div className="flex flex-col lg:flex-row gap-8">
+
+            <div className="lg:w-2/3">
+
+                <div className="bg-white rounded-xl px-2 md:px-6">
+
+                    <div className="hidden md:grid grid-cols-12 gap-4  py-[1.5rem] text-sm text-gray-500 border-b border-[#E0E5EB]">
+                        <div className="col-span-5">Product</div>
+                        <div className="col-span-2 text-right">Price</div>
+                        <div className="col-span-2 text-center">Quantity</div>
+                        <div className="col-span-2 text-right">Total</div>
+                        <div className="col-span-1 text-right">Clear</div>
+                    </div>
+
+                    {cartItems.map((item) => (
+                        <div key={item.productId} className="flex flex-col md:grid md:grid-cols-12 gap-4 py-4 items-start md:items-center border-t border-[#E0E5EB]">
+                            <div className="flex gap-4 w-full md:w-auto md:col-span-5">
+                                <div className="relative w-[40%] md:h-24 h-auto">
+                                    <Image
+                                        src={item.image}
+                                        alt={item.title}
+                                        fill
+                                        className="object-cover rounded-lg"
+                                    />
+                                </div>
+                                <div className='flex flex-col justify-center gap-2 flex-1'>
+                                    <div className="flex justify-between gap-5 text-sm items-start">
+                                        <h3 className="font-medium">{item.title}</h3>
+                                        <span className="font-medium inline-flex md:hidden">₦{item.price.toLocaleString()}</span>
+                                    </div>
+                                    <p className="text-xs text-gray-500">
+                                        Color: <span className="text-black">{item.color}</span>
+                                    </p>
+                                    <p className="text-xs text-gray-500">
+                                        Variation: <span className="text-black">{item.wattage}</span>
+                                    </p>
+                                    <div className="flex items-center border-2 border-[#EDF0F8] rounded-xl w-fit mt-2 md:hidden">
+                                        <button
+                                            onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+                                            className="px-3 py-1.5"
+                                        >
+                                            −
+                                        </button>
+                                        <span className="w-12 text-center">{item.quantity}</span>
+                                        <button
+                                            onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                                            className="px-3 py-1.5"
+                                        >
+                                            +
+                                        </button>
+                                    </div>
+                                    <button
+                                        onClick={() => handleRemoveClick(item.productId)}
+                                        className="text-gray-500 text-start hover:text-gray-600 text-sm md:hidden mt-2 mb-5"
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="hidden md:block md:col-span-2 text-right">
+                                ₦{item.price.toLocaleString()}
+                            </div>
+                            <div className="hidden md:block md:col-span-2">
+                                <div className="flex items-center justify-center border-2 border-[#EDF0F8] rounded-xl mx-auto">
+                                    <button
+                                        onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+                                        className="px-3 py-2"
+                                    >
+                                        −
+                                    </button>
+                                    <span className="w-12 text-center">{item.quantity}</span>
+                                    <button
+                                        onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                                        className="px-3 py-2"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="hidden md:block md:col-span-2 text-right font-medium">
+                                ₦{(item.price * item.quantity).toLocaleString()}
+                            </div>
+                            <div className="absolute top-4 right-4 md:static md:col-span-1 md:text-right">
+                                <button
+                                    onClick={() => handleRemoveClick(item.productId)}
+                                    className="text-gray-400 hover:text-gray-600"
+                                >
+                                    <X className="hidden md:block" size={20} />
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+
+
+                </div>
+            </div>
+
+
+
+
+            <div className="lg:w-1/3">
+
+                <div className="bg-white flex flex-col-reverse md:flex-col  rounded-xl md:p-6">
+                    <button
+                        onClick={() => setShowPromoInput(!showPromoInput)}
+                        className="w-full flex items-center justify-between py-3 px-4 bg-[#EDF0F8] rounded-xl mb-3"
+                    >
+                        <div className="flex gap-5">
+                            <span className='font-bold flex flex-col items-center justify-center'>
+                                <Percent size={15} />
+                            </span>
+                            <span>Apply padi code</span>
+                        </div>
+                        <span>{showPromoInput ? '-' : '+'}</span>
+                    </button>
+
+                    {showPromoInput && (
+                        <div className="mb-3 space-y-2">
+                            <div className="flex gap-2">
+                                <input
+                                    type="text"
+                                    value={promoCode}
+                                    onChange={(e) => setPromoCode(e.target.value)}
+                                    placeholder="Enter promo code"
+                                    className="flex-1 p-3 border-2 border-[#EDF0F8] outline-0 rounded-xl"
+                                />
+                                <button
+                                    onClick={handleApplyCoupon}
+                                    className="px-4 bg-[#184193] text-white rounded-xl"
+                                >
+                                    Apply
+                                </button>
+                            </div>
+                            {couponError && (
+                                <p className="text-red-500 text-sm">{couponError}</p>
+                            )}
+                            <div className="text-sm space-y-1 p-4">
+                                <p className="font-medium">Available Coupons: (click to add)</p>
+                                {demoCoupons.map((coupon) => (
+                                    <div
+                                        key={coupon.code}
+                                        className="flex my-3 justify-between text-gray-600 cursor-pointer hover:text-gray-900"
+                                        onClick={() => setPromoCode(coupon.code)}
+                                    >
+                                        <span className="font-medium">{coupon.code}</span>
+                                        <span>{coupon.description}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="bg-[#EDF0F8] rounded-xl p-6">
+                        <h2 className="font-medium mb-4">Order summary</h2>
+                        <div className="space-y-3 text-sm border-t py-3 border-[#E0E5EB]">
+                            <div className="flex py-3 justify-between">
+                                <span>Subtotal ({cartItems.length} items):</span>
+                                <span>₦{subtotal.toLocaleString()}</span>
+                            </div>
+                            {appliedCoupon && (
+                                <div className="flex py-1 justify-between text-green-600">
+                                    <span>Coupon ({appliedCoupon.code}):</span>
+                                    <span>-₦{discount.toLocaleString()}</span>
+                                </div>
+                            )}
+                            {shippingSaving > 0 && (
+                                <div className="flex py-1 pb-3 justify-between text-gray-500">
+                                    <span>Savings</span>
+                                    <span className='text-red-500'>-₦{totalSaving.toLocaleString()}</span>
+                                </div>
+                            )}
+                            <div className="flex py-1 pb-6 justify-between text-gray-500">
+                                <span>Shipping:</span>
+                                <span className='text-black'>Calculated at checkout</span>
+                            </div>
+                            <div className="flex pt-6 justify-between border-t border-[#E0E5EB] font-medium">
+                                <span>Estimated total:</span>
+                                <span>₦{estimatedTotal.toLocaleString()}</span>
+                            </div>
+                        </div>
+                        <Button
+                            onClick={handlePayment}
+                            rounded={true}
+                            disabled={cartItems.length === 0}
+                            className="w-full py-3 px-4 bg-[#184193] text-white rounded-full mt-4"
+                        >
+                            Proceed to payment
+                        </Button>
+
+
+                    </div>
+                </div>
+            </div>
+            <ConfirmationModal
+                isOpen={!!itemToRemove}
+                onConfirm={handleRemoveConfirm}
+                onCancel={() => setItemToRemove(null)}
+                title="Remove from Cart"
+                message="Are you sure you want to remove this item from your cart? If you change your mind, you'll need to add the item again."
+            />
+        </div>
+
+    );
+};

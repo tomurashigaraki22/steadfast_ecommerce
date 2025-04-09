@@ -69,7 +69,7 @@ export const Header = () => {
         };
     }, [isMenuOpen]);
 
-     return (
+    return (
         <header className="bg-white shadow-sm">
             <div className="hidden md:block">
                 <div className="container mx-auto px-4 py-4">
@@ -149,7 +149,7 @@ export const Header = () => {
                         <Image src="/logo.png" alt="Steadfast" width={120} height={32} />
                     </Link>
                     <div className="flex">
-                        <Link href="/profile" className="relative p-2">
+                        <Link href="/auth/login" className="relative p-2">
                             <User size={24} />
                         </Link>
                         <button onClick={() => setIsCartOpen(true)} className="relative p-2">
@@ -201,6 +201,30 @@ export const Header = () => {
                                                 </li>
                                                 <li>
                                                     <Link
+                                                        href="/wishlist"
+                                                        className="flex items-center justify-between py-2 text-[15px]"
+                                                        onClick={() => setIsMenuOpen(false)}
+                                                    >
+                                                        Wishlist
+                                                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
+                                                            <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                        </svg>
+                                                    </Link>
+                                                </li>
+                                                <li>
+                                                    <Link
+                                                        href="/cart"
+                                                        className="flex items-center justify-between py-2 text-[15px]"
+                                                        onClick={() => setIsMenuOpen(false)}
+                                                    >
+                                                        Cart
+                                                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
+                                                            <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                        </svg>
+                                                    </Link>
+                                                </li>
+                                                <li>
+                                                    <Link
                                                         href="/products"
                                                         className="flex items-center justify-between py-2 text-[15px]"
                                                         onClick={() => setIsMenuOpen(false)}
@@ -214,11 +238,11 @@ export const Header = () => {
                                                 <li>
                                                     <button
                                                         onClick={() => setShowCategories(true)}
-                                                        className="flex items-center justify-between py-2 text-[15px] w-full"
+                                                        className="flex items-center  font-medium justify-between py-2 text-[15px] w-full"
                                                     >
                                                         Categories
                                                         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                                                            <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                            <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
                                                         </svg>
                                                     </button>
                                                 </li>

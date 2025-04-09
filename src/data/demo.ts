@@ -531,7 +531,9 @@ export const demoProducts = originalDemoProducts.map((product, index) => {
         dateUpdated: "2023-11-20T00:00:00Z",
         stock,
         soldOut,
-        totalSold
+        totalSold,
+        description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Modi eaque facere in placeat, rerum, eos beatae neque quis optio alias excepturi facilis cumque incidunt laborum est, ut molestiae atque! Velit sit explicabo minima nesciunt tempore, aspernatur repellat beatae sed recusandae facere vitae eaque vero voluptas earum non placeat ea rem!'
+
     };
 });
 
@@ -544,3 +546,4 @@ export const categories = initialcategories.map((category, index) => {
         image: `/product${randomImageNumber}.png`
     };
 });
+

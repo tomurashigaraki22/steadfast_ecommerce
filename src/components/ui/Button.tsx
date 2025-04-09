@@ -1,24 +1,27 @@
 import { forwardRef } from 'react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline';
+  variant?: 'primary' | 'secondary' | 'outline' | 'secondary_outline';
   isLoading?: boolean;
+  rounded?: boolean;
+
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ children, variant = 'primary', isLoading, className = '', ...props }, ref) => {
-    const baseStyles = 'w-full px-4 py-3 text-sm rounded-lg font-medium transition-colors duration-200';
-    
+  ({ children, variant = 'primary', isLoading, className = '', rounded = false, ...props }, ref) => {
+    const baseStyles = 'w-full px-4 py-3 text-sm font-medium transition-colors duration-200';
+
     const variants = {
       primary: 'bg-[#184193] text-white hover:bg-[#184193]',
       secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300',
-      outline: 'border-2 border-gray-300 hover:border-gray-400'
+      outline: 'border-2 border-gray-300 hover:border-gray-400',
+      secondary_outline: 'bg-[#F5F3FF] text-[#184193] hover:bg-[#F5F3FF]/80'
     };
 
     return (
       <button
         ref={ref}
-        className={`${baseStyles} ${variants[variant]} cursor-pointer ${className}`}
+        className={`${baseStyles} ${rounded == true ? 'rounded-full' : 'rounded-lg'} ${variants[variant]} cursor-pointer ${className}`}
         disabled={isLoading}
         {...props}
       >
