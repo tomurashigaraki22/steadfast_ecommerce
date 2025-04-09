@@ -13,6 +13,8 @@ import { demoProducts } from '@/data/demo';
 import { StarIcon } from '@/components/icons/ShopIcons';
 import { ConfirmationModal } from '@/components/ui/ConfirmationModal';
 import { Button } from '@/components/ui/Button';
+import { AuthModal } from '@/components/auth/AuthModal';
+import { useRouter } from 'next/navigation';
 
 interface CartItem {
     productId: string;
@@ -53,7 +55,9 @@ const demoCoupons: Coupon[] = [
         description: '15% off on all orders'
     }
 ];
+
 export default function CartPage() {
+    const router = useRouter();
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [promoCode, setPromoCode] = useState('');
     const [showPromoInput, setShowPromoInput] = useState(false);
@@ -99,12 +103,17 @@ export default function CartPage() {
             }
         ]);
     }, []);
-
-
+    const handleAuthComplete = (isSuccessful?: boolean) => {
+        setShowAuthModal(false);
+        if (isSuccessful) {
+            router.push('/checkout');
+        }
+    };
 
     const [itemToRemove, setItemToRemove] = useState<string | null>(null);
     const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const freeShippingThreshold = 53000;
+    const [showAuthModal, setShowAuthModal] = useState(false);
     const progressPercentage = Math.min(100, (subtotal / freeShippingThreshold) * 100);
     const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
     const breadcrumbItems = [
@@ -378,10 +387,14 @@ export default function CartPage() {
                                         <span>₦{estimatedTotal.toLocaleString()}</span>
                                     </div>
                                 </div>
-                                <Button className="w-full py-3 px-4 bg-[#184193] text-white rounded-xl mt-4"
+                                <Button
+                                    onClick={() => setShowAuthModal(true)}
+                                    className="w-full py-3 px-4 bg-[#184193] text-white rounded-xl mt-4"
                                 >
                                     Proceed to checkout
-                                </Button>   
+                                </Button>
+
+
                             </div>
                         </div>
                     </div>
@@ -400,7 +413,12 @@ export default function CartPage() {
                     title="Remove from Cart"
                     message="Are you sure you want to remove this item from your cart? If you change your mind, you'll need to add the item again."
                 />
+                <AuthModal
+                    isOpen={showAuthModal}
+                    onClose={handleAuthComplete}
+                />
             </main >
         </>
     );
 }
+
