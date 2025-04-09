@@ -3,11 +3,12 @@ import { Suspense } from 'react';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import {  ShoppingBag, Heart, Menu, User, SearchIcon } from 'lucide-react';
+import { ShoppingBag, Heart, Menu, User, SearchIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import { categories } from '@/data/demo';
 import { FavoritesHelper } from '@/lib/favorites';
+import { CartPanel } from '@/components/cart/CartPanel';
 
 const SearchComponent = () => {
     const searchParams = useSearchParams();
@@ -43,7 +44,10 @@ const SearchComponent = () => {
     );
 };
 
+
 export const Header = () => {
+    // Add new state
+    const [isCartOpen, setIsCartOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [showCategories, setShowCategories] = useState(false);
     const [wishlistCount, setWishlistCount] = useState(0);
@@ -65,9 +69,8 @@ export const Header = () => {
         };
     }, [isMenuOpen]);
 
-    return (
+     return (
         <header className="bg-white shadow-sm">
-            {/* Desktop Header */}
             <div className="hidden md:block">
                 <div className="container mx-auto px-4 py-4">
                     <div className="flex items-center justify-between">
@@ -89,10 +92,13 @@ export const Header = () => {
                                 <Link href="/auth/login" className="text-sm font-semibold">Login / Register</Link>
                             </div>
                             <div className="flex items-center gap-4">
-                                <Link href="/cart" className="relative  bg-[#EDF0F8] p-3 rounded-[50%]">
+                                <button
+                                    onClick={() => setIsCartOpen(true)}
+                                    className="relative bg-[#EDF0F8] p-3 rounded-[50%]"
+                                >
                                     <ShoppingBag size={20} strokeWidth={1.5} />
                                     <span className="absolute top-0 -right-2 border-2 border-white bg-[#184193] text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center">0</span>
-                                </Link>
+                                </button>
                                 <Link href="/wishlist" className="relative bg-[#EDF0F8] p-3 rounded-[50%]">
                                     <Heart size={20} strokeWidth={1.5} />
                                     <span className="absolute top-0 -right-2 border-2 border-white bg-[#184193] text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center">
@@ -134,7 +140,6 @@ export const Header = () => {
                 </div>
             </div>
 
-            {/* Mobile Header */}
             <div className="md:hidden">
                 <div className="flex items-center justify-between px-4 py-3">
                     <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2">
@@ -146,11 +151,11 @@ export const Header = () => {
                     <div className="flex">
                         <Link href="/profile" className="relative p-2">
                             <User size={24} />
-                         </Link>
-                        <Link href="/cart" className="relative p-2">
+                        </Link>
+                        <button onClick={() => setIsCartOpen(true)} className="relative p-2">
                             <ShoppingBag size={24} />
                             <span className="absolute top-0 right-0 bg-[#184193] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
-                        </Link>
+                        </button>
                     </div>
                 </div>
 
@@ -162,7 +167,6 @@ export const Header = () => {
                     </Suspense>
                 </div>
 
-                {/* Mobile Menu */}
                 {isMenuOpen && (
                     <div className="fixed inset-0 bg-white z-50 flex flex-col">
                         <div className="flex justify-between items-center p-4 border-b">
@@ -266,6 +270,9 @@ export const Header = () => {
                     </div>
                 )}
             </div>
-        </header>
-    );
+            <CartPanel
+                isOpen={isCartOpen}
+                onClose={() => setIsCartOpen(false)}
+            />
+        </header>);
 };

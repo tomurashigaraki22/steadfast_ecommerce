@@ -3,88 +3,15 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
-
-interface DealProduct {
-    productId: string;
-    title: string;
-    brand: string;
-    price: number;
-    rating: number;
-    image: string;
-    isNew?: boolean;
-    discount?: {
-        amount: number;
-        percentage: number;
-    };
-}
+import { demoProducts } from '@/data/demo';
 
 export const DealOfMonth = () => {
-    const dealProducts: DealProduct[] = [
-        {
-            productId: '1',
-            title: "Modern Glass Pendant Light",
-            brand: "HUMANATURE",
-            price: 95000,
-            rating: 4,
-            image: "/product.png",
-            discount: {
-                amount: 30000,
-                percentage: 5
-            }
-        },
-        {
-            productId: '2',
-            title: "Cloud Bubble Chandelier",
-            brand: "HUMANATURE",
-            price: 95000,
-            rating: 4,
-            image: "/product2.png",
-            discount: {
-                amount: 30000,
-                percentage: 5
-            }
-        },
-        {
-            productId: '3',
-            title: "LED Corn Light Bulb",
-            brand: "HUMANATURE",
-            price: 95000,
-            rating: 3,
-            image: "/product3.png",
-            discount: {
-                amount: 30000,
-                percentage: 5
-            }
-        },
-        {
-            productId: '4',
-            title: "Industrial Bar Light",
-            brand: "HUMANATURE",
-            price: 95000,
-            rating: 4,
-            image: "/product4.png",
-            discount: {
-                amount: 30000,
-                percentage: 5
-            }
-        },
-        {
-            productId: '5',
-            title: "Crystal Drum Chandelier",
-            brand: "HUMANATURE",
-            price: 95000,
-            rating: 4,
-            image: "/product5.png",
-            discount: {
-                amount: 30000,
-                percentage: 5
-            }
-        }
-    ];
+    
+    const dealProducts =demoProducts.slice(4, 9);
 
     return (
         <section className="py-[2rem] ">
-            <div className="container mx-auto px-4 md:px-0">
+            <div className="container mx-auto px-4 ">
                 <h2 className="text-lg md:text-xl font-semibold text-center mb-8">Deal of the Month</h2>
 
 
@@ -93,7 +20,7 @@ export const DealOfMonth = () => {
                         <Swiper
                             modules={[Pagination]}
                             spaceBetween={10}
-                            slidesPerView={2}
+                            slidesPerView={1}
                             pagination={{
                                 clickable: true,
                                 dynamicBullets: true,
@@ -102,7 +29,7 @@ export const DealOfMonth = () => {
                         >
                             {dealProducts.map((product, index) => (
                                 <SwiperSlide key={index}>
-                                    <ProductCard {...product} />
+                                    <ProductCard {...product} titleHeight={true} />
                                 </SwiperSlide>
                             ))}
                         </Swiper>

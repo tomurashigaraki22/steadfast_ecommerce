@@ -71,7 +71,7 @@ export const ProductGrid = ({
 
     return (
         <section className="space-y-4 py-[2rem] relative">
-            <div className="container mx-auto px-3 pt-5  md:pt-0 md:px-0">
+            <div className="container mx-auto px-3 pt-5  md:pt-0">
                 {breadCrumb &&
                     <Breadcrumb
                         items={breadCrumb}

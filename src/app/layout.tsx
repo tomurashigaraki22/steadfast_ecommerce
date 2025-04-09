@@ -15,17 +15,29 @@ const inter = Inter({
 
 
 export const metadata = {
-  title: 'Steadfast International',
+   title: 'Steadfast International',
   description: 'Your trusted source for quality products',
   keywords: "ecommerce, online shopping, PWA, affiliate marketing",
   authors: [{ name: "Robinson Honour" }],
-  themeColor: "#184193",
-};
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Steadfast Store',
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+  }
+}
 
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#184193'
+  themeColor: '#184193',
+  maximumScale: 1,
+  minimumScale: 1,
+  userScalable: 'no',
 };
 
 export default function RootLayout({

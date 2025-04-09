@@ -5,6 +5,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { TopBanner } from "@/components/layout/TopBanner";
 import { ProductGrid } from "@/components/product/ProductGrid";
+import { InstallPWAPrompt } from "@/components/pwa/InstallPWAPrompt";
 import { DealOfMonth } from "@/components/sections/DealOfMonth";
 import { Hero } from "@/components/sections/Hero";
 import { WhyShopWithUs } from "@/components/sections/WhyShopWithUs";
@@ -34,6 +35,7 @@ export default function Home() {
       />
       <CTASection />
       <Footer />
+      <InstallPWAPrompt />
     </>
   );
 }

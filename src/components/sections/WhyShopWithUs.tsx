@@ -1,4 +1,4 @@
-import { CustomerSupportIcon } from '@/components/icons/ShopIcons';
+import { CustomerSupportIcon, SecurePaymentIcon, WorldwideIcon } from '@/components/icons/ShopIcons';
 import { RippleEffect } from '@/components/ui/RippleEffect';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
@@ -7,12 +7,12 @@ import 'swiper/css/pagination';
 
 const features = [
     {
-        icon: CustomerSupportIcon,
+        icon: WorldwideIcon,
         title: 'Nationwide Delivery',
         description: 'Enjoy fast and reliable delivery to any location across the country'
     },
     {
-        icon: CustomerSupportIcon,
+        icon: SecurePaymentIcon,
         title: 'Secured Payment',
         description: 'Shop with confidence using our safe payment options.'
     },
@@ -52,14 +52,14 @@ export const WhyShopWithUs = () => {
                                 <SwiperSlide key={index}>
                                     <RippleEffect
                                         key={index}
-                                        className="min-h-[20rem] bg-[#F5F5F5] rounded-[1rem] p-6 text-center md:shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.3)] transition-transform hover:scale-105"
+                                        className="   bg-[#F5F5F5] rounded-[1rem] p-4 text-center md:shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.3)] transition-transform hover:scale-105"
                                     >
-                                        <div className="flex mb-5">
-                                            <div className="flex flex-col p-3 items-center justify-center rounded-lg bg-[#184193]">
+                                        <div className="flex mb-2">
+                                            <div className="flex flex-col p-2 items-center justify-center rounded-lg bg-[#184193]">
                                                 <feature.icon className="w-10 h-10 text-[#FFFFFF]" />
                                             </div>
                                         </div>
-                                        <h3 className="text-lg font-semibold text-black text-start my-2">
+                                        <h3 className="text-lg font-bold text-black text-start my-2">
                                             {feature.title}
                                         </h3>
                                         <p className="text-black/80 text-start text-sm">
