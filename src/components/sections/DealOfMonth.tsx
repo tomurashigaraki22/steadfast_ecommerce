@@ -19,8 +19,8 @@ export const DealOfMonth = () => {
                     <div className="md:hidden">
                         <Swiper
                             modules={[Pagination]}
-                            spaceBetween={10}
-                            slidesPerView={1}
+                            spaceBetween={20}
+                            slidesPerView={1.5}
                             pagination={{
                                 clickable: true,
                                 dynamicBullets: true,
@@ -29,7 +29,7 @@ export const DealOfMonth = () => {
                         >
                             {dealProducts.map((product, index) => (
                                 <SwiperSlide key={index}>
-                                    <ProductCard {...product} titleHeight={true} />
+                                    <ProductCard {...product} titleHeight={true} padButton={true} />
                                 </SwiperSlide>
                             ))}
                         </Swiper>

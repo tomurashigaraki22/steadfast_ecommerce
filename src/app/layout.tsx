@@ -15,10 +15,15 @@ const inter = Inter({
 
 
 export const metadata = {
-   title: 'Steadfast International',
+  title: 'Steadfast International',
   description: 'Your trusted source for quality products',
   keywords: "ecommerce, online shopping, PWA, affiliate marketing",
   authors: [{ name: "Robinson Honour" }],
+  icons: {
+    icon: '/icon.png',
+    shortcut: '/icon.png',
+    apple: '/icon.png',
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',

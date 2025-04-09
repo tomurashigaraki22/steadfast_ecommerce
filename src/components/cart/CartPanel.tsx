@@ -1,5 +1,6 @@
 import { X, Minus, Plus } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface CartPanelProps {
     isOpen: boolean;
@@ -115,10 +116,10 @@ export const CartPanel = ({ isOpen, onClose }: CartPanelProps) => {
                             <span className="font-medium">NGN239040</span>
                         </div>
                         <p className="text-sm text-gray-500 mb-4">Shipping will be calculated at checkout</p>
-                        <button className="w-full bg-[#184193] text-white py-3 rounded-full font-medium mb-4">
-                            Checkout
-                        </button>
-                        <button className="w-full flex items-center justify-between px-4 py-3 border border-gray-200 rounded-full">
+                        <Link href='/cart' className="flex justify-center  w-full bg-[#184193] text-white py-3 rounded-full font-medium mb-4">
+                            View Cart
+                        </Link>
+                        <button className="w-full hidden md:flex items-center justify-between px-4 py-3 border border-gray-200 rounded-full">
                             <span className="text-sm">Apply promo code</span>
                             <Plus size={16} />
                         </button>

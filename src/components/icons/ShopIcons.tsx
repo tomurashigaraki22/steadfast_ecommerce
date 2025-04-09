@@ -61,6 +61,27 @@ export const CustomerSupportIcon = ({ className = '' }: IconProps) => (
 );
  
 
+export const StarIcon = ({ className = '', size = 24 }: IconProps) => (
+    <svg 
+        width={size} 
+        height={size} 
+        viewBox="0 0 24 24" 
+        fill="none" 
+        xmlns="http://www.w3.org/2000/svg" 
+        className={className}
+    >
+        <circle cx="12" cy="12" r="11.5" fill="white" stroke="#FC9231"/>
+        <g clipPath="url(#clip0_404_3449)">
+            <path d="M12.4484 6.77869C12.3641 6.60804 12.1903 6.5 12 6.5C11.8097 6.5 11.6359 6.60804 11.5517 6.77869L10.1229 9.67323L6.9277 10.1403C6.73942 10.1678 6.58308 10.2998 6.52439 10.4808C6.4657 10.6618 6.51484 10.8604 6.65115 10.9932L8.96275 13.2447L8.41721 16.4255C8.38504 16.6131 8.46216 16.8027 8.61615 16.9145C8.77014 17.0264 8.97428 17.0411 9.14274 16.9525L12 15.4499L14.8573 16.9525C15.0257 17.0411 15.2299 17.0264 15.3839 16.9145C15.5379 16.8027 15.615 16.6131 15.5828 16.4255L15.0373 13.2447L17.3489 10.9932C17.4852 10.8604 17.5343 10.6618 17.4756 10.4808C17.4169 10.2998 17.2606 10.1678 17.0723 10.1403L13.8771 9.67323L12.4484 6.77869Z" fill="#FC9231"/>
+        </g>
+        <defs>
+            <clipPath id="clip0_404_3449">
+                <rect width="12" height="12" fill="white" transform="translate(6 6)"/>
+            </clipPath>
+        </defs>
+    </svg>
+);
+
 export const ShoppingBagIcon = ({ className = '', size = 24 }: IconProps) => (
     <svg 
         width={size} 

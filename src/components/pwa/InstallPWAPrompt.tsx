@@ -10,6 +10,7 @@ interface BeforeInstallPromptEvent extends Event {
 
 export const InstallPWAPrompt = () => {
   const [showPrompt, setShowPrompt] = useState(false)
+  const [showConfirmation, setShowConfirmation] = useState(false)
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [deviceInfo, setDeviceInfo] = useState<{
     os: "ios" | "android" | "other"
@@ -17,6 +18,16 @@ export const InstallPWAPrompt = () => {
   }>({ os: "other", browser: "other" })
 
   useEffect(() => {
+    // Don't show on larger screens
+    const isLargeScreen = window.matchMedia("(min-width: 1024px)").matches
+    if (isLargeScreen) return
+
+    // Check if hidden by user preference
+    const hideUntil = localStorage.getItem('pwaPromptHideUntil')
+    if (hideUntil && Number(hideUntil) > Date.now()) {
+      return
+    }
+
     // Check if the app is already installed
     const isInstalled = window.matchMedia("(display-mode: standalone)").matches
     if (isInstalled) return
@@ -84,7 +95,9 @@ export const InstallPWAPrompt = () => {
     }
   }
 
-  if (!showPrompt) return null
+  const handleNotNow = () => {
+    setShowConfirmation(true)
+  }
 
   const getInstallInstructions = () => {
     const { os, browser } = deviceInfo
@@ -97,10 +110,10 @@ export const InstallPWAPrompt = () => {
       )
     }
 
-
     if (os === "android") {
       switch (browser) {
         case "chrome":
+          
           return 'Tap the menu (⋮) in the top right, then select "Install app" or "Add to Home screen"'
         case "firefox":
           return 'Tap the menu (⋮) in the top right, then select "Install" or "Add to Home screen"'
@@ -120,8 +133,47 @@ export const InstallPWAPrompt = () => {
 
   const canUseInstallButton = deviceInfo.os !== "ios" && !!deferredPrompt
 
+  const handleConfirmHide = () => {
+    const hideUntil = Date.now() + (48 * 60 * 60 * 1000) // 48 hours in milliseconds
+    localStorage.setItem('pwaPromptHideUntil', hideUntil.toString())
+    setShowPrompt(false)
+    setShowConfirmation(false)
+  }
+
+  if (!showPrompt) return null
+
+  if (showConfirmation) {
+    return (
+      <div className="fixed bottom-4 left-4 right-4 border bg-white rounded-xl shadow-lg p-4 z-50 max-w-md mx-auto">
+        <div className="flex justify-between items-start mb-3">
+          <h3 className="text-lg font-medium">Hide Installation Prompt?</h3>
+          <button onClick={() => setShowConfirmation(false)} className="p-1">
+            <X size={20} />
+          </button>
+        </div>
+        <p className="text-sm text-gray-600 mb-4">
+          Would you like to hide this prompt for 48 hours?
+        </p>
+        <div className="flex gap-3">
+          <button
+            onClick={handleConfirmHide}
+            className="flex-1 bg-[#184193] text-white py-2 rounded-full font-medium"
+          >
+            Yes, hide it
+          </button>
+          <button
+            onClick={() => setShowConfirmation(false)}
+            className="flex-1 border border-gray-200 py-2 rounded-full font-medium"
+          >
+            No, keep it
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="fixed bottom-4 left-4 right-4 border bg-white rounded-xl shadow-lg p-4 z-50 max-w-md mx-auto">
+    <div className="fixed bottom-4 left-4 right-4 border bg-white rounded-xl shadow-lg p-4 z-50 max-w-md mx-auto hidden md:block lg:hidden">
       <div className="flex justify-between items-start mb-3">
         <h3 className="text-lg font-medium">Install Steadfast App</h3>
         <button onClick={() => setShowPrompt(false)} className="p-1">
@@ -143,7 +195,7 @@ export const InstallPWAPrompt = () => {
           </button>
         )}
         <button
-          onClick={() => setShowPrompt(false)}
+          onClick={handleNotNow}
           className="flex-1 border border-gray-200 py-2 rounded-full font-medium"
         >
           Not now
@@ -152,3 +204,4 @@ export const InstallPWAPrompt = () => {
     </div>
   )
 }
+

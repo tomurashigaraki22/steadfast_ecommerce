@@ -25,7 +25,9 @@ interface ProductCardProps {
         percentage: number;
     };
     productId: string;
-    titleHeight?: boolean; 
+    titleHeight?: boolean;
+    padButton?: boolean;
+
 }
 
 export const ProductCard = ({
@@ -38,16 +40,17 @@ export const ProductCard = ({
     image,
     isNew,
     discount,
-    titleHeight = false  
+    padButton = false,
+    titleHeight = false
 }: ProductCardProps) => {
     const router = useRouter();
     const [isWishlisted, setIsWishlisted] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isAdded, setIsAdded] = useState(false);
-    console.log(image)
 
     const imageNumber = parseInt(productId) % 10 + 1;
     const imagePath = `/product${imageNumber}.png`;
+    console.log(image)
     useEffect(() => {
         setIsWishlisted(FavoritesHelper.isProductFavorite(productId));
     }, [productId]);
@@ -88,7 +91,7 @@ export const ProductCard = ({
                 <div className="relative w-full aspect-square rounded-lg overflow-hidden">
                     <Image
                         src={imagePath}
-                         alt={title} 
+                        alt={title}
                         fill
                         className="object-cover transition-transform duration-300 ease-out group-hover:scale-110"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -117,7 +120,7 @@ export const ProductCard = ({
                         />
                     </button>
                 </div>
-                <div className={`space-y-1 ${titleHeight ? 'h-auto' : 'h-12'} md:h-auto cursor-pointer px-1`} onClick={handleProductClick}>
+                <div className={`space-y-1 ${titleHeight ? 'h-5' : 'h-12'} md:h-auto cursor-pointer px-1`} onClick={handleProductClick}>
                     <h3 className="font-medium text-[15px] line-clamp-2 md:line-clamp-1">{title}</h3>
                     <p className="hidden md:flex text-gray-600 text-xs line-clamp-1">{brand}</p>
                 </div>
@@ -140,14 +143,17 @@ export const ProductCard = ({
                         </div>
                     )}
                 </div>
-                <ActionButton
-                    variant={isAdded ? 'outline' : 'primary'}
-                    fullWidth
-                    isCart
-                    onClick={handleAddToCart}
-                >
-                    {isAdded ? 'ADDED TO CART' : 'ADD TO CART'}
-                </ActionButton>
+                <div className={`${padButton == true && ' '}`}>
+                    <ActionButton
+                        variant={isAdded ? 'outline' : 'primary'}
+                        fullWidth
+                        isCart
+                        onClick={handleAddToCart}
+                    >
+                        {isAdded ? 'ADDED TO CART' : 'ADD TO CART'}
+                    </ActionButton>
+                </div>
+
             </div>
         </div>
     );

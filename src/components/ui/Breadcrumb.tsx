@@ -6,11 +6,12 @@ interface BreadcrumbProps {
         label: string;
         href?: string;
     }[];
+    className?: string;
 }
 
-export const Breadcrumb = ({ items }: BreadcrumbProps) => {
+export const Breadcrumb = ({ items, className = 'pb-5  md:py-8' }: BreadcrumbProps) => {
     return (
-        <div className="flex pb-5 md:py-8">
+        <div className={`flex ${className}`}>
             <nav className="inline-flex items-center flex-wrap gap-2 py-2 text-sm md:px-4 md:bg-[#EDF0F8] rounded-lg">
                 {items.map((item, index) => (
                     <div key={index} className="flex items-center">
