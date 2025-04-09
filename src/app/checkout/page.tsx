@@ -36,7 +36,7 @@ export default function CheckoutPage() {
             <TopBanner theme="dark" />
             <Header />
             <div className="container mx-auto px-4 py-8 ">
-                <div className="container mx-auto px-4 md:py-8 max-w-3xl">
+                <div className="container mx-auto px-4 md:py-2 max-w-3xl">
                     <div className="flex justify-between mb-8">
                         <div className="flex flex-col items-center">
                             <div className="w-8 h-8 bg-[#184193] rounded-full flex items-center justify-center text-white text-sm font-medium mb-2">
