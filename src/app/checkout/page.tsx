@@ -44,7 +44,7 @@ export default function CheckoutPage() {
                             </div>
                             <span className="text-xs">Add Items</span>
                         </div>
-                        <div className="flex flex-col items-center">
+                        <div className="flex flex-col items-center"> 
                             <div className={`w-8 h-8 ${currentStep >= 1 ? 'bg-[#184193]' : 'bg-gray-200'} rounded-full flex items-center justify-center text-white text-sm font-medium mb-2`}>
                                 2
                             </div>

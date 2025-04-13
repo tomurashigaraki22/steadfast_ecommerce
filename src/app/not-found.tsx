@@ -3,46 +3,75 @@ import { Button } from '@/components/ui/Button';
 import Image from 'next/image';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { SearchIcon } from 'lucide-react';
+import { TopBanner } from '@/components/layout/TopBanner';
 
 export default function NotFound() {
     return (
         <>
+            <TopBanner theme='dark' />
             <Header />
-            <div className="min-h-screen flex flex-col items-center justify-start pt-[5rem] md:pt-[10rem] p-4">
-                <div className="text-center space-y-6 max-w-md">
-                    <div className="space-y-2">
-                        <Image
-                            src="/logo.png"
-                            alt="Steadfast International"
-                            width={150}
-                            height={40}
-                            className="mx-auto"
-                        />
-                        <h1 className="text-6xl font-bold text-gray-900">404</h1>
-                        <h2 className="text-2xl font-semibold text-gray-800">Page Not Found</h2>
-                        <p className="text-gray-600 mt-4">
-                            Oops! The page you&lsquo;re looking for doesn&lsquo;t exist or has been moved.
-                        </p>
-                    </div>
+            <div className="px-[2rem] py-[2rem]">
+                <div className="">
+                    <div className="container mx-auto px-[2rem] py-[4rem]  bg-gradient-to-tr rounded-[1rem] from-[#E2DAEC] to-[#E4EEFD]">
+                        <div className="flex p-[2rem] flex-col lg:flex-row items-start lg:items-center justify-between gap-12">
+                            <div className="flex-1 space-y-6 max-w-sm">
+                                <h1 className="text-2xl md:text-3xl font-medium text-gray-900">We lost that page...</h1>
+                                <p className="text-gray-600">
+                                    The page you are looking for was moved, removed<br />
+                                    or might never existed. Here some helpful links:
+                                </p>
 
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-                        <Link href="/" className="inline-block">
-                            <Button className="w-full">
-                                Go to Homepage
-                            </Button>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                                        <SearchIcon className="h-5 w-5 text-gray-400" />
+                                    </div>
+                                    <input
+                                        type="text"
+                                        placeholder="What are you looking for..."
+                                        className="w-full pl-10 pr-4 py-2.5 text-sm rounded-lg border border-[#CAD0D9] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex-1 flex justify-center lg:justify-end">
+                                <Image
+                                    src="/404.png"
+                                    alt="404 Illustration"
+                                    width={400}
+                                    height={400}
+                                    priority
+                                    className="max-w-[300px] md:max-w-[400px]"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-12">
+                        <Link
+                            href="/"
+                            className="bg-white p-4 rounded-lg hover:shadow-md transition-shadow"
+                        >
+                            <h3 className="font-medium mb-1">Go to homepage</h3>
+                            <p className="text-sm text-gray-600">Continue shopping from the homepage</p>
                         </Link>
-                        <Link href="/auth/login" className="inline-block">
-                            <Button variant="outline" className="w-full">
-                                Sign In
-                            </Button>
+                        <Link
+                            href="/products"
+                            className="bg-white p-4 rounded-lg hover:shadow-md transition-shadow"
+                        >
+                            <h3 className="font-medium mb-1">Product Category</h3>
+                            <p className="text-sm text-gray-600">Check out the trending products</p>
+                        </Link>
+                        <Link
+                            href="/products/new"
+                            className="bg-white p-4 rounded-lg hover:shadow-md transition-shadow"
+                        >
+                            <h3 className="font-medium mb-1">New Arrivals</h3>
+                            <p className="text-sm text-gray-600">Explore our new arrivals</p>
                         </Link>
                     </div>
-
-                    <p className="text-sm text-gray-500 mt-8">
-                        Need help? <Link href="/contact" className="text-blue-600 hover:text-blue-500">Contact Support</Link>
-                    </p>
                 </div>
             </div>
+
             <Footer />
         </>
     );
