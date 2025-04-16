@@ -13,16 +13,16 @@ export default function NotFound() {
             <Header />
             <div className="px-[2rem] py-[2rem]">
                 <div className="">
-                    <div className="container mx-auto px-[2rem] py-[4rem]  bg-gradient-to-tr rounded-[1rem] from-[#E2DAEC] to-[#E4EEFD]">
+                    <div className="container mx-auto px-[2rem] py-[2rem]  bg-gradient-to-tr rounded-[1rem] from-[#E2DAEC] to-[#E4EEFD]">
                         <div className="flex p-[2rem] flex-col lg:flex-row items-start lg:items-center justify-between gap-12">
-                            <div className="flex-1 space-y-6 max-w-sm">
+                            <div className="flex-1 space-y-6 px-[5rem]  h-full">
                                 <h1 className="text-2xl md:text-3xl font-medium text-gray-900">We lost that page...</h1>
                                 <p className="text-gray-600">
                                     The page you are looking for was moved, removed<br />
                                     or might never existed. Here some helpful links:
                                 </p>
 
-                                <div className="relative">
+                                <div className="relative  max-w-sm">
                                     <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
                                         <SearchIcon className="h-5 w-5 text-gray-400" />
                                     </div>
@@ -34,14 +34,13 @@ export default function NotFound() {
                                 </div>
                             </div>
 
-                            <div className="flex-1 flex justify-center lg:justify-end">
+                            <div className="flex-1 flex justify-center  lg:justify-end relative h-[30rem] w-full">
                                 <Image
                                     src="/404.png"
                                     alt="404 Illustration"
-                                    width={400}
-                                    height={400}
+                                    fill
                                     priority
-                                    className="max-w-[300px] md:max-w-[400px]"
+                                    className="object-contain "
                                 />
                             </div>
                         </div>
