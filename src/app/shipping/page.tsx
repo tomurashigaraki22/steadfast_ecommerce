@@ -87,41 +87,41 @@ export default function ShippingPage() {
                                 <Input
                                     label="First Name"
                                     value={shippingDetails.firstName}
-                                    onChange={(e) => setShippingDetails({...shippingDetails, firstName: e.target.value})}
+                                    onChange={(e) => setShippingDetails({ ...shippingDetails, firstName: e.target.value })}
                                 />
                                 <Input
                                     label="Last Name"
                                     value={shippingDetails.lastName}
-                                    onChange={(e) => setShippingDetails({...shippingDetails, lastName: e.target.value})}
+                                    onChange={(e) => setShippingDetails({ ...shippingDetails, lastName: e.target.value })}
                                 />
                             </div>
                             <Input
                                 label="Email Address"
                                 type="email"
                                 value={shippingDetails.email}
-                                onChange={(e) => setShippingDetails({...shippingDetails, email: e.target.value})}
+                                onChange={(e) => setShippingDetails({ ...shippingDetails, email: e.target.value })}
                             />
                             <Input
                                 label="Phone Number"
                                 type="tel"
                                 value={shippingDetails.phone}
-                                onChange={(e) => setShippingDetails({...shippingDetails, phone: e.target.value})}
+                                onChange={(e) => setShippingDetails({ ...shippingDetails, phone: e.target.value })}
                             />
                             <Input
                                 label="Address"
                                 value={shippingDetails.address}
-                                onChange={(e) => setShippingDetails({...shippingDetails, address: e.target.value})}
+                                onChange={(e) => setShippingDetails({ ...shippingDetails, address: e.target.value })}
                             />
                             <div className="grid grid-cols-2 gap-4">
                                 <Input
                                     label="City"
                                     value={shippingDetails.city}
-                                    onChange={(e) => setShippingDetails({...shippingDetails, city: e.target.value})}
+                                    onChange={(e) => setShippingDetails({ ...shippingDetails, city: e.target.value })}
                                 />
                                 <Input
                                     label="State"
                                     value={shippingDetails.state}
-                                    onChange={(e) => setShippingDetails({...shippingDetails, state: e.target.value})}
+                                    onChange={(e) => setShippingDetails({ ...shippingDetails, state: e.target.value })}
                                 />
                             </div>
                         </form>
