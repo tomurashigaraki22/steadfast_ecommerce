@@ -82,6 +82,7 @@ export const Header = () => {
                 setIsDropdownOpen(false);
             }
         };
+        console.log("USERS: ", user)
 
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);

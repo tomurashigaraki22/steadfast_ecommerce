@@ -9,10 +9,12 @@ import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { SocialButton } from '@/components/auth/SocialButton';
 import Link from 'next/link';
+import { BASE_URL } from '../../../../config';
 
 export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [error, setError] = useState('');
     const [modalType, setModalType] = useState<'success' | 'error'>('success');
     const [formData, setFormData] = useState({ email: '', password: '' });
     const router = useRouter();
@@ -21,30 +23,40 @@ export default function LoginPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
+        setError('');
+
         try {
-            // Simulating API call
-            if (formData.email === 'jess@mail.com' && formData.password === 'password') {
-                const userData = {
-                    firstName: 'Jessica',
-                    lastName: 'Jackson',
-                    email: formData.email
-                };
-                
-                login(userData);
-                setModalType('success');
-                setShowModal(true);
-                
-                // Redirect after success modal
-                setTimeout(() => {
-                    router.push('/profile');
-                }, 2000);
-            } else {
-                throw new Error('Invalid credentials');
+            const response = await fetch(`${BASE_URL}/api/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: formData.email,
+                    password: formData.password
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Login failed');
             }
-        } catch (error) {
-            console.error('Login failed:', error);
-            setModalType('error');
+
+            // Store token in localStorage
+            localStorage.setItem('token', data.token);
+            // Use context to store user data
+            login(data.user);
+            setModalType("success")
             setShowModal(true);
+
+            setTimeout(() => {
+                router.push('/profile');
+            }, 2000);
+        } catch (error: any) {
+            setError(error.message);
+            setModalType("error")
+            setShowModal(true)
         } finally {
             setIsLoading(false);
         }

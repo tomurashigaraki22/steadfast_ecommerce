@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/Button';
 import { SocialButton } from '@/components/auth/SocialButton';
 import Link from 'next/link';
 import { Check, X } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { BASE_URL } from '../../../../config';
 
 interface PasswordRequirement {
     label: string;
@@ -19,6 +21,7 @@ export default function SignupPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
     const [passwordRequirements, setPasswordRequirements] = useState<PasswordRequirement[]>([
         { label: 'Minimum 8 characters', isValid: false },
         { label: 'One lowercase character', isValid: false },
@@ -39,22 +42,46 @@ export default function SignupPage() {
     };
 
     const router = useRouter();
+    const { login } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
+        
+        const form = e.target as HTMLFormElement;
+        const formData = {
+            username: `${form.firstName.value} ${form.lastName.value}`,
+            email: form.email.value,
+            password: password,
+            phone_number: form.phoneNumber.value
+        };
+
         try {
-            // TODO: Add your signup logic here
-            
-            // Show success modal
+            const response = await fetch(`${BASE_URL}/api/auth/signup`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Registration failed');
+            }
+
+            // Store token
+            localStorage.setItem('token', data.token);
+            // Use context to store user data
+
             setShowSuccessModal(true);
             
-            // Redirect after 2 seconds
             setTimeout(() => {
-                router.push('/auth/verify-email');
+                router.push(`/auth/verify-email?email=${formData.email}&user=${data.user}`);
             }, 2000);
-        } catch (error) {
-            console.error('Signup failed:', error);
+        } catch (error: any) {
+            setError(error.message);
         } finally {
             setIsLoading(false);
         }
@@ -70,12 +97,14 @@ export default function SignupPage() {
                     label="First Name"
                     type="text"
                     placeholder="Jessica"
+                    name='firstName'
                     required
                 />
                 <Input
                     label="Last Name"
                     type="text"
                     placeholder="Jackson"
+                    name='lastName'
                     required
                 />
                 <Input
@@ -83,11 +112,13 @@ export default function SignupPage() {
                     type="email"
                     placeholder="dom@mail.com"
                     required
+                    name='email'
                 />
                 <Input
                     label="Phone Number"
                     type="tel"
                     placeholder="+234"
+                    name='phoneNumber'
                     required
                 />
                 <div className="space-y-2">
@@ -98,6 +129,7 @@ export default function SignupPage() {
                         value={password}
                         onChange={(e) => validatePassword(e.target.value)}
                         required
+                        name='password'
                     />
                     <div className="space-y-2 mt-2">
                         {passwordRequirements.map((req, index) => (
