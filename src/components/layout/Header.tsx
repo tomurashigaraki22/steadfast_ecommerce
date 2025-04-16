@@ -1,14 +1,16 @@
 "use client"
 import { Suspense } from 'react';
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { useState, useRef, useEffect } from 'react';
+ import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingBag, Heart, Menu, User, SearchIcon } from 'lucide-react';
+import {  Menu, SearchIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import { categories } from '@/data/demo';
 import { FavoritesHelper } from '@/lib/favorites';
 import { CartPanel } from '@/components/cart/CartPanel';
+import { useAuth } from '@/contexts/AuthContext';
+import { ChevronDown, LogOut, User, ShoppingBag, Heart } from 'lucide-react';
 
 const SearchComponent = () => {
     const searchParams = useSearchParams();
@@ -69,6 +71,22 @@ export const Header = () => {
         };
     }, [isMenuOpen]);
 
+    const { user, logout } = useAuth();
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
     return (
         <header className="bg-white shadow-sm">
             <div className="hidden md:block">
@@ -87,9 +105,55 @@ export const Header = () => {
                         </div>
 
                         <div className="flex items-center gap-8">
-                            <div className="flex items-center gap-2">
-                                <User size={20} />
-                                <Link href="/auth/login" className="text-sm font-semibold">Login / Register</Link>
+                            <div className="relative" ref={dropdownRef}>
+                                {user ? (
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                            className="flex items-center gap-2 text-sm font-semibold hover:text-[#184193]"
+                                        >
+                                            <User size={20} />
+                                            <span>{user.firstName}</span>
+                                            <ChevronDown size={16} />
+                                        </button>
+
+                                        {isDropdownOpen && (
+                                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
+                                                <Link
+                                                    href="/profile"
+                                                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                    onClick={() => setIsDropdownOpen(false)}
+                                                >
+                                                    <User size={16} />
+                                                    Profile
+                                                </Link>
+                                                <Link
+                                                    href="/orders"
+                                                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                    onClick={() => setIsDropdownOpen(false)}
+                                                >
+                                                    <ShoppingBag size={16} />
+                                                    Orders
+                                                </Link>
+                                                <button
+                                                    onClick={() => {
+                                                        logout();
+                                                        setIsDropdownOpen(false);
+                                                    }}
+                                                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
+                                                >
+                                                    <LogOut size={16} />
+                                                    Logout
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <Link href="/auth/login" className="flex items-center gap-2 text-sm font-semibold">
+                                        <User size={20} />
+                                        Login / Register
+                                    </Link>
+                                )}
                             </div>
                             <div className="flex items-center gap-4">
                                 <button

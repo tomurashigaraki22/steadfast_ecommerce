@@ -19,7 +19,7 @@ const defaultProfile = {
 };
 
 export default function ProfilePage() {
-    const [activeTab, setActiveTab] = useState('personal'); 
+    const [activeTab, setActiveTab] = useState('personal');
     const breadcrumbItems = [
         { label: 'Home', href: '/' },
         { label: 'Profile' }
@@ -27,16 +27,14 @@ export default function ProfilePage() {
 
     const tabs = [
         { id: 'personal', label: 'Personal Information' },
-        { id: 'orders', label: 'Order History' },
         { id: 'notification', label: 'Notification' },
         { id: 'security', label: 'Security' },
-        { id: 'logout', label: 'Logout' }
     ];
 
     const renderActiveTab = () => {
         switch (activeTab) {
             case 'personal':
-                return <ProfileTab 
+                return <ProfileTab
                     firstName={defaultProfile.firstName}
                     lastName={defaultProfile.lastName}
                     email={defaultProfile.email}

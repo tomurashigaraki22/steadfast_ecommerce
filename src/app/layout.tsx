@@ -1,3 +1,4 @@
+import { AuthProvider } from "@/contexts/AuthContext";
 import "./globals.css";
 import { Inter, Montserrat } from 'next/font/google'
 
@@ -55,7 +56,9 @@ export default function RootLayout({
       <body
         className={`${montserrat.className}`}
       >
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
