@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import { AuthWrapper } from '@/components/auth/AuthWrapper';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -11,24 +12,39 @@ import Link from 'next/link';
 
 export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
-    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [modalType, setModalType] = useState<'success' | 'error'>('success');
+    const [formData, setFormData] = useState({ email: '', password: '' });
     const router = useRouter();
+    const { login } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         try {
-            // TODO: Add authentication logic here
-
-            // Show success modal
-            setShowSuccessModal(true);
-
-            // Redirect after 2 seconds
-            setTimeout(() => {
-                router.push('/auth/welcome-back');
-            }, 2000);
+            // Simulating API call
+            if (formData.email === 'jess@mail.com' && formData.password === 'password') {
+                const userData = {
+                    firstName: 'Jessica',
+                    lastName: 'Jackson',
+                    email: formData.email
+                };
+                
+                login(userData);
+                setModalType('success');
+                setShowModal(true);
+                
+                // Redirect after success modal
+                setTimeout(() => {
+                    router.push('/profile');
+                }, 2000);
+            } else {
+                throw new Error('Invalid credentials');
+            }
         } catch (error) {
             console.error('Login failed:', error);
+            setModalType('error');
+            setShowModal(true);
         } finally {
             setIsLoading(false);
         }
@@ -45,12 +61,16 @@ export default function LoginPage() {
                     type="email"
                     placeholder="jess@mail.com"
                     required
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
                 <Input
                     label="Password"
                     type="password"
                     required
                     isPassword={true}
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 />
 
                 <div className="flex items-center justify-between">
@@ -97,12 +117,12 @@ export default function LoginPage() {
             </form>
 
             <Modal
-                isOpen={showSuccessModal}
-                onClose={() => setShowSuccessModal(false)}
-                type="success"
-                title="Authentication Successful"
-                message="Verifying your credentials..."
-                autoClose
+                isOpen={showModal}
+                onClose={() => setShowModal(false)}
+                type={modalType}
+                title={modalType === 'success' ? "Authentication Successful" : "Authentication Failed"}
+                message={modalType === 'success' ? "Redirecting to homepage..." : "Invalid email or password"}
+                autoClose={modalType === 'success'}
                 autoCloseTime={2000}
             />
         </AuthWrapper>

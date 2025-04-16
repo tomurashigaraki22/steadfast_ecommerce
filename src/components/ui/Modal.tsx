@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Button } from './Button';
-import { Info, AlertCircle, CheckCircle, X } from 'lucide-react';
+import { Info, AlertCircle, CheckCircle, X, XCircle } from 'lucide-react';
 
-type ModalType = 'info' | 'warning' | 'success';
+type ModalType = 'info' | 'warning' | 'success' | 'error';
 
 interface ModalButton {
     text: string;
@@ -74,12 +74,14 @@ export const Modal = ({
         info: <Info className="w-12 h-12 text-blue-500" />,
         warning: <AlertCircle className="w-12 h-12 text-yellow-500" />,
         success: <CheckCircle className="w-12 h-12 text-green-500" />,
+        error: <XCircle className="w-12 h-12 text-red-500" />,
     };
 
     const bgColors = {
         info: 'bg-blue-50',
         warning: 'bg-yellow-50',
         success: 'bg-green-50',
+        error: 'bg-red-50',
     };
 
     if (!isVisible) return null;
