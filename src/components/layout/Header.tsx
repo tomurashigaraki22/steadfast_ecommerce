@@ -111,7 +111,7 @@ export const Header = () => {
                                     <div className="flex items-center gap-2">
                                         <button
                                             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                            className="flex items-center gap-2 text-sm font-semibold hover:text-[#184193]"
+                                            className="flex items-center gap-2 text-sm font-semibold hover:text-[#184193] relative z-10"
                                         >
                                             <User size={20} />
                                             <span>{user.firstName}</span>
@@ -119,33 +119,38 @@ export const Header = () => {
                                         </button>
 
                                         {isDropdownOpen && (
-                                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
-                                                <Link
-                                                    href="/profile"
-                                                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                    onClick={() => setIsDropdownOpen(false)}
-                                                >
-                                                    <User size={16} />
-                                                    Profile
-                                                </Link>
-                                                <Link
-                                                    href="/orders"
-                                                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                    onClick={() => setIsDropdownOpen(false)}
-                                                >
-                                                    <ShoppingBag size={16} />
-                                                    Orders
-                                                </Link>
-                                                <button
-                                                    onClick={() => {
-                                                        logout();
-                                                        setIsDropdownOpen(false);
-                                                    }}
-                                                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
-                                                >
-                                                    <LogOut size={16} />
-                                                    Logout
-                                                </button>
+                                            <div className="absolute right-1/2 translate-x-1/2 mt-5 top-full   w-56 bg-white rounded-lg shadow-xl py-3 z-20 border border-gray-100">
+                                               
+                                                <div className="py-2">
+                                                    <Link
+                                                        href="/profile"
+                                                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"
+                                                        onClick={() => setIsDropdownOpen(false)}
+                                                    >
+                                                        <User size={16} />
+                                                        Profile
+                                                    </Link>
+                                                    <Link
+                                                        href="/orders"
+                                                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"
+                                                        onClick={() => setIsDropdownOpen(false)}
+                                                    >
+                                                        <ShoppingBag size={16} />
+                                                        Orders
+                                                    </Link>
+                                                </div>
+                                                <div className="border-t border-gray-100 pt-2">
+                                                    <button
+                                                        onClick={() => {
+                                                            logout();
+                                                            setIsDropdownOpen(false);
+                                                        }}
+                                                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 w-full"
+                                                    >
+                                                        <LogOut size={16} />
+                                                        Logout
+                                                    </button>
+                                                </div>
                                             </div>
                                         )}
                                     </div>
