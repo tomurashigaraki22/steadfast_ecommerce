@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { SocialButton } from '@/components/auth/SocialButton';
 import Link from 'next/link';
-import { BASE_URL } from '../../../../config';
+;
 
 export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
@@ -23,43 +23,21 @@ export default function LoginPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        setError('');
 
-        try {
-            const response = await fetch(`${BASE_URL}/api/auth/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: formData.email,
-                    password: formData.password
-                })
-            });
+        const result = await login(formData);
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.error || 'Login failed');
-            }
-
-            // Store token in localStorage
-            localStorage.setItem('token', data.token);
-            // Use context to store user data
-            login(data.user);
-            setModalType("success")
+        if (result.success) {
+            setModalType('success');
             setShowModal(true);
-
             setTimeout(() => {
                 router.push('/profile');
             }, 2000);
-        } catch (error: any) {
-            setError(error.message);
-            setModalType("error")
-            setShowModal(true)
-        } finally {
-            setIsLoading(false);
+        } else {
+            setModalType('error');
+            setShowModal(true);
         }
+
+        setIsLoading(false);
     };
 
     return (

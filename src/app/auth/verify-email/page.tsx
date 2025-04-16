@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { useAuth } from '@/contexts/AuthContext';
-import { BASE_URL } from '../../../../config';
+;
 
 export default function VerifyEmailPage() {
     const [isLoading, setIsLoading] = useState(false);
@@ -21,54 +21,29 @@ export default function VerifyEmailPage() {
     const searchParams = useSearchParams();
     const email = searchParams.get('email')
     const { login } = useAuth();
-    const userParam = searchParams.get('user');
-    const userData = userParam ? JSON.parse(decodeURIComponent(userParam)) : null;
+    const { verifyEmail } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
 
         try {
-            const response = await fetch(`${BASE_URL}/api/auth/verify-email`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email,
-                    otp: code
-                })
-            });
+            const result = await verifyEmail({ email: email!, otp: code });
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                setModalType('error');
-                setModalMessage(data.error || 'Verification failed');
+            if (result.success) {
+                setModalType('success');
+                setModalMessage('Email verified successfully! Redirecting to login...');
                 setShowModal(true);
-                throw new Error(data.error || 'Verification failed');
-            }
-
-            // If verification successful and we have user data
-            if (userData) {
-                // Store token if it exists in the response
-                if (data.token) {
-                    localStorage.setItem('token', data.token);
-                }
                 
-                // Login the user with the data we have
-                login(userData);
+                setTimeout(() => {
+                    router.push('/auth/login');
+                }, 2000);
+            } else {
+                setModalType('error');
+                setModalMessage(result.error || 'Verification failed');
+                setShowModal(true);
             }
-
-            setModalType('success');
-            setModalMessage('Email verified successfully! Redirecting to dashboard...');
-            setShowModal(true);
-            
-            setTimeout(() => {
-                router.push('/dashboard');
-            }, 2000);
         } catch (error: any) {
-            console.error('Verification failed:', error);
             setModalType('error');
             setModalMessage(error.message);
             setShowModal(true);

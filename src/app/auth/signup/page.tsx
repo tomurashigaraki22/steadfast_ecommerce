@@ -10,7 +10,7 @@ import { SocialButton } from '@/components/auth/SocialButton';
 import Link from 'next/link';
 import { Check, X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { BASE_URL } from '../../../../config';
+;
 
 interface PasswordRequirement {
     label: string;
@@ -43,6 +43,7 @@ export default function SignupPage() {
 
     const router = useRouter();
     const { login } = useAuth();
+    const { signup } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -57,29 +58,16 @@ export default function SignupPage() {
         };
 
         try {
-            const response = await fetch(`${BASE_URL}/api/auth/signup`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.error || 'Registration failed');
-            }
-
-            // Store token
-            localStorage.setItem('token', data.token);
-            // Use context to store user data
-
-            setShowSuccessModal(true);
+            const result = await signup(formData);
             
-            setTimeout(() => {
-                router.push(`/auth/verify-email?email=${formData.email}&user=${data.user}`);
-            }, 2000);
+            if (result.success) {
+                setShowSuccessModal(true);
+                setTimeout(() => {
+                    router.push(`/auth/verify-email?email=${formData.email}`);
+                }, 2000);
+            } else {
+                setError(result.error || 'Signup failed');
+            }
         } catch (error: any) {
             setError(error.message);
         } finally {
