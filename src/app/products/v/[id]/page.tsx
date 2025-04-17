@@ -23,6 +23,7 @@ interface Product {
     price: number;
     rating: number;
     image: string;
+    images: string[];
     isNew?: boolean;
     dateCreated: string;
     dateUpdated: string;
@@ -52,10 +53,12 @@ export default function ProductDetailPage() {
 
     useEffect(() => {
         const fetchProducts = async () => {
+            console.log("PRODUCTS: ", productId)
             try {
                 setIsLoading(true);
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
                 const data = await response.json();
+                console.log("DATA: ", data)
                 setProducts(data.products || []);
             } catch (error) {
                 console.error('Error fetching products:', error);
@@ -91,13 +94,13 @@ export default function ProductDetailPage() {
         console.log('Added to cart');
     };
 
-    const product = products.find(p => p.id === productId);
-    console.log("PRODUCT: ", products)
+    const product = products.find(p => parseInt(p.id) === parseInt(productId));
+    console.log("PRODUCT: ", product)
     console.log("PRID: ", productId)
     const category = product ? categories.find(c => c.id === product.category) : null;
 
     
-    if (!product) {
+    if (!product && !isPageLoading) {
         return <div>Product not found</div>;
     }
 
@@ -134,20 +137,22 @@ export default function ProductDetailPage() {
                     <div className="md:w-1/2">
                         <div className="relative aspect-square mb-4">
                             <Image
-                                src={product.image}
+                                src={product.images[0]}
                                 alt={product.name}
                                 fill
                                 className="object-cover rounded-lg"
                             />
                         </div>
                         <div className="grid grid-cols-3 gap-4">
-                            {[1, 2, 3].map((_, index) => (
+                            {product.images.slice(1).map((image, index) => (
                                 <div key={index} className="relative aspect-square">
                                     <Image
-                                        src={product.image}
+                                        src={image}
                                         alt={`${product.name} view ${index + 1}`}
                                         fill
                                         className="object-cover rounded-lg"
+                                        sizes="(max-width: 768px) 33vw, 25vw"
+                                        priority={index === 0}
                                     />
                                 </div>
                             ))}
@@ -238,7 +243,7 @@ export default function ProductDetailPage() {
                     </div>
                 </div>
 
-                <ProductTabs productId={product.id} />
+                <ProductTabs productId={product.id} product={product} />
 
             </main>
             <ProductGrid

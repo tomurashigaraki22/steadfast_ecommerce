@@ -19,6 +19,7 @@ interface ProductGridProps {
         price: number;
         rating: number;
         image: string;
+        images: string[];
         isNew?: boolean;
         discount?: {
             amount: number;

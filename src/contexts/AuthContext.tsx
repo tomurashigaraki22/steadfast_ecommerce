@@ -17,6 +17,7 @@ interface AuthContextType {
     isAuthenticated: boolean;
     isLoading: boolean;
     changePassword: (passwords: { oldPassword: string; newPassword: string }) => Promise<{ success: boolean; error?: string }>;
+    forgotPassword: (email: string) => Promise<{ success: boolean; error?: string }>; // <-- Add this
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -183,6 +184,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
+    const forgotPassword = async (email: string) => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/forgot-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to send reset email');
+            }
+
+            return { success: true };
+        } catch (error: any) {
+            return {
+                success: false,
+                error: error.message || 'Failed to send reset email'
+            };
+        }
+    };
+
     return (
         <AuthContext.Provider value={{ 
             user, 
@@ -192,6 +215,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             updateProfile, // Add this
             logout, 
             changePassword,
+            forgotPassword, // <-- Add this
             isAuthenticated: !!user,
             isLoading 
         }}>

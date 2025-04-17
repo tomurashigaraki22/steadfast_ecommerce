@@ -18,6 +18,7 @@ interface ProductCardProps {
     price: number;
     rating: number;
     image: string;
+    images: string[];
     enableSales?: boolean;
     isNew?: boolean;
     discount?: {
@@ -38,6 +39,7 @@ export const ProductCard = ({
     rating,
     enableSales = true,
     image,
+    images,
     isNew,
     discount,
     padButton = false,
@@ -90,7 +92,7 @@ export const ProductCard = ({
             >
                 <div className="relative w-full aspect-square rounded-lg overflow-hidden">
                     <Image
-                        src={imagePath}
+                        src={images[0]}
                         alt={name}
                         fill
                         className="object-cover transition-transform duration-300 ease-out group-hover:scale-110"

@@ -22,7 +22,7 @@ interface Product {
     title: string;
     brand: string;
     price: number;
-    rating: number;
+    rating: number | null;  // Updated to handle null ratings
     image: string;
     isNew?: boolean;
     dateCreated: string;
@@ -41,11 +41,18 @@ export default function ProductsPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [productFilters, setProductFilters] = useState<FilterOption[]>([]);
 
+    const handleProductClick = (productId: string) => {
+        router.push(`/products/v/${productId}`);
+    };
+
     useEffect(() => {
         if (!products || products.length === 0) return;
 
         const prices = products.map(p => p.price).filter(Boolean);
-        const ratingsSet = new Set<number>(products.map(p => p.rating).filter(Boolean));
+        const validRatings = products
+            .map(p => p.rating)
+            .filter((rating): rating is number => rating !== null && !isNaN(rating));
+        const ratingsSet = new Set<number>(validRatings);
         const ratings = Array.from(ratingsSet).sort((a, b) => b - a);
 
         const dynamicFilters: FilterOption[] = [
@@ -122,27 +129,17 @@ export default function ProductsPage() {
     const fetchProducts = async () => {
         setIsLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || 'Failed to fetch products');
-            }
-
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
             const data = await response.json();
-            setProducts(data.products || []);
+            const products = data.products || [];
+            setProducts(products);
             
-            const prices = data.products.map((p: Product) => p.price);
-            // Fix the typing for ratings array in fetch
-            const ratingsSet = new Set<number>(data.products.map((p: Product) => p.rating));
-            const ratings = Array.from(ratingsSet).sort((a, b) => b - a);
+            // Add null checks and filter out invalid ratings
+            const validProducts = products.filter(p => p && p.rating != null);
+            const prices = validProducts.map(p => p.price);
+            const ratingsSet = new Set(validProducts.map(p => Number(p.rating)));
+            const ratings = Array.from(ratingsSet).filter(rating => !isNaN(rating)).sort((a, b) => b - a);
             
-            // Update price range and rating filters
             setProductFilters(prev => prev.map(filter => {
                 if (filter.id === 'price') {
                     return {
@@ -153,22 +150,21 @@ export default function ProductsPage() {
                         }
                     };
                 }
-                if (filter.id === 'rating') {
+                if (filter.id === 'rating' && ratings.length > 0) {
                     return {
                         ...filter,
-                        options: ratings.map((rating: number) => ({
+                        options: ratings.map(rating => ({
                             value: rating.toString(),
                             label: `${rating}★ & above`,
-                            amount: data.products.filter((p: Product) => p.rating >= rating).length
+                            amount: validProducts.filter(p => p.rating >= rating).length
                         }))
                     };
                 }
                 return filter;
             }));
 
-        } catch (error: any) {
+        } catch (error) {
             console.error('Error fetching products:', error);
-            // You might want to add error state handling here
             setProducts([]);
         } finally {
             setIsLoading(false);
@@ -201,7 +197,7 @@ export default function ProductsPage() {
             <TopBanner theme={'dark'} />
             <Header />
             <ProductGrid
-                title="All Products"
+                name="All Products"
                 products={products}
                 filters={productFilters as import('@/components/product/ProductFilter').FilterOption[]}
                 onFilterChange={handleFilterChange}
