@@ -9,7 +9,6 @@ import { Heart, Share2 } from 'lucide-react';
 import { TopBanner } from '@/components/layout/TopBanner';
 import { Header } from '@/components/layout/Header';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
-import { demoProducts, categories } from '@/data/demo';
 import { StarRating } from '@/components/ui/StarRating';
 import { ActionButton } from '@/components/ui/ActionButton';
 import { BookmarkIcon } from '@/components/icons/bookmark';
@@ -69,7 +68,7 @@ export default function ProductDetailPage() {
         };
 
         fetchProducts();
-    }, []);
+    }, [productId]);
 
     const toggleWishlist = async () => {
         try {
@@ -97,7 +96,6 @@ export default function ProductDetailPage() {
     const product = products.find(p => parseInt(p.id) === parseInt(productId));
     console.log("PRODUCT: ", product)
     console.log("PRID: ", productId)
-    const category = product ? categories.find(c => c.id === product.category) : null;
 
     
     if (!product && !isPageLoading) {

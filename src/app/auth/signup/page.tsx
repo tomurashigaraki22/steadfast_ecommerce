@@ -21,7 +21,7 @@ export default function SignupPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const [error, setError] = useState<string | null>(null); // <-- Add error state
     const [passwordRequirements, setPasswordRequirements] = useState<PasswordRequirement[]>([
         { label: 'Minimum 8 characters', isValid: false },
         { label: 'One lowercase character', isValid: false },
@@ -42,13 +42,13 @@ export default function SignupPage() {
     };
 
     const router = useRouter();
-    const { login } = useAuth();
     const { signup } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        
+        setError(null); // Reset error on submit
+
         const form = e.target as HTMLFormElement;
         const formData = {
             username: `${form.firstName.value} ${form.lastName.value}`,
@@ -59,7 +59,7 @@ export default function SignupPage() {
 
         try {
             const result = await signup(formData);
-            
+
             if (result.success) {
                 setShowSuccessModal(true);
                 setTimeout(() => {
@@ -68,8 +68,12 @@ export default function SignupPage() {
             } else {
                 setError(result.error || 'Signup failed');
             }
-        } catch (error: any) {
-            setError(error.message);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                setError(error.message || 'Signup failed');
+            } else {
+                setError('Signup failed');
+            }
         } finally {
             setIsLoading(false);
         }
@@ -138,6 +142,9 @@ export default function SignupPage() {
                 <Button type="submit" isLoading={isLoading}>
                     Create an Account
                 </Button>
+                {error && (
+                    <p className="text-red-500 text-center">{error}</p>
+                )}
 
                 <div className="relative my-6">
                     <div className="absolute inset-0 flex items-center">

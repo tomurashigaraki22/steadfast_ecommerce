@@ -37,7 +37,7 @@ export default function ReferralPage() {
                             <div className="space-y-6 px-[5rem] h-full">
                                 <h1 className="text-2xl md:text-3xl font-medium text-gray-900">Processing Your Referral</h1>
                                 <p className="text-gray-600">
-                                    We're saving your referral code and will<br />
+                                    We&rsquo;re saving your referral code and will<br />
                                     redirect you to our homepage shortly.
                                 </p>
                             </div>

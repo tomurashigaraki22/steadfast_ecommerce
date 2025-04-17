@@ -32,8 +32,12 @@ export default function ForgotPasswordPage() {
             } else {
                 setError(result.error || 'Failed to send reset email');
             }
-        } catch (error: any) {
-            setError(error.message || 'Failed to send reset email');
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                setError(error.message || 'Failed to send reset email');
+            } else {
+                setError('Failed to send reset email');
+            }
         } finally {
             setIsLoading(false);
         }

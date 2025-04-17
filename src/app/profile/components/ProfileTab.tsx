@@ -5,19 +5,12 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Pen } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
-import Cookies from 'js-cookie';
 import { useAuth } from '@/contexts/AuthContext';
 
-interface ProfileProps {
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    phone?: string;
-    address?: string;
-}
 
 
-export function ProfileTab(defaultProfile: ProfileProps) {
+
+export function ProfileTab() {
     const { updateProfile } = useAuth();
     // Ensure all fields have a default value to avoid undefined
     const initialProfile = {
@@ -55,9 +48,13 @@ export function ProfileTab(defaultProfile: ProfileProps) {
             setShowModal(true);
             setIsEditing(false);
 
-        } catch (error: any) {
+        } catch (error: unknown) {
             setModalType('error');
-            setModalMessage(error.message || 'Failed to update profile');
+            if (error instanceof Error) {
+                setModalMessage(error.message || 'Failed to update profile');
+            } else {
+                setModalMessage('Failed to update profile');
+            }
             setShowModal(true);
         } finally {
             setIsLoading(false);

@@ -23,7 +23,7 @@ export function NotificationsTab() {
                 <div className="flex items-center justify-between gap-5">
                     <div>
                         <h3 className="font-medium">Product update notifications</h3>
-                        <p className="text-sm text-[#15151580]">Send an email when a product I've purchased is updated</p>
+                        <p className="text-sm text-[#15151580]">Send an email when a product I&rsquo;ve purchased is updated</p>
                     </div>
                     <Switch 
                         checked={notifications.productUpdates}

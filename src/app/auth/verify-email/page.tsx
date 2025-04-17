@@ -20,7 +20,6 @@ export default function VerifyEmailPage() {
     
     const searchParams = useSearchParams();
     const email = searchParams.get('email')
-    const { login } = useAuth();
     const { verifyEmail } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -43,9 +42,14 @@ export default function VerifyEmailPage() {
                 setModalMessage(result.error || 'Verification failed');
                 setShowModal(true);
             }
-        } catch (error: any) {
-            setModalType('error');
-            setModalMessage(error.message);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                setModalType('error');
+                setModalMessage(error.message);
+            } else {
+                setModalType('error');
+                setModalMessage('Verification failed');
+            }
             setShowModal(true);
         } finally {
             setIsLoading(false);

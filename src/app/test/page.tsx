@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { SocialButton } from '@/components/auth/SocialButton'; 
 import { WhyShopWithUs } from '@/components/sections/WhyShopWithUs';
-import { ProductGrid } from '@/components/product/ProductGrid';
 import { DealOfMonth } from '@/components/sections/DealOfMonth';
 import ShopByCategory from '@/components/category/ShopByCategory';
 
@@ -26,13 +25,6 @@ interface ModalConfig {
 }
 
 // Add this after the ModalConfig interface
-interface FilterOption {
-    id: string;
-    label: string;
-    type: 'checkbox' | 'radio' | 'range';
-    options?: Array<{ value: string; label: string }>;
-    range?: { min: number; max: number };
-}
 
 export default function TestPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -54,137 +46,6 @@ export default function TestPage() {
     const showModal = (config: ModalConfig) => {
         setModalConfig(config);
         setIsModalOpen(true);
-    };
-
-    const productFilters: FilterOption[] = [
-        {
-            id: 'category',
-            label: 'Category',
-            type: 'checkbox',
-            options: [
-                { value: 'adidas', label: 'Adidas' },
-                { value: 'armani', label: 'Armani' },
-                { value: 'geneva', label: 'Geneva' },
-                { value: 'gucci', label: 'Gucci' },
-                { value: 'nike', label: 'Nike' },
-            ],
-        },
-        {
-            id: 'rating',
-            label: 'Rating',
-            type: 'checkbox',
-        },
-        {
-            id: 'price',
-            label: 'Pricing',
-            type: 'range',
-        }
-    ];
-
-
-    const products = [
-        {
-            productId: '1',
-            title: "Chilliwack black Bomber",
-            brand: "HUMANATURE",
-            price: 95000,
-            rating: 4,
-            image: "/product.png",
-            isNew: true,
-            discount: {
-                amount: 10000,
-                percentage: 5
-            }
-        },
-        {
-            productId: '2',
-            title: "Chilliwack black Bomber",
-            brand: "HUMANATURE",
-            price: 95000,
-            rating: 4,
-            image: "/product.png",
-            isNew: true,
-            discount: {
-                amount: 10000,
-                percentage: 5
-            }
-        },
-        {
-            productId: '3',
-            title: "Chilliwack black Bomber",
-            brand: "HUMANATURE",
-            price: 95000,
-            rating: 4,
-            image: "/product.png",
-            isNew: true,
-            discount: {
-                amount: 10000,
-                percentage: 5
-            }
-        },
-        {
-            productId: '4',
-            title: "Chilliwack black Bomber",
-            brand: "HUMANATURE",
-            price: 95000,
-            rating: 4,
-            image: "/product.png",
-            discount: {
-                amount: 10000,
-                percentage: 5
-            }
-        },
-        {
-            productId: '5',
-            title: "Chilliwack black Bomber",
-            brand: "HUMANATURE",
-            price: 95000,
-            rating: 4,
-            image: "/product.png",
-            discount: {
-                amount: 10000,
-                percentage: 5
-            }
-        },
-        {
-            productId: '6',
-            title: "Chilliwack black Bomber",
-            brand: "HUMANATURE",
-            price: 95000,
-            rating: 4,
-            image: "/product.png",
-            isNew: true,
-            discount: {
-                amount: 10000,
-                percentage: 5
-            }
-        }
-    ];
-
-
-
-    const [isLoading, setIsLoading] = useState(false);
-    const [filteredProducts, setFilteredProducts] = useState(products);
-
-    // Add this type definition near the top of the file with other interfaces
-    type FilterValue = string[] | number[] | { min?: number; max?: number };
-
-    const handleFilterChange = async (filters: Record<string, FilterValue>) => {
-        setIsLoading(true);
-        console.log(filters);
-        try {
-            await new Promise(resolve => setTimeout(resolve, 500));
-
-            const newProducts = products.filter(product => {
-                // Add your filter logic here
-                console.log(product)
-                return true;
-            });
-
-            setFilteredProducts(newProducts);
-        } finally {
-            setIsLoading(false);
-        }
     };
 
 

@@ -4,9 +4,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import { Product } from '@/types/user';
 
 export const DealOfMonth = () => {
-    const [products, setProducts] = useState<any[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -16,7 +17,10 @@ export const DealOfMonth = () => {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
                 const data = await response.json();
                 setProducts(data.products || []);
-            } catch (error) {
+            } catch (error: unknown) {
+                if (error instanceof Error) {
+                    console.error('Error fetching products:', error.message);
+                }
                 setProducts([]);
             } finally {
                 setIsLoading(false);

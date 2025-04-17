@@ -19,7 +19,6 @@ const defaultAddresses = [
 ];
 
 export default function ShippingAddressPage() {
-    const [addresses, setAddresses] = useState(defaultAddresses);
     const [isEditing, setIsEditing] = useState<number | null>(null);
     const [isAdding, setIsAdding] = useState(false);
 
@@ -42,7 +41,7 @@ export default function ShippingAddressPage() {
                 </div>
 
                 <div className="space-y-4">
-                    {addresses.map((address) => (
+                    {defaultAddresses.map((address) => (
                         <div
                             key={address.id}
                             className="border rounded-lg p-4 relative"

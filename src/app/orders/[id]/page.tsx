@@ -6,7 +6,6 @@ import { TopBanner } from '@/components/layout/TopBanner';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
-import { demoProducts } from '@/data/demo';
 import { RatingModal } from '@/components/orders/RatingModal';
 import { Button } from '@/components/ui/Button';
 import { Plus } from 'lucide-react';

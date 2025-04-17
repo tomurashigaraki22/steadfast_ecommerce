@@ -7,6 +7,25 @@ export interface User {
     address?: string;   
 }
 
+export interface Product {
+    productId: string;
+    title: string;
+    brand: string;
+    price: number;
+    rating: number | null;  // Updated to handle null ratings
+    image: string;
+    isNew?: boolean;
+    dateCreated: string;
+    dateUpdated: string;
+    categoryId: string;
+    stock: number;
+    totalSold: number;
+    discount?: {
+        amount: number;
+        percentage: number;
+    };
+}
+
 export interface LoginCredentials {
     email: string;
     password: string;

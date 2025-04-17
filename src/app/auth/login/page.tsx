@@ -14,7 +14,6 @@ import Link from 'next/link';
 export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [error, setError] = useState('');
     const [modalType, setModalType] = useState<'success' | 'error'>('success');
     const [formData, setFormData] = useState({ email: '', password: '' });
     const router = useRouter();

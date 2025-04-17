@@ -7,7 +7,6 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import Link from 'next/link';
-import { demoProducts } from '@/data/demo';
 
 interface OrderItem {
     orderId: string;

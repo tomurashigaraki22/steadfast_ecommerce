@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { useAuth } from '@/contexts/AuthContext';
-import Cookies from 'js-cookie';
  
 export function SecurityTab() {
     const { changePassword } = useAuth();
@@ -50,11 +49,13 @@ export function SecurityTab() {
                 confirmPassword: ''
             });
 
-        } catch (error: any) {
-            setModalType('error');
-            setModalMessage(error.message || 'Failed to update password');
-            setShowModal(true);
-        } finally {
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                console.error('Error:', error.message);
+            } else {
+                console.error('An unknown error occurred');
+            }
+        }finally {
             setIsLoading(false);
         }
     };

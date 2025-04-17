@@ -11,15 +11,7 @@ import { ProfileTab } from './components/ProfileTab';
 import { LogoutTab } from './components/LogoutTab';
 import Cookies from 'js-cookie';
 import { User } from '@/types/user';
-import { useAuth } from '@/contexts/AuthContext';
 
-const defaultProfile = {
-    firstName: 'Jessica',
-    lastName: 'Jackson',
-    email: 'jess@mail.com',
-    phone: '+234',
-    address: 'No.1 Apartment Street, Address ltd, Lagos, Nigeria'
-};
 
 export default function ProfilePage() {
     const [activeTab, setActiveTab] = useState('personal');

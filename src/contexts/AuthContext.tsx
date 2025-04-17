@@ -60,11 +60,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setUser(data.user);
 
             return { success: true };
-        } catch (error: any) {
-            return { 
-                success: false, 
-                error: error.message || 'Login failed' 
-            };
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return {
+                    success: false,
+                    error: error.message || 'Failed to send reset email'
+                };
+            } else {
+                return {
+                    success: false,
+                    error: 'Failed to send reset email'
+                };
+            }
         }
     };
 
@@ -89,11 +96,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
 
             return { success: true };
-        } catch (error: any) {
-            return {
-                success: false,
-                error: error.message || 'Signup failed'
-            };
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return {
+                    success: false,
+                    error: error.message || 'Failed to send reset email'
+                };
+            } else {
+                return {
+                    success: false,
+                    error: 'Failed to send reset email'
+                };
+            }
         }
     };
 
@@ -112,11 +126,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
 
             return { success: true };
-        } catch (error: any) {
-            return {
-                success: false,
-                error: error.message || 'Verification failed'
-            };
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return {
+                    success: false,
+                    error: error.message || 'Failed to send reset email'
+                };
+            } else {
+                return {
+                    success: false,
+                    error: 'Failed to send reset email'
+                };
+            }
         }
     };
 
@@ -143,11 +164,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             Cookies.set('user', JSON.stringify(updatedUser), { expires: 70000 });
 
             return { success: true };
-        } catch (error: any) {
-            return {
-                success: false,
-                error: error.message || 'Failed to update profile'
-            };
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return {
+                    success: false,
+                    error: error.message || 'Failed to send reset email'
+                };
+            } else {
+                return {
+                    success: false,
+                    error: 'Failed to send reset email'
+                };
+            }
         }
     };
 
@@ -176,11 +204,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
 
             return { success: true };
-        } catch (error: any) {
-            return {
-                success: false,
-                error: error.message || 'Failed to update password'
-            };
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return {
+                    success: false,
+                    error: error.message || 'Failed to send reset email'
+                };
+            } else {
+                return {
+                    success: false,
+                    error: 'Failed to send reset email'
+                };
+            }
         }
     };
 
@@ -198,11 +233,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
 
             return { success: true };
-        } catch (error: any) {
-            return {
-                success: false,
-                error: error.message || 'Failed to send reset email'
-            };
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return {
+                    success: false,
+                    error: error.message || 'Failed to send reset email'
+                };
+            } else {
+                return {
+                    success: false,
+                    error: 'Failed to send reset email'
+                };
+            }
         }
     };
 

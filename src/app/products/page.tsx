@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { TopBanner } from '@/components/layout/TopBanner';
 import { Header } from '@/components/layout/Header';
-import { demoProducts, categories } from '@/data/demo';
+import { categories } from '@/data/demo';
 
 // Move these to a separate types file later
 type FilterValue = string[] | number[] | { min?: number; max?: number };
@@ -41,9 +41,6 @@ export default function ProductsPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [productFilters, setProductFilters] = useState<FilterOption[]>([]);
 
-    const handleProductClick = (productId: string) => {
-        router.push(`/products/v/${productId}`);
-    };
 
     useEffect(() => {
         if (!products || products.length === 0) return;
