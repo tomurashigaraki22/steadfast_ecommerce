@@ -293,33 +293,9 @@ export default function TestPage() {
             <DealOfMonth />
 
             <DemoTitle text="Product Grid without filter" />
+ 
 
-            <ProductGrid
-                title="New Arrivals"
-                subtitle="Check out our latest products"
-                viewAllLink="/new-arrivals"
-                products={products.slice(0, 4)} 
-            />
-
-
-
-            <DemoTitle text="Product Grid with filter" />
-            <ProductGrid
-                title="Explore Products with Filters"
-                subtitle="Find the perfect product for you"
-                viewAllLink="/products"
-                products={filteredProducts}
-                filters={productFilters.map(filter => ({
-                    ...filter,
-                    options: filter.options?.map(option => ({
-                        ...option,
-                        amount: 0 // Adding the required amount property
-                    }))
-                }))}
-                onFilterChange={handleFilterChange}
-                isLoading={isLoading}
-            />
-
+      
             <Modal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
