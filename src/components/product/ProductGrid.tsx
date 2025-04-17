@@ -8,13 +8,13 @@ import { Breadcrumb } from '../ui/Breadcrumb';
 type FilterValue = string[] | number[] | { min?: number; max?: number };
 
 interface ProductGridProps {
-    title?: string;
+    name?: string;
     subtitle?: string;
     viewAllLink?: string;
     enableSales?: boolean;
     products: Array<{
-        productId: string;
-        title: string;
+        id: string;
+        name: string;
         brand: string;
         price: number;
         rating: number;
@@ -38,7 +38,7 @@ interface ProductGridProps {
 }
 
 export const ProductGrid = ({
-    title,
+    name,
     subtitle,
     viewAllLink,
     products,
@@ -83,10 +83,10 @@ export const ProductGrid = ({
                     </div>
                 )}
 
-                {(title || subtitle || filters) && (
+                {(name || subtitle || filters) && (
                     <div className="flex justify-between mb-5 items-center">
                         <div>
-                            {title && <h2 className="text-lg font-semibold">{title}</h2>}
+                            {name && <h2 className="text-lg font-semibold">{name}</h2>}
                             {subtitle && <p className="text-sm text-gray-600 mt-1">{subtitle}</p>}
                         </div>
                         {filters && (
@@ -168,7 +168,7 @@ export const ProductGrid = ({
                     <div className="flex-1">
                         <div className={`grid grid-cols-2 ${filters && isFilterOpen ? 'md:grid-cols-3' : 'md:grid-cols-4'} gap-3 space-y-2 md:space-y-0 md:gap-6`}>
                             {currentProducts.map((product) => (
-                                <ProductCard key={product.productId} enableSales={enableSales} {...product} />
+                                <ProductCard key={product.id} enableSales={enableSales} {...product} />
                             ))}
                         </div>
 

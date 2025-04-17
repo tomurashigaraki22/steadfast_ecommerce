@@ -17,8 +17,8 @@ import { Footer } from '@/components/layout/Footer';
 import { ProductTabs } from '@/components/product/ProductTabs';
 import { ProductGrid } from '@/components/product/ProductGrid';
 interface Product {
-    productId: string;
-    title: string;
+    id: string;
+    name: string;
     brand: string;
     price: number;
     rating: number;
@@ -27,6 +27,7 @@ interface Product {
     dateCreated: string;
     dateUpdated: string;
     stock: number;
+    category: string;
     totalSold: number;
     discount?: {
         amount: number;
@@ -42,14 +43,31 @@ export default function ProductDetailPage() {
     const [isAdded, setIsAdded] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [products, setProducts] = useState<Product[]>([]);
+    const [isPageLoading, setIsPageLoading] = useState(true);
+
 
     useEffect(() => {
         setIsWishlisted(FavoritesHelper.isProductFavorite(productId));
     }, [productId]);
 
     useEffect(() => {
-        setProducts(demoProducts);
+        const fetchProducts = async () => {
+            try {
+                setIsLoading(true);
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
+                const data = await response.json();
+                setProducts(data.products || []);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            } finally {
+                setIsLoading(false);
+                setIsPageLoading(false);
+            }
+        };
+
+        fetchProducts();
     }, []);
+
     const toggleWishlist = async () => {
         try {
             setIsLoading(true);
@@ -72,18 +90,36 @@ export default function ProductDetailPage() {
         setIsAdded(!isAdded);
         console.log('Added to cart');
     };
-    const product = demoProducts.find(p => p.productId === productId);
-    const category = product ? categories.find(c => c.id === product.categoryId) : null;
 
-    if (!product || !category) {
+    const product = products.find(p => p.id === productId);
+    console.log("PRODUCT: ", products)
+    console.log("PRID: ", productId)
+    const category = product ? categories.find(c => c.id === product.category) : null;
+
+    
+    if (!product) {
         return <div>Product not found</div>;
+    }
+
+    if (isPageLoading) {
+        return (
+            <>
+                <TopBanner theme="dark" />
+                <Header />
+                <main className="container mx-auto px-4 pt-8">
+                    <div className="flex items-center justify-center min-h-[60vh]">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#184193]"></div>
+                    </div>
+                </main>
+                <Footer />
+            </>
+        );
     }
 
     const breadcrumbItems = [
         { label: 'Home', href: '/' },
-        { label: 'Categories', href: '/categories' },
-        { label: category.name, href: `/products/category/${category.slug}` },
-        { label: product.title }
+        { label: 'Products', href: '/products' },
+        { label: product.name }
     ];
 
     return (
@@ -99,7 +135,7 @@ export default function ProductDetailPage() {
                         <div className="relative aspect-square mb-4">
                             <Image
                                 src={product.image}
-                                alt={product.title}
+                                alt={product.name}
                                 fill
                                 className="object-cover rounded-lg"
                             />
@@ -109,7 +145,7 @@ export default function ProductDetailPage() {
                                 <div key={index} className="relative aspect-square">
                                     <Image
                                         src={product.image}
-                                        alt={`${product.title} view ${index + 1}`}
+                                        alt={`${product.name} view ${index + 1}`}
                                         fill
                                         className="object-cover rounded-lg"
                                     />
@@ -148,7 +184,7 @@ export default function ProductDetailPage() {
                             </div>
                         </div>
 
-                        <h1 className="text-2xl font-semibold mb-2">{product.title}</h1>
+                        <h1 className="text-2xl font-semibold mb-2">{product.name}</h1>
                         <p className="text-gray-400 text-sm mb-4">POP/Surface Light</p>
                         <p className="text-gray-600 mb-8 leading-relaxed">
                             Buy one or buy a few and make every space where you sit more convenient. Light and easy to move around with removable tray top; handy for serving snacks.
@@ -202,11 +238,11 @@ export default function ProductDetailPage() {
                     </div>
                 </div>
 
-                <ProductTabs productId={product.productId} />
+                <ProductTabs productId={product.id} />
 
             </main>
             <ProductGrid
-                title="Similar Items You Might Also Like"
+                name="Similar Items You Might Also Like"
                 products={products.slice(0, 4)}
                 isLoading={isLoading} />
             <Footer />

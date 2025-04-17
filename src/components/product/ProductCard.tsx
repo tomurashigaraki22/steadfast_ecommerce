@@ -13,7 +13,7 @@ import { FavoritesHelper } from '@/lib/favorites';
 
 // Add to interface ProductCardProps
 interface ProductCardProps {
-    title: string;
+    name: string;
     brand: string;
     price: number;
     rating: number;
@@ -24,15 +24,15 @@ interface ProductCardProps {
         amount: number;
         percentage: number;
     };
-    productId: string;
+    id: string;
     titleHeight?: boolean;
     padButton?: boolean;
 
 }
 
 export const ProductCard = ({
-    productId,
-    title,
+    id,
+    name,
     brand,
     price,
     rating,
@@ -48,15 +48,15 @@ export const ProductCard = ({
     const [isLoading, setIsLoading] = useState(false);
     const [isAdded, setIsAdded] = useState(false);
 
-    const imageNumber = parseInt(productId) % 10 + 1;
+    const imageNumber = parseInt(id) % 10 + 1;
     const imagePath = `/product${imageNumber}.png`;
     console.log(image)
     useEffect(() => {
-        setIsWishlisted(FavoritesHelper.isProductFavorite(productId));
-    }, [productId]);
+        setIsWishlisted(FavoritesHelper.isProductFavorite(id));
+    }, [id]);
 
     const handleProductClick = () => {
-        router.push(`/products/v/${productId}`);
+        router.push(`/products/v/${id}`);
     };
 
     const toggleWishlist = async () => {
@@ -64,9 +64,9 @@ export const ProductCard = ({
             setIsLoading(true);
 
             if (isWishlisted) {
-                FavoritesHelper.removeFromFavorites(productId);
+                FavoritesHelper.removeFromFavorites(id);
             } else {
-                FavoritesHelper.addToFavorites(productId);
+                FavoritesHelper.addToFavorites(id);
             }
 
             setIsWishlisted(!isWishlisted);
@@ -91,7 +91,7 @@ export const ProductCard = ({
                 <div className="relative w-full aspect-square rounded-lg overflow-hidden">
                     <Image
                         src={imagePath}
-                        alt={title}
+                        alt={name}
                         fill
                         className="object-cover transition-transform duration-300 ease-out group-hover:scale-110"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -121,7 +121,7 @@ export const ProductCard = ({
                     </button>
                 </div>
                 <div className={`space-y-1 ${titleHeight ? 'h-5' : 'h-12'} md:h-auto cursor-pointer px-1`} onClick={handleProductClick}>
-                    <h3 className="font-medium text-[15px] line-clamp-2 md:line-clamp-1">{title}</h3>
+                    <h3 className="font-medium text-[15px] line-clamp-2 md:line-clamp-1">{name}</h3>
                     <p className="hidden md:flex text-gray-600 text-xs line-clamp-1">{brand}</p>
                 </div>
 
