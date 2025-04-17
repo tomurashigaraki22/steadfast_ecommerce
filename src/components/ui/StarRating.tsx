@@ -1,7 +1,7 @@
 'use client';
 
 interface OutlinedStarRatingProps {
-    rating: number;
+    rating: number | 0;
 }
 
 export const StarRating = ({ rating }: OutlinedStarRatingProps) => {

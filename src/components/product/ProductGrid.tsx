@@ -8,7 +8,7 @@ import { Breadcrumb } from '../ui/Breadcrumb';
 type FilterValue = string[] | number[] | { min?: number; max?: number };
 
 interface ProductGridProps {
-    name?: string;
+    title?: string;
     subtitle?: string;
     viewAllLink?: string;
     enableSales?: boolean;
@@ -39,7 +39,7 @@ interface ProductGridProps {
 }
 
 export const ProductGrid = ({
-    name,
+    title,
     subtitle,
     viewAllLink,
     products,
@@ -84,10 +84,10 @@ export const ProductGrid = ({
                     </div>
                 )}
 
-                {(name || subtitle || filters) && (
+                {(title || subtitle || filters) && (
                     <div className="flex justify-between mb-5 items-center">
                         <div>
-                            {name && <h2 className="text-lg font-semibold">{name}</h2>}
+                            {title && <h2 className="text-lg font-semibold">{title}</h2>}
                             {subtitle && <p className="text-sm text-gray-600 mt-1">{subtitle}</p>}
                         </div>
                         {filters && (

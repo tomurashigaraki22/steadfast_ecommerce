@@ -195,7 +195,7 @@ export default function ProductsPage() {
             <TopBanner theme={'dark'} />
             <Header />
             <ProductGrid
-                name="All Products"
+                title="All Products"
                 products={products}
                 filters={productFilters as import('@/components/product/ProductFilter').FilterOption[]}
                 onFilterChange={handleFilterChange}

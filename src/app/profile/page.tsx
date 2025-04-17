@@ -32,11 +32,13 @@ export default function ProfilePage() {
         switch (activeTab) {
             case 'personal':
                 return <ProfileTab
-                    firstName={userData?.username?.split(" ")[0] || ''}
-                    lastName={userData?.username?.split(" ")[1] || ''}
-                    email={userData?.email || ''}
-                    phone={userData?.phone_number || ''}
-                    address={userData?.address || ''}
+                    user={{
+                        firstName: userData?.username?.split(" ")[0] || '',
+                        lastName: userData?.username?.split(" ")[1] || '',
+                        email: userData?.email || '',
+                        phone: userData?.phone_number || '',
+                        address: userData?.address || ''
+                    }}
                 />;
             case 'security':
                 return <SecurityTab />;

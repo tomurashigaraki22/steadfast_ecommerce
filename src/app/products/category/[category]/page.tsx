@@ -160,7 +160,10 @@ export default function CategoryPage() {
             <ProductGrid
                 title={categoryInfo.name}
                 subtitle={categoryInfo.description}
-                products={products}
+                products={products.map(product => ({
+                    ...product,
+                    images: product.image ? [product.image] : [] // Ensure images array exists
+                }))}
                 filters={productFilters as import('@/components/product/ProductFilter').FilterOption[]}
                 onFilterChange={handleFilterChange}
                 isLoading={isLoading}

@@ -15,12 +15,13 @@ import { BookmarkIcon } from '@/components/icons/bookmark';
 import { Footer } from '@/components/layout/Footer';
 import { ProductTabs } from '@/components/product/ProductTabs';
 import { ProductGrid } from '@/components/product/ProductGrid';
+import { demoProducts } from '@/data/demo';
 interface Product {
     id: string;
     name: string;
     brand: string;
     price: number;
-    rating: number;
+    rating: number | 0;
     image: string;
     images: string[];
     isNew?: boolean;
@@ -117,10 +118,10 @@ export default function ProductDetailPage() {
         );
     }
 
-    const breadcrumbItems = [
+    const breadCrumb = [
         { label: 'Home', href: '/' },
         { label: 'Products', href: '/products' },
-        { label: product.name }
+        { label: product?.name || 'Product Details' }
     ];
 
     return (
@@ -128,32 +129,34 @@ export default function ProductDetailPage() {
             <TopBanner theme="dark" />
             <Header />
             <main className="container mx-auto px-4 pt-8">
-                <Breadcrumb items={breadcrumbItems} />
+                <Breadcrumb items={breadCrumb} />
 
                 <div className="flex flex-col md:flex-row gap-8 mt-8">
                     {/* Product Images */}
                     <div className="md:w-1/2">
                         <div className="relative aspect-square mb-4">
+                        {product && (
                             <Image
                                 src={product.images[0]}
                                 alt={product.name}
                                 fill
                                 className="object-cover rounded-lg"
                             />
+                        )}
                         </div>
                         <div className="grid grid-cols-3 gap-4">
-                            {product.images.slice(1).map((image, index) => (
-                                <div key={index} className="relative aspect-square">
-                                    <Image
-                                        src={image}
-                                        alt={`${product.name} view ${index + 1}`}
-                                        fill
-                                        className="object-cover rounded-lg"
-                                        sizes="(max-width: 768px) 33vw, 25vw"
-                                        priority={index === 0}
-                                    />
-                                </div>
-                            ))}
+                        {product && product.images.slice(1).map((image, index) => (
+                            <div key={index} className="relative aspect-square">
+                                <Image
+                                    src={image}
+                                    alt={`${product.name} view ${index + 1}`}
+                                    fill
+                                    className="object-cover rounded-lg"
+                                    sizes="(max-width: 768px) 33vw, 25vw"
+                                    priority={index === 0}
+                                />
+                            </div>
+                        ))}
                         </div>
                     </div>
 
@@ -162,10 +165,9 @@ export default function ProductDetailPage() {
                         <div className="flex flex-col md:flex-row gap-5 md:gap-0 md:items-center justify-between mb-4">
                             <div className="flex items-center gap-2">
                                 <div className="flex">
-                                    <StarRating rating={product.rating} />
-
+                                    <StarRating rating={product?.rating || 0} />
                                 </div>
-                                <span className="text-sm text-gray-600">{product.rating} Reviews</span>
+                                <span className="text-sm text-gray-600">{product?.rating} Reviews</span>
                             </div>
                             <div className="flex items-center gap-4">
                                 <button className="flex items-center gap-1 bg-[#FFF0F0] text-[#D46F77] px-3 py-2 rounded-xl">
@@ -187,13 +189,13 @@ export default function ProductDetailPage() {
                             </div>
                         </div>
 
-                        <h1 className="text-2xl font-semibold mb-2">{product.name}</h1>
+                        <h1 className="text-2xl font-semibold mb-2">{product?.name}</h1>
                         <p className="text-gray-400 text-sm mb-4">POP/Surface Light</p>
                         <p className="text-gray-600 mb-8 leading-relaxed">
                             Buy one or buy a few and make every space where you sit more convenient. Light and easy to move around with removable tray top; handy for serving snacks.
                         </p>
 
-                        <p className="text-2xl font-semibold mb-8">NGN {product.price.toLocaleString()}.00</p>
+                        <p className="text-2xl font-semibold mb-8">NGN {product?.price.toLocaleString()}.00</p>
 
                         <div className="mb-8">
                             <h3 className="font-medium mb-4">Choose your variation</h3>
@@ -241,12 +243,16 @@ export default function ProductDetailPage() {
                     </div>
                 </div>
 
-                <ProductTabs productId={product.id} product={product} />
-
+                {product && (
+                    <ProductTabs productId={product.id} />
+                )}
             </main>
             <ProductGrid
-                name="Similar Items You Might Also Like"
-                products={products.slice(0, 4)}
+                title="Similar Items You Might Also Like"
+                products={demoProducts.slice(0, 4).map(product => ({
+                    ...product,
+                    images: product.image ? [product.image] : [] // Ensure images array exists
+                }))}
                 isLoading={isLoading} />
             <Footer />
         </>

@@ -23,14 +23,20 @@ export default function Home() {
         title="Explore Products"
         subtitle=""
         viewAllLink="/products"
-        products={demoProducts.slice(0, 8)}
+        products={demoProducts.slice(0, 5).map(product => ({
+          ...product,
+          images: product.image ? [product.image] : [] // Ensure images array exists
+      }))}
       />
       <WhyShopWithUs />
       <ProductGrid
         title="New Arrivals"
         subtitle=""
         viewAllLink="/products/new"
-        products={demoProducts.slice(0, 8)}
+        products={demoProducts.slice(0, 5).map(product => ({
+          ...product,
+          images: product.image ? [product.image] : [] // Ensure images array exists
+      }))}
         enableSales={false}
       />
       <CTASection />

@@ -4,7 +4,6 @@ import { ProductReviews } from './ProductReviews';
 
 interface ProductTabsProps {
     productId: string;
-    products: string[];
 }
 
 export const ProductTabs = ({ productId }: ProductTabsProps) => {

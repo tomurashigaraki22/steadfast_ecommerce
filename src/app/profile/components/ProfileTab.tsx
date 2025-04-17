@@ -10,17 +10,30 @@ import { useAuth } from '@/contexts/AuthContext';
 
 
 
-export function ProfileTab() {
+interface UserProfile {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    address: string;
+}
+
+interface ProfileTabProps {
+    user: UserProfile;
+}
+
+
+
+export function ProfileTab({ user }: ProfileTabProps) {
     const { updateProfile } = useAuth();
-     const initialProfile = {
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        address: '',
-    };
     const [isEditing, setIsEditing] = useState(false);
-    const [profile, setProfile] = useState(initialProfile);
+    const [profile, setProfile] = useState({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phone: user.phone,
+        address: user.address
+    });
     const [isLoading, setIsLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [modalType, setModalType] = useState<'success' | 'error'>('success');

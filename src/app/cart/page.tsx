@@ -402,7 +402,10 @@ export default function CartPage() {
 
                 <ProductGrid
                     title="Similar Items You Might Like"
-                    products={demoProducts.slice(0, 4)}
+                    products={demoProducts.slice(0, 4).map(product => ({
+                        ...product,
+                        images: product.image ? [product.image] : [] // Ensure images array exists
+                    }))}
                     isLoading={false}
                 />
                 <Footer />

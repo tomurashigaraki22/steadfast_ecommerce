@@ -1,6 +1,7 @@
 import { AuthProvider } from "@/contexts/AuthContext";
 import "./globals.css";
 import { Inter, Montserrat } from 'next/font/google'
+import { Suspense } from "react";
 
 const montserrat = Montserrat({
   weight: ['400', '500', '600', '700'],
@@ -30,11 +31,7 @@ export const metadata = {
     statusBarStyle: 'default',
     title: 'Steadfast Store',
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-  }
+  // Remove the viewport property from here
 }
 
 export const viewport = {
@@ -56,9 +53,11 @@ export default function RootLayout({
       <body
         className={`${montserrat.className}`}
       >
+        <Suspense fallback={<div>Loading...</div>}>
         <AuthProvider>
           {children}
         </AuthProvider>
+        </Suspense>
       </body>
     </html>
   );
