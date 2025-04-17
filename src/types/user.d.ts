@@ -4,7 +4,7 @@ export interface User {
     username: string;
     phone_number?: string;
     is_verified: boolean;
-    address?: string;  // Add this line
+    address?: string;   
 }
 
 export interface LoginCredentials {

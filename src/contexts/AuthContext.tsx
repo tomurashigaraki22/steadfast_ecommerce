@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import { createContext, useContext, useState, useEffect } from 'react';
 
 import { User, LoginCredentials, AuthResponse, SignupCredentials, VerifyEmailCredentials } from '@/types/user';
-;
+
 
 
 interface AuthContextType {
@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const data: AuthResponse = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || 'Login failed');
+                throw new Error((data as { error?: string }).error || 'Login failed');
             }
 
             // Store in cookies instead of localStorage
@@ -138,7 +138,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             // Update local user state and cookie
             const updatedUser = { ...user, ...profileData };
-            setUser(updatedUser);
+            setUser(updatedUser as User);
             Cookies.set('user', JSON.stringify(updatedUser), { expires: 70000 });
 
             return { success: true };

@@ -113,7 +113,7 @@ export const Header = () => {
                                             className="flex items-center gap-2 text-sm font-semibold hover:text-[#184193] relative z-10"
                                         >
                                             <User size={20} />
-                                            <span>{user.firstName}</span>
+                                            <span>{user.username}</span>
                                             <ChevronDown size={16} />
                                         </button>
 
