@@ -19,8 +19,16 @@ interface ProfileProps {
 
 export function ProfileTab(defaultProfile: ProfileProps) {
     const { updateProfile } = useAuth();
+    // Ensure all fields have a default value to avoid undefined
+    const initialProfile = {
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        address: '',
+    };
     const [isEditing, setIsEditing] = useState(false);
-    const [profile, setProfile] = useState(defaultProfile);
+    const [profile, setProfile] = useState(initialProfile);
     const [isLoading, setIsLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [modalType, setModalType] = useState<'success' | 'error'>('success');

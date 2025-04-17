@@ -52,7 +52,8 @@ export const ProductCard = ({
 
     const imageNumber = parseInt(id) % 10 + 1;
     const imagePath = `/product${imageNumber}.png`;
-    console.log(image)
+    console.log("THIS IS: ", imagePath, id)
+    console.log("Coonfirm: ", image)
     useEffect(() => {
         setIsWishlisted(FavoritesHelper.isProductFavorite(id));
     }, [id]);
@@ -92,8 +93,8 @@ export const ProductCard = ({
             >
                 <div className="relative w-full aspect-square rounded-lg overflow-hidden">
                     <Image
-                        src={images[0]}
-                        alt={name}
+                        src={Array.isArray(images) && images.length > 0 ? images[0] : image}
+                        alt={name || "ProductImage"}
                         fill
                         className="object-cover transition-transform duration-300 ease-out group-hover:scale-110"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
