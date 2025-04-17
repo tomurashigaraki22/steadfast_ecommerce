@@ -13,8 +13,8 @@ interface ProductGridProps {
     viewAllLink?: string;
     enableSales?: boolean;
     products: Array<{
-        id: string;
-        name: string;
+        productId: string;
+        title: string;
         brand: string;
         price: number;
         rating: number;
@@ -168,9 +168,21 @@ export const ProductGrid = ({
 
                     <div className="flex-1">
                         <div className={`grid grid-cols-2 ${filters && isFilterOpen ? 'md:grid-cols-3' : 'md:grid-cols-4'} gap-3 space-y-2 md:space-y-0 md:gap-6`}>
-                            {currentProducts.map((product) => (
-                                <ProductCard key={product.id} enableSales={enableSales} {...product} />
-                            ))}
+                        {currentProducts.map((product) => (
+                            <ProductCard 
+                                key={product.productId} 
+                                enableSales={enableSales} 
+                                productId={product.productId}
+                                title={product.title}
+                                brand={product.brand}
+                                price={product.price}
+                                rating={product.rating}
+                                image={product.image}
+                                images={product.images}
+                                isNew={product.isNew}
+                                discount={product.discount}
+                            />
+                        ))}
                         </div>
 
                         {totalPages > 1 && (

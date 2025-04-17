@@ -13,10 +13,11 @@ import { FavoritesHelper } from '@/lib/favorites';
 
 // Add to interface ProductCardProps
 interface ProductCardProps {
-    name: string;
+    productId: string;
+    title: string;
     brand: string;
     price: number;
-    rating: number;
+    rating: number | 0;
     image: string;
     images: string[];
     enableSales?: boolean;
@@ -25,15 +26,14 @@ interface ProductCardProps {
         amount: number;
         percentage: number;
     };
-    id: string;
     titleHeight?: boolean;
     padButton?: boolean;
 
 }
 
 export const ProductCard = ({
-    id,
-    name,
+    productId,
+    title,
     brand,
     price,
     rating,
@@ -50,16 +50,16 @@ export const ProductCard = ({
     const [isLoading, setIsLoading] = useState(false);
     const [isAdded, setIsAdded] = useState(false);
 
-    const imageNumber = parseInt(id) % 10 + 1;
+    const imageNumber = parseInt(productId) % 10 + 1;
     const imagePath = `/product${imageNumber}.png`;
-    console.log("THIS IS: ", imagePath, id)
+    console.log("THIS IS: ", imagePath, productId)
     console.log("Coonfirm: ", image)
     useEffect(() => {
-        setIsWishlisted(FavoritesHelper.isProductFavorite(id));
-    }, [id]);
+        setIsWishlisted(FavoritesHelper.isProductFavorite(productId));
+    }, [productId]);
 
     const handleProductClick = () => {
-        router.push(`/products/v/${id}`);
+        router.push(`/products/v/${productId}`);
     };
 
     const toggleWishlist = async () => {
@@ -67,9 +67,9 @@ export const ProductCard = ({
             setIsLoading(true);
 
             if (isWishlisted) {
-                FavoritesHelper.removeFromFavorites(id);
+                FavoritesHelper.removeFromFavorites(productId);
             } else {
-                FavoritesHelper.addToFavorites(id);
+                FavoritesHelper.addToFavorites(productId);
             }
 
             setIsWishlisted(!isWishlisted);
@@ -93,8 +93,8 @@ export const ProductCard = ({
             >
                 <div className="relative w-full aspect-square rounded-lg overflow-hidden">
                     <Image
-                        src={Array.isArray(images) && images.length > 0 ? images[0] : image}
-                        alt={name || "ProductImage"}
+                        src={Array.isArray(images) && images.length > 0 ? images[0] : '/product.png'}
+                        alt={title || "ProductImage"}
                         fill
                         className="object-cover transition-transform duration-300 ease-out group-hover:scale-110"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -124,7 +124,7 @@ export const ProductCard = ({
                     </button>
                 </div>
                 <div className={`space-y-1 ${titleHeight ? 'h-5' : 'h-12'} md:h-auto cursor-pointer px-1`} onClick={handleProductClick}>
-                    <h3 className="font-medium text-[15px] line-clamp-2 md:line-clamp-1">{name}</h3>
+                    <h3 className="font-medium text-[15px] line-clamp-2 md:line-clamp-1">{title}</h3>
                     <p className="hidden md:flex text-gray-600 text-xs line-clamp-1">{brand}</p>
                 </div>
 

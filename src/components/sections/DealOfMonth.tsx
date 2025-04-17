@@ -4,7 +4,26 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { Product } from '@/types/user';
+
+interface Product {
+    productId: string;
+    title: string;
+    brand: string;
+    price: number;
+    rating: number | 0;  // Updated to handle null ratings
+    image: string;
+    images: string[];
+    isNew?: boolean;
+    dateCreated: string;
+    dateUpdated: string;
+    categoryId: string;
+    stock: number;
+    totalSold: number;
+    discount?: {
+        amount: number;
+        percentage: number;
+    };
+}
 
 export const DealOfMonth = () => {
     const [products, setProducts] = useState<Product[]>([]);
@@ -60,9 +79,9 @@ export const DealOfMonth = () => {
                         </div>
 
                         <div className="hidden md:grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
-                            {products.map((product) => (
+                            {products.map((product, index) => (
                                 <ProductCard
-                                    key={product.id || product.productId}
+                                    key={`${product.productId}-${index}`}
                                     {...product}
                                 />
                             ))}

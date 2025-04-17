@@ -22,8 +22,9 @@ interface Product {
     title: string;
     brand: string;
     price: number;
-    rating: number | null;  // Updated to handle null ratings
+    rating: number | 0;  // Updated to handle null ratings
     image: string;
+    images: string[];
     isNew?: boolean;
     dateCreated: string;
     dateUpdated: string;
@@ -132,10 +133,10 @@ export default function ProductsPage() {
             setProducts(products);
             
             // Add null checks and filter out invalid ratings
-            const validProducts = products.filter(p => p && p.rating != null);
-            const prices = validProducts.map(p => p.price);
-            const ratingsSet = new Set(validProducts.map(p => Number(p.rating)));
-            const ratings = Array.from(ratingsSet).filter(rating => !isNaN(rating)).sort((a, b) => b - a);
+            const validProducts = products.filter((p: Product) => p && p.rating != null);
+            const prices = validProducts.map((p: Product) => p.price);
+            const ratingsSet = new Set<number>(validProducts.map((p: Product) => Number(p.rating) ?? 0));
+            const ratings = Array.from(ratingsSet).filter((rating): rating is number => !isNaN(rating)).sort((a: number, b: number) => b - a);
             
             setProductFilters(prev => prev.map(filter => {
                 if (filter.id === 'price') {
@@ -153,7 +154,7 @@ export default function ProductsPage() {
                         options: ratings.map(rating => ({
                             value: rating.toString(),
                             label: `${rating}★ & above`,
-                            amount: validProducts.filter(p => p.rating >= rating).length
+                            amount: validProducts.filter((p: Product) => p.rating >= rating).length
                         }))
                     };
                 }
