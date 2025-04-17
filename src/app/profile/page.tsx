@@ -42,14 +42,6 @@ export default function ProfilePage() {
                 return <SecurityTab />;
             case 'notification':
                 return <NotificationsTab />;
-            case 'orders':
-                return (
-                    <div className="py-[2.5rem] px-[2.5rem] bg-[#FAFAFA] max-w-2xl mx-auto mt-[3rem] border border-[#00000010] rounded-2xl">
-                        <h1 className="text-xl font-medium mb-1">Order History</h1>
-                        <p className="text-sm text-[#15151580]">View your order history</p>
-                        {/* Add order history content */}
-                    </div>
-                );
             case 'logout':
                 return <LogoutTab />;
             default:

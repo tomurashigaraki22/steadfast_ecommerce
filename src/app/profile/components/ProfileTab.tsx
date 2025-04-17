@@ -12,8 +12,7 @@ import { useAuth } from '@/contexts/AuthContext';
 
 export function ProfileTab() {
     const { updateProfile } = useAuth();
-    // Ensure all fields have a default value to avoid undefined
-    const initialProfile = {
+     const initialProfile = {
         firstName: '',
         lastName: '',
         email: '',
