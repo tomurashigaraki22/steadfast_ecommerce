@@ -4,18 +4,58 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Pen } from 'lucide-react';
+import { Modal } from '@/components/ui/Modal';
+import Cookies from 'js-cookie';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface ProfileProps {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    address: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    phone?: string;
+    address?: string;
 }
 
+
 export function ProfileTab(defaultProfile: ProfileProps) {
+    const { updateProfile } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
     const [profile, setProfile] = useState(defaultProfile);
+    const [isLoading, setIsLoading] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [modalType, setModalType] = useState<'success' | 'error'>('success');
+    const [modalMessage, setModalMessage] = useState('');
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsLoading(true);
+
+        try {
+            const result = await updateProfile({
+                username: `${profile.firstName} ${profile.lastName}`,
+                email: profile.email,
+                phone_number: profile.phone,
+                address: profile.address
+            });
+
+            if (!result.success) {
+                throw new Error(result.error);
+            }
+
+            setModalType('success');
+            setModalMessage('Profile updated successfully!');
+            setShowModal(true);
+            setIsEditing(false);
+
+        } catch (error: any) {
+            setModalType('error');
+            setModalMessage(error.message || 'Failed to update profile');
+            setShowModal(true);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
 
     return (
         <div className="py-[2.5rem] px-[2.5rem] bg-[#FAFAFA] max-w-2xl mx-auto mt-[3rem] border border-[#00000010] rounded-2xl">
@@ -36,7 +76,7 @@ export function ProfileTab(defaultProfile: ProfileProps) {
             </div>
 
             {isEditing ? (
-                <form className="space-y-4">
+                <form className="space-y-4" onSubmit={handleSubmit}>
                     <Input
                         label="First Name"
                         value={profile.firstName}
@@ -68,11 +108,12 @@ export function ProfileTab(defaultProfile: ProfileProps) {
                         <Button
                             variant="outline"
                             className='bg-white'
+                            type="button"
                             onClick={() => setIsEditing(false)}
                         >
                             Cancel
                         </Button>
-                        <Button onClick={() => setIsEditing(false)}>
+                        <Button type="submit" isLoading={isLoading}>
                             Save Changes
                         </Button>
                     </div>
@@ -101,6 +142,16 @@ export function ProfileTab(defaultProfile: ProfileProps) {
                     </div>
                 </div>
             )}
+
+            <Modal
+                isOpen={showModal}
+                onClose={() => setShowModal(false)}
+                type={modalType}
+                title={modalType === 'success' ? 'Profile Updated' : 'Update Failed'}
+                message={modalMessage}
+                autoClose={modalType === 'success'}
+                autoCloseTime={2000}
+            />
         </div>
     );
 }

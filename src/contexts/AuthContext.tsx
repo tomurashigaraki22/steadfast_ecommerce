@@ -12,9 +12,11 @@ interface AuthContextType {
     login: (credentials: LoginCredentials) => Promise<{ success: boolean; error?: string }>;
     signup: (credentials: SignupCredentials) => Promise<{ success: boolean; error?: string }>;
     verifyEmail: (credentials: VerifyEmailCredentials) => Promise<{ success: boolean; error?: string }>;
+    updateProfile: (profileData: Partial<User>) => Promise<{ success: boolean; error?: string }>;
     logout: () => void;
     isAuthenticated: boolean;
     isLoading: boolean;
+    changePassword: (passwords: { oldPassword: string; newPassword: string }) => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,6 +28,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         try {
             const savedUser = Cookies.get('user');
+            console.log('Saved user:', savedUser); // Add this line to check the value of savedUser
             if (savedUser) {
                 setUser(JSON.parse(savedUser));
             }
@@ -51,8 +54,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
 
             // Store in cookies instead of localStorage
-            Cookies.set('token', data.token, { expires: 7 }); // Expires in 7 days
-            Cookies.set('user', JSON.stringify(data.user), { expires: 7 });
+            Cookies.set('token', data.token, { expires: 70000 }); // Expires in 7 days
+            Cookies.set('user', JSON.stringify(data.user), { expires: 70000 });
             setUser(data.user);
 
             return { success: true };
@@ -116,13 +119,79 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
+    const updateProfile = async (profileData: Partial<User>) => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/profile`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${Cookies.get('token')}`
+                },
+                body: JSON.stringify(profileData)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to update profile');
+            }
+
+            // Update local user state and cookie
+            const updatedUser = { ...user, ...profileData };
+            setUser(updatedUser);
+            Cookies.set('user', JSON.stringify(updatedUser), { expires: 70000 });
+
+            return { success: true };
+        } catch (error: any) {
+            return {
+                success: false,
+                error: error.message || 'Failed to update profile'
+            };
+        }
+    };
+
+    const changePassword = async (passwords: { oldPassword: string; newPassword: string }) => {
+        try {
+            const cookieUser = Cookies.get('user');
+            const userData = cookieUser ? JSON.parse(cookieUser) : null;
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/change-password`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${Cookies.get('token')}`
+                },
+                body: JSON.stringify({
+                    email: userData?.email,
+                    old_password: passwords.oldPassword,
+                    new_password: passwords.newPassword
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to update password');
+            }
+
+            return { success: true };
+        } catch (error: any) {
+            return {
+                success: false,
+                error: error.message || 'Failed to update password'
+            };
+        }
+    };
+
     return (
         <AuthContext.Provider value={{ 
             user, 
             login, 
             signup,
             verifyEmail,
+            updateProfile, // Add this
             logout, 
+            changePassword,
             isAuthenticated: !!user,
             isLoading 
         }}>
