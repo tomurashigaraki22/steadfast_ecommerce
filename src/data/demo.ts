@@ -395,111 +395,111 @@ export const initialcategories = [
         id: 'cat_1a2b3c4d5e6f',
         name: 'Surface Lights',
         image: `/product${Math.floor(Math.random() * 10) + 1}.png`,
-        slug: 'surface-lights',
+        slug: 'surface-light',
         description: 'LED surface and panel lights for efficient illumination',
     },
     {
         id: 'cat_8h9i0j1k2l3m',
         name: 'Outdoor Lights',
         image: "/category.png",
-        slug: 'outdoor-lights',
+        slug: 'outdoor-light',
         description: 'Weather-resistant lights for gardens and outdoor spaces',
     },
     {
         id: 'cat_4n5o6p7q8r9s',
         name: 'Pendant Lights',
         image: "/category.png",
-        slug: 'pendant-lights',
+        slug: 'pendant-light',
         description: 'Stylish hanging lights for dining and living areas',
     },
     {
         id: 'cat_2t3u4v5w6x7y',
         name: 'Wall Lights',
         image: "/category.png",
-        slug: 'wall-lights',
+        slug: 'wall-light',
         description: 'Decorative wall sconces and ambient lighting',
     },
     {
         id: 'cat_9z0a1b2c3d4e',
         name: 'Smart Lights',
         image: "/category.png",
-        slug: 'smart-lights',
+        slug: 'smart-light',
         description: 'WiFi-enabled smart lighting solutions',
     },
     {
         id: 'cat_5f6g7h8i9j0k',
         name: 'Table Lamps',
         image: "/category.png",
-        slug: 'table-lamps',
+        slug: 'table-lamp',
         description: 'Bedside and decorative table lamps',
     },
     {
         id: 'cat_6',
         name: 'Wall Lights',
-        slug: 'wall-lights',
+        slug: 'wall-light',
         image: '/category.png',
         description: 'Decorative wall-mounted lighting fixtures'
     },
     {
         id: 'cat_7',
         name: 'Table Lamps',
-        slug: 'table-lamps',
+        slug: 'table-lamp',
         image: '/category.png',
         description: 'Versatile lighting for desks and tables'
     },
     {
         id: 'cat_8',
         name: 'Floor Lamps',
-        slug: 'floor-lamps',
+        slug: 'floor-lamp',
         image: '/category.png',
         description: 'Standing lamps for ambient lighting'
     },
     {
         id: 'cat_9',
         name: 'Bathroom Lights',
-        slug: 'bathroom-lights',
+        slug: 'bathroom-light',
         image: '/category.png',
         description: 'Moisture-resistant bathroom lighting'
     },
     {
         id: 'cat_10',
         name: 'Kitchen Lights',
-        slug: 'kitchen-lights',
+        slug: 'kitchen-light',
         image: '/category.png',
         description: 'Task and ambient lighting for kitchens'
     },
     {
         id: 'cat_11',
         name: 'Track Lights',
-        slug: 'track-lights',
+        slug: 'track-light',
         image: '/category-11.png',
         description: 'Adjustable track lighting systems'
     },
     {
         id: 'cat_12',
         name: 'LED Strips',
-        slug: 'led-strips',
+        slug: 'led-strip',
         image: '/category-12.png',
         description: 'Flexible LED strip lighting solutions'
     },
     {
         id: 'cat_13',
         name: 'Cabinet Lights',
-        slug: 'cabinet-lights',
+        slug: 'cabinet-light',
         image: '/category-13.png',
         description: 'Under-cabinet and display lighting'
     },
     {
         id: 'cat_14',
         name: 'Emergency Lights',
-        slug: 'emergency-lights',
+        slug: 'emergency-light',
         image: '/category-14.png',
         description: 'Backup and safety lighting systems'
     },
     {
         id: 'cat_15',
         name: 'Decorative Lights',
-        slug: 'decorative-lights',
+        slug: 'decorative-light',
         image: '/category-15.png',
         description: 'Artistic and accent lighting pieces'
     }
@@ -519,10 +519,12 @@ export const demoProducts = originalDemoProducts.map((product, index) => {
     const stock = baseStock + (index % 30);
     const soldOut = index % 10 === 0;
     const totalSold = soldOut ? stock : Math.floor(stock * 0.7);
-    const randomImageNumber = Math.floor(Math.random() * 10) + 1; // Random number between 1-10
+    const randomImageNumber = Math.floor(Math.random() * 10) + 1;
+    const category = initialcategories.find(cat => cat.id === product.categoryId)?.name || 'General';
 
     return {
         ...product,
+        category, // Add category property
         image: `/product${randomImageNumber}.png`,
         rating: getRandomRating(),
         dateCreated: product.isNew
@@ -533,7 +535,6 @@ export const demoProducts = originalDemoProducts.map((product, index) => {
         soldOut,
         totalSold,
         description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Modi eaque facere in placeat, rerum, eos beatae neque quis optio alias excepturi facilis cumque incidunt laborum est, ut molestiae atque! Velit sit explicabo minima nesciunt tempore, aspernatur repellat beatae sed recusandae facere vitae eaque vero voluptas earum non placeat ea rem!'
-
     };
 });
 

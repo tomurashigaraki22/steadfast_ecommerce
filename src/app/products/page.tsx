@@ -25,6 +25,7 @@ interface Product {
     rating: number | 0;  // Updated to handle null ratings
     image: string;
     images: string[];
+    category: string;
     isNew?: boolean;
     dateCreated: string;
     dateUpdated: string;

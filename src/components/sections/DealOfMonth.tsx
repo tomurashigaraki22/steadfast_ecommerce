@@ -14,6 +14,7 @@ interface Product {
     image: string;
     images: string[];
     isNew?: boolean;
+    category: string;
     dateCreated: string;
     dateUpdated: string;
     categoryId: string;
@@ -35,6 +36,7 @@ export const DealOfMonth = () => {
             try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
                 const data = await response.json();
+                console.log('Fetched products:', data.products); // Log the fetched product
                 setProducts(data.products || []);
             } catch (error: unknown) {
                 if (error instanceof Error) {

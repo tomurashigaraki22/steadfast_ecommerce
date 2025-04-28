@@ -18,6 +18,7 @@ interface ProductGridProps {
         brand: string;
         price: number;
         rating: number;
+        category: string;
         image: string;
         images: string[];
         isNew?: boolean;
@@ -175,6 +176,7 @@ export const ProductGrid = ({
                                 productId={product.productId}
                                 title={product.title}
                                 brand={product.brand}
+                                category={product.category}
                                 price={product.price}
                                 rating={product.rating}
                                 image={product.image}

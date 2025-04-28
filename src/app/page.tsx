@@ -25,7 +25,8 @@ export default function Home() {
         viewAllLink="/products"
         products={demoProducts.slice(0, 5).map(product => ({
           ...product,
-          images: product.image ? [product.image] : [] // Ensure images array exists
+          images: product.image ? [product.image] : [],
+          category: product.category // Use category directly
       }))}
       />
       <WhyShopWithUs />
@@ -35,7 +36,8 @@ export default function Home() {
         viewAllLink="/products/new"
         products={demoProducts.slice(0, 5).map(product => ({
           ...product,
-          images: product.image ? [product.image] : [] // Ensure images array exists
+          images: product.image ? [product.image] : [],
+          category: product.category || "Outdoor Lights" // Use category directly
       }))}
         enableSales={false}
       />

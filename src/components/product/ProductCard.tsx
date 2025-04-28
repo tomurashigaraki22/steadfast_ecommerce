@@ -16,6 +16,7 @@ interface ProductCardProps {
     productId: string;
     title: string;
     brand: string;
+    category: string;
     price: number;
     rating: number | 0;
     image: string;
@@ -36,6 +37,7 @@ export const ProductCard = ({
     title,
     brand,
     price,
+    category,
     rating,
     enableSales = true,
     image,
@@ -125,7 +127,7 @@ export const ProductCard = ({
                 </div>
                 <div className={`space-y-1 ${titleHeight ? 'h-5' : 'h-12'} md:h-auto cursor-pointer px-1`} onClick={handleProductClick}>
                     <h3 className="font-medium text-[15px] line-clamp-2 md:line-clamp-1">{title}</h3>
-                    <p className="hidden md:flex text-gray-600 text-xs line-clamp-1">{brand}</p>
+                    <p className="hidden md:flex text-gray-600 text-xs line-clamp-1">{brand || category}</p>
                 </div>
 
                 <div className="flex items-start gap-2 mb-2 md:mb-[1rem]  px-1 flex-col justify-center">

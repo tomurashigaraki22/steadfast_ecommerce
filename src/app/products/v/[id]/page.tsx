@@ -17,7 +17,7 @@ import { ProductTabs } from '@/components/product/ProductTabs';
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { demoProducts } from '@/data/demo';
 interface Product {
-    id: string;
+    productId: string;
     name: string;
     brand: string;
     price: number;
@@ -94,7 +94,7 @@ export default function ProductDetailPage() {
         console.log('Added to cart');
     };
 
-    const product = products.find(p => parseInt(p.id) === parseInt(productId));
+    const product = products.find(p => parseInt(p.productId) === parseInt(productId));
     console.log("PRODUCT: ", product)
     console.log("PRID: ", productId)
 
@@ -244,7 +244,7 @@ export default function ProductDetailPage() {
                 </div>
 
                 {product && (
-                    <ProductTabs productId={product.id} />
+                    <ProductTabs productId={product.productId} />
                 )}
             </main>
             <ProductGrid

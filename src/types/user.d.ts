@@ -15,6 +15,7 @@ export interface Product {
     rating: number | null;  // Updated to handle null ratings
     image: string;
     isNew?: boolean;
+    category: string;
     dateCreated: string;
     dateUpdated: string;
     categoryId: string;
