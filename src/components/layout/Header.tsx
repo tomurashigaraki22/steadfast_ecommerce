@@ -1,16 +1,17 @@
 "use client"
 import { Suspense } from 'react';
 import { useState, useRef, useEffect } from 'react';
- import Link from 'next/link';
+import Link from 'next/link';
 import Image from 'next/image';
-import {  Menu, SearchIcon } from 'lucide-react';
+import { Menu, SearchIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
-import { categories } from '@/data/demo';
 import { FavoritesHelper } from '@/lib/favorites';
 import { CartPanel } from '@/components/cart/CartPanel';
 import { useAuth } from '@/contexts/AuthContext';
 import { ChevronDown, LogOut, User, ShoppingBag, Heart } from 'lucide-react';
+import Cookies from 'js-cookie';
+import { useWishlist } from '@/context/WishlistContext';
 
 const SearchComponent = () => {
     const searchParams = useSearchParams();
@@ -48,16 +49,56 @@ const SearchComponent = () => {
 
 
 export const Header = () => {
-    // Add new state
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [showCategories, setShowCategories] = useState(false);
-    const [wishlistCount, setWishlistCount] = useState(0);
+    const { wishlist } = useWishlist();
+
+
+    interface Category {
+        id: string;
+        name: string;
+        slug: string;
+        description: string;
+        image_url: string;
+    }
+
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const favorites = FavoritesHelper.getAllFavorites();
-        setWishlistCount(favorites.length);
+        const cachedCategories = localStorage.getItem('categories');
+        if (cachedCategories) {
+            const parsedCategories = JSON.parse(cachedCategories);
+            setCategories(parsedCategories);
+            setIsLoading(false);
+            console.log(parsedCategories)
+            console.log(typeof parsedCategories)
+
+        }
+
+        const fetchCategories = async () => {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`);
+                const data = await response.json();
+                if (Array.isArray(data.categories)) {
+                    localStorage.setItem('categories', JSON.stringify(data.categories));
+                    setCategories(data.categories);
+                    console.log(typeof data.categories)
+
+                }
+            } catch (error: unknown) {
+                if (error instanceof Error) {
+                    console.error('Error fetching categories:', error.message);
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchCategories();
     }, []);
+
 
 
     useEffect(() => {
@@ -119,7 +160,7 @@ export const Header = () => {
 
                                         {isDropdownOpen && (
                                             <div className="absolute right-1/2 translate-x-1/2 mt-5 top-full   w-56 bg-white rounded-lg shadow-xl py-3 z-20 border border-gray-100">
-                                               
+
                                                 <div className="py-2">
                                                     <Link
                                                         href="/profile"
@@ -171,13 +212,15 @@ export const Header = () => {
                                 <Link href="/wishlist" className="relative bg-[#EDF0F8] p-3 rounded-[50%]">
                                     <Heart size={20} strokeWidth={1.5} />
                                     <span className="absolute top-0 -right-2 border-2 border-white bg-[#184193] text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center">
-                                        {wishlistCount}
+                                        {wishlist.length}
                                     </span>
+
                                 </Link>
 
                             </div>
                         </div>
                     </div>
+
 
                     <div className="flex flex-col items-center justify-center gap-8 mt-4">
                         <div className="flex flex-row items-center justify-center gap-8 mt-4">
@@ -192,22 +235,31 @@ export const Header = () => {
 
                             <nav className="flex-1">
                                 <ul className="flex gap-8">
-                                    {categories.slice(0, 4).map(category => (
-                                        <li key={category.id}>
-                                            <Link
-                                                href={`/products/category/${category.slug}`}
-                                                className="text-sm py-1.5 px-4 line-clamp-1"
-                                            >
-                                                {category.name}
-                                            </Link>
-                                        </li>
-                                    ))}
+                                    {isLoading ? (
+                                        Array.from({ length: 4 }).map((_, index) => (
+                                            <li key={index}>
+                                                <div className="animate-pulse bg-gray-200 rounded-lg h-6 w-24"></div>
+                                            </li>
+                                        ))
+                                    ) : (
+                                        categories.slice(0, 4).map(category => (
+                                            <li key={category.id}>
+                                                <Link
+                                                    href={`/products/category/${category.slug}`}
+                                                    className="text-sm py-1.5 px-4 line-clamp-1"
+                                                >
+                                                    {category.name}
+                                                </Link>
+                                            </li>
+                                        ))
+                                    )}
                                 </ul>
                             </nav>
                         </div>
                     </div>
                 </div>
             </div>
+
 
             <div className="md:hidden">
                 <div className="flex items-center justify-between px-4 py-3">
@@ -367,5 +419,8 @@ export const Header = () => {
                 isOpen={isCartOpen}
                 onClose={() => setIsCartOpen(false)}
             />
-        </header>);
+        </header>
+    );
 };
+
+

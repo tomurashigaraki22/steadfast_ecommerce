@@ -3,29 +3,27 @@ import Link from 'next/link';
 
 interface CategoryCardProps {
     name: string;
-    image: string;
+    image_url: string;
     slug: string;
     className?: string;
-    id: string; // Add id to props
+    id: string;
 }
 
-export const CategoryCard = ({ name, image, slug, className = '', id }: CategoryCardProps) => {
-    const imageNumber = parseInt(id.replace(/\D/g, '')) % 10 + 1;
-    const imagePath = `/product${imageNumber}.png`;
-    console.log(image)
+export const CategoryCard = ({ name, image_url, slug, className = '', id }: CategoryCardProps) => {
 
+ 
     return (
         <Link href={'/products/category/' + slug} className={`flex flex-col  items-center justify-center relative ${className}`}>
-            <div className="relative w-full h-full rounded-full overflow-hidden mb-3">
+            <div className="relative w-[10rem] h-[10rem] overflow-hidden aspect-square rounded-full border border-[#00000020] mb-3">
                 <Image
-                    src={imagePath}
+                    src={image_url}
                     alt={name}
-                    width={450}
-                    height={450}
-                    className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110"
-                 />
+                    width={500}
+                    height={500}
+                    className="object-cover transition-transform  aspect-square duration-300 group-hover:scale-110"
+                />
             </div>
-            <h3 className="text-sm font-medium">{name}</h3>
+            <h3 className="text-sm font-medium line-clamp-1">{name}</h3>
         </Link>
     );
 };

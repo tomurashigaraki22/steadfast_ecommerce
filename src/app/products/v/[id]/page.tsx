@@ -15,7 +15,7 @@ import { BookmarkIcon } from '@/components/icons/bookmark';
 import { Footer } from '@/components/layout/Footer';
 import { ProductTabs } from '@/components/product/ProductTabs';
 import { ProductGrid } from '@/components/product/ProductGrid';
-import { demoProducts } from '@/data/demo';
+ 
 interface Product {
     productId: string;
     name: string;
@@ -53,13 +53,11 @@ export default function ProductDetailPage() {
 
     useEffect(() => {
         const fetchProducts = async () => {
-            console.log("PRODUCTS: ", productId)
-            try {
+             try {
                 setIsLoading(true);
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
                 const data = await response.json();
-                console.log("DATA: ", data)
-                setProducts(data.products || []);
+                 setProducts(data.products || []);
             } catch (error) {
                 console.error('Error fetching products:', error);
             } finally {
@@ -247,14 +245,14 @@ export default function ProductDetailPage() {
                     <ProductTabs productId={product.productId} />
                 )}
             </main>
-            <ProductGrid
+            {/* <ProductGrid
                 title="Similar Items You Might Also Like"
                 products={demoProducts.slice(0, 4).map(product => ({
                     ...product,
                     images: product.image ? [product.image] : [] // Ensure images array exists
                 }))}
                 isLoading={isLoading} />
-            <Footer />
+            <Footer /> */}
         </>
     );
 }

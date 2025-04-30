@@ -10,9 +10,9 @@ import { ActionButton } from '../ui/ActionButton';
 import { HeartIcon } from '@/components/icons/Heart';
 import { useState } from 'react';
 import { FavoritesHelper } from '@/lib/favorites';
+import { useWishlist } from '@/context/WishlistContext';
 
-// Add to interface ProductCardProps
-interface ProductCardProps {
+ interface ProductCardProps {
     productId: string;
     title: string;
     brand: string;
@@ -44,18 +44,17 @@ export const ProductCard = ({
     images,
     isNew,
     discount,
-    padButton = false,
+    padButton = false, 
     titleHeight = false
 }: ProductCardProps) => {
     const router = useRouter();
+    const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
     const [isWishlisted, setIsWishlisted] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [isAdded, setIsAdded] = useState(false);
 
+    const [isAdded, setIsAdded] = useState(false);
     const imageNumber = parseInt(productId) % 10 + 1;
-    const imagePath = `/product${imageNumber}.png`;
-    console.log("THIS IS: ", imagePath, productId)
-    console.log("Coonfirm: ", image)
+    const imagePath = `/product${imageNumber}.png`; 
     useEffect(() => {
         setIsWishlisted(FavoritesHelper.isProductFavorite(productId));
     }, [productId]);

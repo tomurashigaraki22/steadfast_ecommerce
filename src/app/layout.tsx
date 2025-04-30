@@ -2,6 +2,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import "./globals.css";
 import { Inter, Montserrat } from 'next/font/google'
 import { Suspense } from "react";
+import { WishlistProvider } from "@/context/WishlistContext";
 
 const montserrat = Montserrat({
   weight: ['400', '500', '600', '700'],
@@ -54,9 +55,11 @@ export default function RootLayout({
         className={`${montserrat.className}`}
       >
         <Suspense fallback={<div>Loading...</div>}>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+          <AuthProvider>
+            <WishlistProvider>
+              {children}
+            </WishlistProvider>
+          </AuthProvider>
         </Suspense>
       </body>
     </html>

@@ -7,17 +7,13 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { Button } from '@/components/ui/Button';
-import { demoProducts } from '@/data/demo';
 import { Minus, Plus } from 'lucide-react';
 import { StarRating } from '@/components/ui/StarRating';
+import { useWishlist } from '@/context/WishlistContext';
 
 export default function WishlistPage() {
-    const [wishlistItems, setWishlistItems] = useState(demoProducts.slice(0, 4));
+    const { wishlist } = useWishlist();
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
-    const [quantities, setQuantities] = useState<Record<string, number>>(
-        Object.fromEntries(demoProducts.slice(0, 4).map(p => [p.productId, 1]))
-    );
-
     const breadcrumbItems = [
         { label: 'Home', href: '/' },
         { label: 'Wishlist' }
@@ -39,16 +35,10 @@ export default function WishlistPage() {
         );
     };
 
+    // Replace demoProducts with wishlist
     const handleDeleteSelected = () => {
-        setWishlistItems(prev => prev.filter(item => !selectedItems.includes(item.productId)));
+        selectedItems.forEach((id) => removeFromWishlist(id));
         setSelectedItems([]);
-    };
-
-    const updateQuantity = (productId: string, increment: boolean) => {
-        setQuantities(prev => ({
-            ...prev,
-            [productId]: Math.max(1, prev[productId] + (increment ? 1 : -1))
-        }));
     };
 
     return (
@@ -57,7 +47,7 @@ export default function WishlistPage() {
             <Header />
             <main className="container mx-auto px-4 py-8">
                 <Breadcrumb items={breadcrumbItems} className="mb-6" />
-                {wishlistItems.length === 0 ? (
+                {wishlist.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-16 px-4">
                         <div className="relative w-[200px] h-[200px] mb-6">
                             <Image
@@ -78,7 +68,7 @@ export default function WishlistPage() {
                                 <label className="flex items-center gap-2">
                                     <input
                                         type="checkbox"
-                                        checked={selectedItems.length === wishlistItems.length}
+                                        checked={selectedItems.length === wishlist.length}
                                         onChange={handleSelectAll}
                                         className="w-4 h-4 rounded border-gray-300"
                                     />
@@ -91,17 +81,10 @@ export default function WishlistPage() {
                                 >
                                     Delete Selected
                                 </button>
-                                <select
-                                    defaultValue="date"
-                                    className="text-sm border border-gray-200 rounded-lg px-4 py-2 bg-white w-full md:w-auto"
-                                >
-                                    <option value="date">Date Added</option>
-                                </select>
                             </div>
                         </div>
-
                         <div className="space-y-6">
-                            {wishlistItems.map((item) => (
+                            {wishlist.map((item) => (
                                 <div key={item.productId} className="bg-white p-0 md:p-6 rounded-xl">
                                     <div className="flex gap-4 md:gap-6">
                                         <div className="flex relative items-center gap-4">
@@ -158,7 +141,7 @@ export default function WishlistPage() {
                         </div>
                     </>
                 )}
-            </main >
+            </main>
             <Footer />
         </>
     );

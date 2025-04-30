@@ -1,14 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { TopBanner } from '@/components/layout/TopBanner';
 import { Header } from '@/components/layout/Header';
+import { useParams } from 'next/navigation';
 import { NoProducts } from '@/components/ui/NoProducts';
-import { demoProducts, categories } from '@/data/demo';
- 
- type FilterValue = string[] | number[] | { min?: number; max?: number };
+
+type FilterValue = string[] | number[] | { min?: number; max?: number };
 
 interface FilterOption {
     id: string;
@@ -23,12 +22,14 @@ interface Product {
     title: string;
     brand: string;
     price: number;
-    rating: number;
+    rating: number | 0;
     image: string;
+    images: string[];
     category: string;
     isNew?: boolean;
     dateCreated: string;
     dateUpdated: string;
+    categoryId: string;
     stock: number;
     totalSold: number;
     discount?: {
@@ -36,156 +37,75 @@ interface Product {
         percentage: number;
     };
 }
-
-export default function CategoryPage() {
+interface Category {
+    id: string;
+    name: string;
+    slug: string;
+    description: string;
+    image_url: string;
+}
+export default function ProductsPage() {
     const params = useParams();
     const categorySlug = params.category as string;
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [products, setProducts] = useState<Product[]>([]);
     const [productFilters, setProductFilters] = useState<FilterOption[]>([]);
-    const [categoryInfo, setCategoryInfo] = useState<typeof categories[0] | null>(null);
+    const [categories, setCategories] = useState<Category[]>([]);
 
-
-    const fetchProducts = async () => {
-        setIsLoading(true);
-        try {
-            // Fetch products by category using the category slug
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/category/${categorySlug}`);
-            const data = await response.json();
-            const products = data.products || [];
-            
-            // Map API response to Product interface
-            // Replace 'any' with proper type
-            const formattedProducts = products.map((product: {
-                id: string;
-                name: string;
-                price: number;
-                rating?: number;
-                images: string[];
-                category: string;
-                stock_quantity: number;
-            }) => ({
-                productId: product.id,
-                title: product.name,
-                brand: '', // Add brand if available in API
-                price: product.price,
-                rating: product.rating || 0,
-                image: product.images[0] || '',
-                images: product.images,
-                category: product.category,
-                isNew: false, // Add logic to determine if product is new
-                dateCreated: '', // Add creation date if available
-                dateUpdated: '', // Add update date if available
-                stock: product.stock_quantity,
-                totalSold: 0, // Add total sold if available
-                discount: undefined // Add discount if available
-            }));
-        
-            setProducts(formattedProducts);
-        
-            // Generate filters based on fetched products
-            const prices = formattedProducts.map((p: Product) => p.price);
-            const ratings = Array.from<number>(new Set(formattedProducts.map((p: Product) => p.rating))).sort((a, b) => b - a);
-        
-            // Use formattedProducts instead of filteredProducts since we're working with the newly fetched products
-            const dynamicFilters: FilterOption[] = [
-                {
-                    id: 'popularity',
-                    label: 'Most Popular',
-                    type: 'radio',
-                    options: [
-                        {
-                            value: 'most-popular',
-                            label: 'Most Popular',
-                            amount: demoProducts.filter(p =>
-                                p.rating >= 4 &&
-                                (p.totalSold / p.stock) >= 0.7
-                            ).length
-                        },
-                        {
-                            value: 'least-popular',
-                            label: 'Least Popular',
-                            amount: demoProducts.filter(p =>
-                                p.rating < 4 ||
-                                (p.totalSold / p.stock) < 0.3
-                            ).length
-                        },
-                        {
-                            value: 'newest', label: 'Newest', amount: demoProducts.filter(p => {
-                                const createDate = new Date(p.dateCreated);
-                                const threeMonthsAgo = new Date();
-                                threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-                                return createDate > threeMonthsAgo;
-                            }).length
-                        },
-                        {
-                            value: 'oldest', label: 'Oldest', amount: demoProducts.filter(p => {
-                                const createDate = new Date(p.dateCreated);
-                                const sixMonthsAgo = new Date();
-                                sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-                                return createDate <= sixMonthsAgo;
-                            }).length
-                        },
-                        { value: 'highest-rated', label: 'Highest Rated', amount: demoProducts.filter(p => p.rating >= 4).length }
-                    ]
-                },
-                {
-                    id: 'price',
-                    label: 'Price Range',
-                    type: 'range',
-                    range: {
-                        min: Math.min(...(prices.length ? prices : [0])),
-                        max: Math.max(...(prices.length ? prices : [0]))
-                    }
-                },
-                {
-                    id: 'rating',
-                    label: 'Rating',
-                    type: 'rating',
-                    options: ratings.map(rating => ({
-                        value: rating.toString(),
-                        label: `${rating}★ & above`,
-                        amount: formattedProducts.filter((p: Product) => p.rating >= rating).length
-                    }))
-                }
-            ];
-
-            setProductFilters(dynamicFilters);
-        
-        } catch (error) {
-            console.error('Error fetching products:', error);
-            setProducts([]);
-        } finally {
+    useEffect(() => {
+        const cachedCategories = localStorage.getItem('categories');
+        if (cachedCategories) {
+            const parsedCategories = JSON.parse(cachedCategories);
+            setCategories(parsedCategories);
             setIsLoading(false);
+            console.log(parsedCategories)
+            console.log(typeof parsedCategories)
+
         }
-    };
+
+        const fetchCategories = async () => {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`);
+                const data = await response.json();
+                if (Array.isArray(data.categories)) {
+                    localStorage.setItem('categories', JSON.stringify(data.categories));
+                    setCategories(data.categories);
+                    console.log(typeof data.categories)
+
+                }
+            } catch (error: unknown) {
+                if (error instanceof Error) {
+                    console.error('Error fetching categories:', error.message);
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchCategories();
+    }, []);
+
     useEffect(() => {
-        fetchProducts();
-    }, [fetchProducts]); // Add fetchProducts to dependency array
+        if (!products || products.length === 0) return;
 
-    useEffect(() => {
-        if (products.length < 1 && !isLoading) {
-            return;
-        }
-
-        const currentCategory = categories.find(cat => cat.slug === categorySlug);
-        setCategoryInfo(currentCategory || null);
-
-        // Filter products by category
-        const filteredProducts = currentCategory
-            ? products.filter(product => product.category === categorySlug)
-            : [];
-
-        // Only update state if products actually changed
-        if (JSON.stringify(filteredProducts) !== JSON.stringify(products)) {
-            setProducts(filteredProducts);
-        }
-
-        // Generate filters based on filtered products
-        const prices = filteredProducts.map(p => p.price);
-        const ratings = Array.from(new Set(filteredProducts.map(p => p.rating))).sort((a, b) => b - a);
+        const prices = products.map(p => p.price).filter(Boolean);
+        const validRatings = products
+            .map(p => p.rating)
+            .filter((rating): rating is number => rating !== null && !isNaN(rating));
+        const ratingsSet = new Set<number>(validRatings);
+        const ratings = Array.from(ratingsSet).sort((a, b) => b - a);
 
         const dynamicFilters: FilterOption[] = [
+            {
+                id: 'category',
+                label: 'Category',
+                type: 'checkbox',
+                options: categories.map(category => ({
+                    value: category.id,
+                    label: category.name,
+                    amount: products.filter(p => p.categoryId === category.id).length
+                }))
+            },
             {
                 id: 'popularity',
                 label: 'Most Popular',
@@ -194,7 +114,7 @@ export default function CategoryPage() {
                     {
                         value: 'most-popular',
                         label: 'Most Popular',
-                        amount: demoProducts.filter((p: Product) =>
+                        amount: products.filter(p =>
                             p.rating >= 4 &&
                             (p.totalSold / p.stock) >= 0.7
                         ).length
@@ -202,15 +122,13 @@ export default function CategoryPage() {
                     {
                         value: 'least-popular',
                         label: 'Least Popular',
-                        amount: demoProducts.filter((p: Product) =>
+                        amount: products.filter(p =>
                             p.rating < 4 ||
                             (p.totalSold / p.stock) < 0.3
                         ).length
                     },
                     {
-                        value: 'newest', 
-                        label: 'Newest', 
-                        amount: demoProducts.filter((p: Product) => {
+                        value: 'newest', label: 'Newest', amount: products.filter(p => {
                             const createDate = new Date(p.dateCreated);
                             const threeMonthsAgo = new Date();
                             threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
@@ -218,20 +136,14 @@ export default function CategoryPage() {
                         }).length
                     },
                     {
-                        value: 'oldest', 
-                        label: 'Oldest', 
-                        amount: demoProducts.filter((p: Product) => {
+                        value: 'oldest', label: 'Oldest', amount: products.filter(p => {
                             const createDate = new Date(p.dateCreated);
                             const sixMonthsAgo = new Date();
                             sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
                             return createDate <= sixMonthsAgo;
                         }).length
                     },
-                    { 
-                        value: 'highest-rated', 
-                        label: 'Highest Rated', 
-                        amount: demoProducts.filter((p: Product) => p.rating >= 4).length 
-                    }
+                    { value: 'highest-rated', label: 'Highest Rated', amount: products.filter(p => p.rating >= 4).length }
                 ]
             },
             {
@@ -239,27 +151,72 @@ export default function CategoryPage() {
                 label: 'Price Range',
                 type: 'range',
                 range: {
-                    min: Math.min(...(prices.length ? prices : [0])),
-                    max: Math.max(...(prices.length ? prices : [0]))
+                    min: Math.min(...prices),
+                    max: Math.max(...prices)
                 }
             },
             {
                 id: 'rating',
                 label: 'Rating',
                 type: 'rating',
-                options: ratings.map(rating => ({
+                options: ratings.length > 0 ? ratings.map((rating: number) => ({
                     value: rating.toString(),
                     label: `${rating}★ & above`,
-                    amount: filteredProducts.filter(p => p.rating >= rating).length
-                }))
+                    amount: products.filter(p => p.rating >= rating).length
+                })) : []
             }
         ];
 
-        setProducts(filteredProducts);
         setProductFilters(dynamicFilters);
-    }, [categorySlug, isLoading, products]); // Add missing dependencies
+    }, [products]);
 
-    
+    const fetchProducts = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/category/${categorySlug}`);
+            const data = await response.json();
+            const products = data.products || [];
+            setProducts(products);
+
+            const validProducts = products.filter((p: Product) => p && p.rating != null);
+            const prices = validProducts.map((p: Product) => p.price);
+            const ratingsSet = new Set<number>(validProducts.map((p: Product) => Number(p.rating) ?? 0));
+            const ratings = Array.from(ratingsSet).filter((rating): rating is number => !isNaN(rating)).sort((a: number, b: number) => b - a);
+
+            setProductFilters(prev => prev.map(filter => {
+                if (filter.id === 'price') {
+                    return {
+                        ...filter,
+                        range: {
+                            min: Math.min(...prices),
+                            max: Math.max(...prices)
+                        }
+                    };
+                }
+                if (filter.id === 'rating' && ratings.length > 0) {
+                    return {
+                        ...filter,
+                        options: ratings.map(rating => ({
+                            value: rating.toString(),
+                            label: `${rating}★ & above`,
+                            amount: validProducts.filter((p: Product) => p.rating >= rating).length
+                        }))
+                    };
+                }
+                return filter;
+            }));
+
+        } catch (error) {
+            console.error('Error fetching products:', error);
+            setProducts([]);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchProducts();
+    }, []);
 
     const handleFilterChange = async (filters: Record<string, FilterValue>) => {
         setIsLoading(true);
@@ -278,38 +235,21 @@ export default function CategoryPage() {
         }
     };
 
-    if (!categorySlug || products.length === 0 && !isLoading) {
-        return (
-            <>
-                <TopBanner theme={'dark'} />
-                <Header />
-                <NoProducts />
-            </>
-        );
-    }
-
     return (
         <>
             <TopBanner theme={'dark'} />
             <Header />
-          
+            
             <ProductGrid
-                title={categorySlug}
+                title={categories.find(cat => cat.slug === categorySlug)?.name || "Category"}
                 subtitle={categorySlug}
-                products={products.map(product => ({
-                    ...product,
-                    images: product.image ? [product.image] : [] // Ensure images array exists
-                }))}
+                products={products}
                 filters={productFilters as import('@/components/product/ProductFilter').FilterOption[]}
                 onFilterChange={handleFilterChange}
                 isLoading={isLoading}
                 maxRecord={12}
                 emptyState={<NoProducts />}
-                breadCrumb={[
-                    { label: 'Home', href: '/' },
-                    { label: 'Categories', href: '/categories' },
-                    { label: categoryInfo?.name || '' }
-                ]}
+
             />
         </>
     );

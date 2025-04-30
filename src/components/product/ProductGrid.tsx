@@ -4,6 +4,7 @@ import { ProductCard } from './ProductCard';
 import { ProductFilter, FilterOption } from './ProductFilter';
 import { Pagination } from '@/components/common/Pagination';
 import { Breadcrumb } from '../ui/Breadcrumb';
+import { NoProducts } from '../ui/NoProducts';
 
 type FilterValue = string[] | number[] | { min?: number; max?: number };
 
@@ -48,7 +49,7 @@ export const ProductGrid = ({
     filters,
     breadCrumb,
     onFilterChange,
-    isLoading = false,
+    isLoading = true,
     maxRecord = 12
 }: ProductGridProps) => {
     const [activeFilters, setActiveFilters] = useState<Record<string, FilterValue>>({});
@@ -69,7 +70,7 @@ export const ProductGrid = ({
         onFilterChange?.(newFilters);
     };
 
-    console.log(activeFilters)
+
 
     return (
         <section className="space-y-4 py-[2rem] relative">
@@ -79,11 +80,7 @@ export const ProductGrid = ({
                         items={breadCrumb}
                     />
                 }
-                {isLoading && (
-                    <div className="absolute inset-0 bg-white/50 z-10 flex items-center justify-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-                    </div>
-                )}
+
 
                 {(title || subtitle || filters) && (
                     <div className="flex justify-between mb-5 items-center">
@@ -134,7 +131,6 @@ export const ProductGrid = ({
                 )}
 
                 <div className="flex gap-6">
-                    {/* Desktop Filter */}
                     {filters && isFilterOpen && (
                         <div className="hidden md:block w-64 flex-shrink-0">
                             <ProductFilter
@@ -145,7 +141,6 @@ export const ProductGrid = ({
                         </div>
                     )}
 
-                    {/* Mobile Filter Popup */}
                     {filters && isFilterOpen && (
                         <div className="md:hidden fixed inset-0 bg-white z-50 overflow-y-auto">
                             <div className="p-4">
@@ -168,23 +163,32 @@ export const ProductGrid = ({
                     )}
 
                     <div className="flex-1">
+                        {products.length === 0 && !isLoading && (
+                            <NoProducts />
+                        )}
                         <div className={`grid grid-cols-2 ${filters && isFilterOpen ? 'md:grid-cols-3' : 'md:grid-cols-4'} gap-3 space-y-2 md:space-y-0 md:gap-6`}>
-                        {currentProducts.map((product) => (
-                            <ProductCard 
-                                key={product.productId} 
-                                enableSales={enableSales} 
-                                productId={product.productId}
-                                title={product.title}
-                                brand={product.brand}
-                                category={product.category}
-                                price={product.price}
-                                rating={product.rating}
-                                image={product.image}
-                                images={product.images}
-                                isNew={product.isNew}
-                                discount={product.discount}
-                            />
-                        ))}
+                            {isLoading ? (
+                                Array.from({ length: 12 }).map((_, index) => (
+                                    <div key={index} className="animate-pulse bg-gray-200 rounded-[1rem] h-[25rem]"></div>
+                                ))
+                            ) : (
+                                currentProducts.map((product,index) => (
+                                    <ProductCard
+                                        key={index}
+                                        enableSales={enableSales}
+                                        productId={product.productId}
+                                        title={product.title}
+                                        brand={product.brand}
+                                        category={product.category}
+                                        price={product.price}
+                                        rating={product.rating}
+                                        image={product.image}
+                                        images={product.images}
+                                        isNew={product.isNew}
+                                        discount={product.discount}
+                                    />
+                                ))
+                            )}
                         </div>
 
                         {totalPages > 1 && (
