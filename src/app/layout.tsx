@@ -3,6 +3,7 @@ import "./globals.css";
 import { Inter, Montserrat } from 'next/font/google'
 import { Suspense } from "react";
 import { WishlistProvider } from "@/context/WishlistContext";
+import { CartProvider } from "@/context/CartContext";
 
 const montserrat = Montserrat({
   weight: ['400', '500', '600', '700'],
@@ -56,9 +57,11 @@ export default function RootLayout({
       >
         <Suspense fallback={<div>Loading...</div>}>
           <AuthProvider>
-            <WishlistProvider>
-              {children}
-            </WishlistProvider>
+            <CartProvider>
+              <WishlistProvider>
+                {children}
+              </WishlistProvider>
+            </CartProvider>
           </AuthProvider>
         </Suspense>
       </body>

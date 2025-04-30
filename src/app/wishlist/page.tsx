@@ -12,7 +12,7 @@ import { StarRating } from '@/components/ui/StarRating';
 import { useWishlist } from '@/context/WishlistContext';
 
 export default function WishlistPage() {
-    const { wishlist } = useWishlist();
+    const { wishlist, removeFromWishlist } = useWishlist();
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
     const breadcrumbItems = [
         { label: 'Home', href: '/' },
@@ -29,18 +29,31 @@ export default function WishlistPage() {
 
     const handleSelectAll = () => {
         setSelectedItems(
-            selectedItems.length === wishlistItems.length
+            selectedItems.length === wishlist.length
                 ? []
-                : wishlistItems.map(item => item.productId)
+                : wishlist.map(item => item.productId)
         );
     };
 
-    // Replace demoProducts with wishlist
     const handleDeleteSelected = () => {
         selectedItems.forEach((id) => removeFromWishlist(id));
         setSelectedItems([]);
     };
 
+    const [quantities, setQuantities] = useState<Record<string, number>>(() => {
+        const initialQuantities: Record<string, number> = {};
+        wishlist.forEach(item => {
+            initialQuantities[item.productId] = 1;
+        });
+        return initialQuantities;
+    });
+
+    const updateQuantity = (productId: string, increment: boolean) => {
+        setQuantities(prev => ({
+            ...prev,
+            [productId]: Math.max(1, (prev[productId] || 1) + (increment ? 1 : -1))
+        }));
+    };
     return (
         <>
             <TopBanner theme="dark" />
@@ -114,9 +127,8 @@ export default function WishlistPage() {
                                                 <span className="text-sm text-gray-500">{item.rating} Reviews</span>
                                             </div>
                                             <h3 className="text-base md:text-lg font-medium mb-1 line-clamp-2">{item.title}</h3>
-                                            <p className="text-sm text-gray-500 mb-2">{item.categoryId}</p>
-                                            <p className="text-sm text-gray-500 mb-4 line-clamp-2 hidden md:block">{item.description}</p>
-                                            <p className="text-lg md:text-xl font-medium mb-4 md:mb-6">NGN {item.price.toLocaleString()}.00</p>
+                                            <p className="text-sm text-gray-500 mb-2">{item.category}</p>
+                                             <p className="text-lg md:text-xl font-medium mb-4 md:mb-6">NGN {item.price.toLocaleString()}.00</p>
 
 
 

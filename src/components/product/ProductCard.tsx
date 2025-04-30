@@ -11,6 +11,7 @@ import { HeartIcon } from '@/components/icons/Heart';
 import { useState } from 'react';
 import { FavoritesHelper } from '@/lib/favorites';
 import { useWishlist } from '@/context/WishlistContext';
+import { useCart } from '@/context/CartContext';
 
  interface ProductCardProps {
     productId: string;
@@ -51,40 +52,65 @@ export const ProductCard = ({
     const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
     const [isWishlisted, setIsWishlisted] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-
+    const { addToCart, isInCart } = useCart();
     const [isAdded, setIsAdded] = useState(false);
-    const imageNumber = parseInt(productId) % 10 + 1;
-    const imagePath = `/product${imageNumber}.png`; 
+
     useEffect(() => {
-        setIsWishlisted(FavoritesHelper.isProductFavorite(productId));
-    }, [productId]);
+        setIsAdded(isInCart(productId));
+    }, [productId, isInCart]);
+
+    const handleAddToCart = () => {
+        addToCart({
+            productId,
+            title,
+            price,
+            image: images[0],
+            quantity: 1,
+            category,
+            brand,
+            rating,
+            thumbnail: images[0],
+        });
+        setIsAdded(true);
+    };
 
     const handleProductClick = () => {
         router.push(`/products/v/${productId}`);
     };
 
-    const toggleWishlist = async () => {
+    useEffect(() => {
+        setIsWishlisted(isInWishlist(productId));
+      }, [productId, isInWishlist]);
+    
+      const toggleWishlist = async () => {
         try {
-            setIsLoading(true);
+          setIsLoading(true);
+          if (isWishlisted) {
+            removeFromWishlist(productId);
+          } else {
+            addToWishlist({
+              productId,
+              title,
+              image: images[0],
+              description: title,
+              price,
+              category,
+              brand,
+              rating,
+              stock: 1,
+              thumbnail: images[0],
 
-            if (isWishlisted) {
-                FavoritesHelper.removeFromFavorites(productId);
-            } else {
-                FavoritesHelper.addToFavorites(productId);
-            }
-
-            setIsWishlisted(!isWishlisted);
+            });
+          }
+          setIsWishlisted(!isWishlisted);
         } catch (error) {
-            console.error('Error updating wishlist:', error);
+          console.error('Error updating wishlist:', error);
         } finally {
-            setIsLoading(false);
+          setIsLoading(false);
         }
-    };
-
-    const handleAddToCart = () => {
-        setIsAdded(!isAdded);
-        console.log('Added to cart');
-    };
+      };
+ 
+ 
 
     return (
         <div className="flex flex-col">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Percent, X } from 'lucide-react';
@@ -9,12 +9,12 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { ProductGrid } from '@/components/product/ProductGrid';
-import { demoProducts } from '@/data/demo';
 import { StarIcon } from '@/components/icons/ShopIcons';
 import { ConfirmationModal } from '@/components/ui/ConfirmationModal';
 import { Button } from '@/components/ui/Button';
 import { AuthModal } from '@/components/auth/AuthModal';
 import { useRouter } from 'next/navigation';
+import { useCart } from '@/context/CartContext';
 
 interface CartItem {
     productId: string;
@@ -58,51 +58,29 @@ const demoCoupons: Coupon[] = [
 
 export default function CartPage() {
     const router = useRouter();
-    const [cartItems, setCartItems] = useState<CartItem[]>([]);
+    const { cartItems, updateQuantity, removeFromCart } = useCart();
     const [promoCode, setPromoCode] = useState('');
     const [showPromoInput, setShowPromoInput] = useState(false);
+    const [itemToRemove, setItemToRemove] = useState<string | null>(null);
+    const [showAuthModal, setShowAuthModal] = useState(false);
+    const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
+    const [couponError, setCouponError] = useState('');
 
-    useEffect(() => {
-        // Demo data - replace with actual cart data
-        setCartItems([
-            {
-                productId: '1',
-                title: 'Cantilever Light',
-                price: 8990,
-                image: '/product1.png',
-                quantity: 1,
-                wattage: '36 WATT',
-                color: 'White'
-            },
-            {
-                productId: '2',
-                title: 'Tablet Apple iPad Pro M2',
-                price: 8900,
-                image: '/product2.png',
-                quantity: 1,
-                color: 'Black',
-                wattage: '256 GB'
-            },
-            {
-                productId: '3',
-                title: 'Smart Watch Series 7',
-                price: 4250,
-                image: '/product3.png',
-                quantity: 2,
-                color: 'White',
-                wattage: '44 mm'
-            },
-            {
-                productId: '4',
-                title: 'Cantilever Light',
-                price: 8990,
-                image: '/product4.png',
-                quantity: 1,
-                wattage: '36 WATT',
-                color: 'Black'
-            }
-        ]);
-    }, []);
+    const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const freeShippingThreshold = 53000;
+    const progressPercentage = Math.min(100, (subtotal / freeShippingThreshold) * 100);
+    const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
+    const breadcrumbItems = [
+        { label: 'Home', href: '/' },
+        { label: 'Cart' }
+    ];
+
+    const handleRemoveConfirm = () => {
+        if (itemToRemove) {
+            removeFromCart(itemToRemove);
+            setItemToRemove(null);
+        }
+    };
     const handleAuthComplete = (isSuccessful?: boolean) => {
         setShowAuthModal(false);
         if (isSuccessful) {
@@ -110,28 +88,7 @@ export default function CartPage() {
         }
     };
 
-    const [itemToRemove, setItemToRemove] = useState<string | null>(null);
-    const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const freeShippingThreshold = 53000;
-    const [showAuthModal, setShowAuthModal] = useState(false);
-    const progressPercentage = Math.min(100, (subtotal / freeShippingThreshold) * 100);
-    const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
-    const breadcrumbItems = [
-        { label: 'Home', href: '/' },
-        { label: 'Cart' }
-    ];
-    const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
-    const [couponError, setCouponError] = useState('');
 
-    const updateQuantity = (productId: string, newQuantity: number) => {
-        setCartItems(items =>
-            items.map(item =>
-                item.productId === productId
-                    ? { ...item, quantity: Math.max(1, newQuantity) }
-                    : item
-            )
-        );
-    };
     const handleApplyCoupon = () => {
         setCouponError('');
         const coupon = demoCoupons.find(c => c.code.toLowerCase() === promoCode.toLowerCase());
@@ -162,12 +119,6 @@ export default function CartPage() {
         setItemToRemove(productId);
     };
 
-    const handleRemoveConfirm = () => {
-        if (itemToRemove) {
-            setCartItems(items => items.filter(item => item.productId !== itemToRemove));
-            setItemToRemove(null);
-        }
-    };
     const discount = calculateDiscount();
     const estimatedTotal = subtotal - discount;
 
@@ -235,10 +186,10 @@ export default function CartPage() {
                                                 <span className="font-medium inline-flex md:hidden">₦{item.price.toLocaleString()}</span>
                                             </div>
                                             <p className="text-xs text-gray-500">
-                                                Color: <span className="text-black">{item.color}</span>
+                                                Category: <span className="text-black">{item.category}</span>
                                             </p>
                                             <p className="text-xs text-gray-500">
-                                                Variation: <span className="text-black">{item.wattage}</span>
+                                                Brand: <span className="text-black">{item.brand}</span>
                                             </p>
                                             <div className="flex items-center border-2 border-[#EDF0F8] rounded-xl w-fit mt-2 md:hidden">
                                                 <button
@@ -399,7 +350,7 @@ export default function CartPage() {
                         </div>
                     </div>
                 </div>
-
+                {/* 
                 <ProductGrid
                     title="Similar Items You Might Like"
                     products={demoProducts.slice(0, 4).map(product => ({
@@ -407,7 +358,7 @@ export default function CartPage() {
                         images: product.image ? [product.image] : [] // Ensure images array exists
                     }))}
                     isLoading={false}
-                />
+                /> */}
                 <Footer />
                 <ConfirmationModal
                     isOpen={!!itemToRemove}

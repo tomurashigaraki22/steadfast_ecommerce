@@ -7,6 +7,12 @@ interface WishlistItem {
   title: string;
   image: string;
   description: string;
+  price: number;
+  rating: number;
+  stock: number;
+  brand: string;
+  category: string;
+  thumbnail: string;
 }
 
 interface WishlistContextType {

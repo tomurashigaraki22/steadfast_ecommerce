@@ -12,6 +12,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { ChevronDown, LogOut, User, ShoppingBag, Heart } from 'lucide-react';
 import Cookies from 'js-cookie';
 import { useWishlist } from '@/context/WishlistContext';
+import { useCart } from '@/context/CartContext';
 
 const SearchComponent = () => {
     const searchParams = useSearchParams();
@@ -53,6 +54,7 @@ export const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [showCategories, setShowCategories] = useState(false);
     const { wishlist } = useWishlist();
+    const { cartItems } = useCart();
 
 
     interface Category {
@@ -202,12 +204,15 @@ export const Header = () => {
                                 )}
                             </div>
                             <div className="flex items-center gap-4">
+
                                 <button
                                     onClick={() => setIsCartOpen(true)}
                                     className="relative bg-[#EDF0F8] p-3 rounded-[50%]"
                                 >
                                     <ShoppingBag size={20} strokeWidth={1.5} />
-                                    <span className="absolute top-0 -right-2 border-2 border-white bg-[#184193] text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                                    <span className="absolute top-0 -right-2 border-2 border-white bg-[#184193] text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center">
+                                        {cartItems.length}
+                                    </span>
                                 </button>
                                 <Link href="/wishlist" className="relative bg-[#EDF0F8] p-3 rounded-[50%]">
                                     <Heart size={20} strokeWidth={1.5} />

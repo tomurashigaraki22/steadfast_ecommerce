@@ -1,54 +1,31 @@
 import { X, Minus, Plus } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useCart } from '@/context/CartContext';
 
 interface CartPanelProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
-interface CartItem {
-    id: string;
-    name: string;
-    image: string;
-    color: string;
-    variation: string;
-    quantity: number;
-    price: string;
-}
-
 export const CartPanel = ({ isOpen, onClose }: CartPanelProps) => {
     if (!isOpen) return null;
 
-    const demoItems: CartItem[] = [
-        {
-            id: 'NGN89900',
-            name: 'Cantilever Light',
-            image: '/product1.png',
-            color: 'White',
-            variation: '36 WATT',
-            quantity: 1,
-            price: '₦89,900'
-        },
-        {
-            id: 'NGN89900',
-            name: 'Cantilever Light',
-            image: '/product2.png',
-            color: 'White',
-            variation: '36 WATT',
-            quantity: 2,
-            price: '₦89,900'
-        },
-        {
-            id: 'NGN89900',
-            name: 'Cantilever Light',
-            image: '/product3.png',
-            color: 'White',
-            variation: '36 WATT',
-            quantity: 1,
-            price: '₦89,900'
+    const { cartItems, removeFromCart, updateQuantity } = useCart();
+
+    const handleQuantityChange = (productId: string, increment: boolean) => {
+        const item = cartItems.find(item => item.productId === productId);
+        if (item) {
+            const newQuantity = increment ? item.quantity + 1 : item.quantity - 1;
+            if (newQuantity > 0) {
+                updateQuantity(productId, newQuantity);
+            }
         }
-    ];
+    };
+
+    const calculateTotal = () => {
+        return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+    };
 
     return (
         <>
@@ -68,12 +45,12 @@ export const CartPanel = ({ isOpen, onClose }: CartPanelProps) => {
 
                     <div className="flex-1 overflow-y-auto bg-[#fff] px-6 py-4">
                         <div className="space-y-6 bg-[#fff]">
-                            {demoItems.map((item, index) => (
-                                <div key={index} className="flex gap-4">
-                                    <div className=" flex  bg-white   ">
+                            {cartItems.map((item) => (
+                                <div key={item.productId} className="flex gap-4">
+                                    <div className="flex bg-white">
                                         <Image
                                             src={item.image}
-                                            alt={item.name}
+                                            alt={item.title}
                                             width={110}
                                             height={110}
                                             className="object-cover rounded-lg aspect-square"
@@ -81,29 +58,36 @@ export const CartPanel = ({ isOpen, onClose }: CartPanelProps) => {
                                     </div>
                                     <div className="flex-1">
                                         <div className="flex text-sm gap-5 mb-2 justify-between">
-                                            <h3 className="font-medium">{item.name}</h3>
-                                            <span className="font-medium">{item.price}</span>
-                                        </div>
-                                        <div className="mt-1 text-xs text-gray-500">
-                                            <p>Color: <span className='font-medium text-xs text-black'>{item.color}</span></p>
-                                            <p>Variation: <span className='font-medium text-xs text-black'>{item.variation}</span></p>
+                                            <h3 className="font-medium">{item.title}</h3>
+                                            <span className="font-medium">₦{item.price.toLocaleString()}</span>
                                         </div>
                                         <div className="flex flex-col">
                                             <div className="flex items-start">
-                                                <div className="mt-2 inline-flex items-center rounded-lg border border-gray-200  px-1 py-1">
-                                                    <button className="p-1 px-3 text-gray-400 hover:text-gray-600">
+                                                <div className="mt-2 inline-flex items-center rounded-lg border border-gray-200 px-1 py-1">
+                                                    <button 
+                                                        className="p-1 px-3 text-gray-400 hover:text-gray-600"
+                                                        onClick={() => handleQuantityChange(item.productId, false)}
+                                                    >
                                                         <Minus size={16} />
                                                     </button>
                                                     <span className="p-1 px-3 mx-4 min-w-[20px] text-center text-sm">
                                                         {item.quantity}
                                                     </span>
-                                                    <button className="p-1 px-3 text-gray-400 hover:text-gray-600">
+                                                    <button 
+                                                        className="p-1 px-3 text-gray-400 hover:text-gray-600"
+                                                        onClick={() => handleQuantityChange(item.productId, true)}
+                                                    >
                                                         <Plus size={16} />
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
-                                        <button className="mt-2 text-xs text-black">Remove</button>
+                                        <button 
+                                            className="mt-2 text-xs text-black"
+                                            onClick={() => removeFromCart(item.productId)}
+                                        >
+                                            Remove
+                                        </button>
                                     </div>
                                 </div>
                             ))}
@@ -113,10 +97,10 @@ export const CartPanel = ({ isOpen, onClose }: CartPanelProps) => {
                     <div className="bg-[#fff] px-6 py-4">
                         <div className="flex justify-between mb-1">
                             <span className="font-medium">Estimated total:</span>
-                            <span className="font-medium">NGN239040</span>
+                            <span className="font-medium">₦{calculateTotal().toLocaleString()}</span>
                         </div>
                         <p className="text-sm text-gray-500 mb-4">Shipping will be calculated at checkout</p>
-                        <Link href='/cart' className="flex justify-center  w-full bg-[#184193] text-white py-3 rounded-full font-medium mb-4">
+                        <Link href='/cart' className="flex justify-center w-full bg-[#184193] text-white py-3 rounded-full font-medium mb-4">
                             View Cart
                         </Link>
                         <button className="w-full hidden md:flex items-center justify-between px-4 py-3 border border-gray-200 rounded-full">
