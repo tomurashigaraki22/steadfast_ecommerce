@@ -381,14 +381,4 @@ export const originalDemoProducts = [
 ];
 
 
-
- 
-
-const getRandomRating = () => {
-    // Use a deterministic pattern instead of random
-    const productIndex = originalDemoProducts.length;
-    const ratings = [3, 4, 4, 5, 5]; // Maintain higher ratings distribution
-    return ratings[productIndex % ratings.length];
-};
-
  

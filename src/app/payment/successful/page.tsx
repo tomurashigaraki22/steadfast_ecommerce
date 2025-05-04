@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
  import { ProductGrid } from '@/components/product/ProductGrid';
-import { demoProducts } from '@/data/demo';
 
 export default function PaymentSuccessfulPage() {
     const router = useRouter();
@@ -33,14 +32,14 @@ export default function PaymentSuccessfulPage() {
                     </div>
                 </div>
 
-                <ProductGrid
+                {/* <ProductGrid
                     title="Similar Items You Might Like"
                     products={demoProducts.slice(0, 4).map(product => ({
                         ...product,
                         images: product.image ? [product.image] : [] // Ensure images array exists
                     }))}
                     isLoading={false}
-                />
+                /> */}
             </main>
             <Footer />
         </>

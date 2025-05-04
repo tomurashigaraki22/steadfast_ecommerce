@@ -46,6 +46,7 @@ export default function Home() {
           fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products?max=8`)
         ]);
 
+ 
         const dealsData = await dealsResponse.json();
         const newArrivalsData = await newArrivalsResponse.json();
         const exploreData = await exploreResponse.json();
@@ -65,7 +66,8 @@ export default function Home() {
           setDeals(mappedDeals);
         }
 
-        if (Array.isArray(newArrivalsData.products)) {
+        if (Array.isArray(newArrivalsData.products)) { 
+          
           const mappedNewArrivals = newArrivalsData.products.map(mapProduct);
           localStorage.setItem('newArrivals', JSON.stringify(mappedNewArrivals));
           setNewArrivals(mappedNewArrivals);
