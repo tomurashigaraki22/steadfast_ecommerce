@@ -34,7 +34,9 @@ export const DealOfMonth = ({ products }: DealOfMonthProps) => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        setIsLoading(false);
+        if (products && products.length != 0) {
+            setIsLoading(false);
+        }
     }, [products]);
 
     return (

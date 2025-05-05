@@ -46,7 +46,7 @@ export default function Home() {
           fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products?max=8`)
         ]);
 
- 
+
         const dealsData = await dealsResponse.json();
         const newArrivalsData = await newArrivalsResponse.json();
         const exploreData = await exploreResponse.json();
@@ -66,8 +66,8 @@ export default function Home() {
           setDeals(mappedDeals);
         }
 
-        if (Array.isArray(newArrivalsData.products)) { 
-          
+        if (Array.isArray(newArrivalsData.products)) {
+
           const mappedNewArrivals = newArrivalsData.products.map(mapProduct);
           localStorage.setItem('newArrivals', JSON.stringify(mappedNewArrivals));
           setNewArrivals(mappedNewArrivals);
@@ -85,8 +85,9 @@ export default function Home() {
 
     // Check localStorage for cached data
     const cachedDeals = localStorage.getItem('deals');
+
     const cachedNewArrivals = localStorage.getItem('newArrivals');
-    const cachedExplore = localStorage.getItem('exploreProducts');
+    const cachedExplore = localStorage.getItem('exploreProducts');  
 
     if (cachedDeals) setDeals(JSON.parse(cachedDeals));
     if (cachedNewArrivals) setNewArrivals(JSON.parse(cachedNewArrivals));

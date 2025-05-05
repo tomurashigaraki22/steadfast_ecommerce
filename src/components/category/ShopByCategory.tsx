@@ -38,14 +38,13 @@ const ShopByCategory = () => {
                     localStorage.setItem('categories', JSON.stringify(data.categories));
                     setCategories(data.categories);
                     console.log(typeof data.categories)
+                    setIsLoading(false);
 
                 }
             } catch (error: unknown) {
                 if (error instanceof Error) {
                     console.error('Error fetching categories:', error.message);
                 }
-            } finally {
-                setIsLoading(false);
             }
         };
 
