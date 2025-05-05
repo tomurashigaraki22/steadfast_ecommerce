@@ -67,14 +67,13 @@ export default function ProductsPage() {
                     localStorage.setItem('categories', JSON.stringify(data.categories));
                     setCategories(data.categories);
                     console.log(typeof data.categories)
+                    setIsLoading(false);
 
                 }
             } catch (error: unknown) {
                 if (error instanceof Error) {
                     console.error('Error fetching categories:', error.message);
                 }
-            } finally {
-                setIsLoading(false);
             }
         };
 
@@ -201,12 +200,11 @@ export default function ProductsPage() {
                 }
                 return filter;
             }));
+            setIsLoading(false);
+
 
         } catch (error) {
             console.error('Error fetching products:', error);
-            setProducts([]);
-        } finally {
-            setIsLoading(false);
         }
     };
 

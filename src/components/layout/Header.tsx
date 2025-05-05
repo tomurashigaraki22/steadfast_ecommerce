@@ -63,6 +63,11 @@ export const Header = () => {
         slug: string;
         description: string;
         image_url: string;
+        topProducts: {
+            id: string;
+            name: string;
+            slug: string;
+        }[];
     }
 
     const [categories, setCategories] = useState<Category[]>([]);
@@ -87,14 +92,13 @@ export const Header = () => {
                     localStorage.setItem('categories', JSON.stringify(data.categories));
                     setCategories(data.categories);
                     console.log(typeof data.categories)
+                    setIsLoading(false);
 
                 }
             } catch (error: unknown) {
                 if (error instanceof Error) {
                     console.error('Error fetching categories:', error.message);
                 }
-            } finally {
-                setIsLoading(false);
             }
         };
 
@@ -123,6 +127,18 @@ export const Header = () => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
                 setIsDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            const target = event.target as HTMLElement;
+            if (!target.closest('.group')) {
+                setShowCategories(false);
             }
         };
 
@@ -227,16 +243,22 @@ export const Header = () => {
                     </div>
 
 
-                    <div className="flex flex-col items-center justify-center gap-8 mt-4">
+                    <div className="flex relative flex-col items-center justify-center gap-8 mt-4">
                         <div className="flex flex-row items-center justify-center gap-8 mt-4">
                             <div className="relative group">
-                                <button className="flex items-center gap-2 text-sm py-3 px-4 border border-[#184193] rounded-[2rem]">
+                                <button
+                                    onClick={() => setShowCategories(!showCategories)}
+                                    className="flex items-center gap-2 text-sm py-3 px-4 border border-[#184193] rounded-[2rem]"
+                                >
                                     All Categories
-                                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <svg className={`w-4 h-4 transition-transform ${showCategories ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
                                 </button>
+
+
                             </div>
+
 
                             <nav className="flex-1">
                                 <ul className="flex gap-8">
@@ -260,8 +282,58 @@ export const Header = () => {
                                     )}
                                 </ul>
                             </nav>
+
+                            <div className={`absolute top-[4.5rem] left-0 w-full z-50 transition-all duration-300 ${showCategories ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+                                <div className="container mx-auto px-6 rounded-lg py-6 bg-white max-w-5xl">
+                                    <div className="grid grid-cols-5 gap-8">
+                                        {isLoading ? (
+                                            Array.from({ length: 5 }).map((_, index) => (
+                                                <div key={index} className="space-y-4">
+                                                    <div className=" pb-2">
+                                                        <div className="h-8 bg-gray-200 rounded animate-pulse w-3/4"></div>
+                                                    </div>
+                                                    <div className="grid gap-4">
+                                                        {Array.from({ length: 4 }).map((_, subIndex) => (
+                                                            <div key={subIndex} className="h-7 bg-gray-200 rounded animate-pulse w-full"></div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            categories.map((category) => (
+                                                <div key={category.id} className="space-y-4">
+                                                    <div className=" pb-2">
+                                                        <Link
+                                                            href={`/products/category/${category.slug}`}
+                                                            className="text-lg font-medium hover:text-[#184193]"
+                                                            onClick={() => setShowCategories(false)}
+                                                        >
+                                                            {category.name}
+                                                        </Link>
+                                                    </div>
+                                                    <div className="grid gap-2">
+                                                        {category.topProducts?.slice(0, 5).map((product) => (
+                                                            <Link
+                                                                key={product.id}
+                                                                href={`/products/category/${category.slug}/${product.slug}`}
+                                                                className="text-sm text-gray-600 hover:text-[#184193]"
+                                                                onClick={() => setShowCategories(false)}
+                                                            >
+                                                                {product.name}
+                                                            </Link>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
+
+
                 </div>
             </div>
 
@@ -427,5 +499,7 @@ export const Header = () => {
         </header>
     );
 };
+
+
 
 

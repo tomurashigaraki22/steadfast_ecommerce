@@ -40,7 +40,7 @@ export const DealOfMonth = ({ products }: DealOfMonthProps) => {
     }, [products]);
 
     return (
-        <section className="py-[2rem]">
+        <section className="pt-[3rem] py-[2rem]">
             <div className="container mx-auto px-4">
                 <h2 className="text-lg md:text-xl font-semibold text-center mb-8">Deal of the Month</h2>
 
