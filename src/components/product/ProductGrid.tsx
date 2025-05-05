@@ -169,7 +169,7 @@ export const ProductGrid = ({
                         <div className={`grid grid-cols-2 ${filters && isFilterOpen ? 'md:grid-cols-3' : 'md:grid-cols-4'} gap-3 space-y-2 md:space-y-0 md:gap-6`}>
                             {isLoading ? (
                                 Array.from({ length: 12 }).map((_, index) => (
-                                    <div key={index} className="animate-pulse bg-gray-200 rounded-[1rem] h-[25rem]"></div>
+                                    <div key={index} className="animate-pulse bg-gray-200 rounded-[1rem] h-[20rem] md:h-[25rem]"></div>
                                 ))
                             ) : (
                                 currentProducts.map((product,index) => (

@@ -83,11 +83,10 @@ export default function Home() {
       }
     };
 
-    // Check localStorage for cached data
     const cachedDeals = localStorage.getItem('deals');
 
     const cachedNewArrivals = localStorage.getItem('newArrivals');
-    const cachedExplore = localStorage.getItem('exploreProducts');  
+    const cachedExplore = localStorage.getItem('exploreProducts');
 
     if (cachedDeals) setDeals(JSON.parse(cachedDeals));
     if (cachedNewArrivals) setNewArrivals(JSON.parse(cachedNewArrivals));

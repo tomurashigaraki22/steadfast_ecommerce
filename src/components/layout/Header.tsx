@@ -1,35 +1,35 @@
 "use client"
-import { Suspense } from 'react';
-import { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Menu, SearchIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useSearchParams } from 'next/navigation';
-import { FavoritesHelper } from '@/lib/favorites';
-import { CartPanel } from '@/components/cart/CartPanel';
-import { useAuth } from '@/contexts/AuthContext';
-import { ChevronDown, LogOut, User, ShoppingBag, Heart } from 'lucide-react';
-import Cookies from 'js-cookie';
-import { useWishlist } from '@/context/WishlistContext';
-import { useCart } from '@/context/CartContext';
+import { Suspense } from "react"
+import type React from "react"
+
+import { useState, useRef, useEffect } from "react"
+import Link from "next/link"
+import Image from "next/image"
+import { Menu, SearchIcon } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useSearchParams } from "next/navigation"
+import { CartPanel } from "@/components/cart/CartPanel"
+import { useAuth } from "@/contexts/AuthContext"
+import { ChevronDown, LogOut, User, ShoppingBag, Heart } from "lucide-react"
+import { useWishlist } from "@/context/WishlistContext"
+import { useCart } from "@/context/CartContext"
 
 const SearchComponent = () => {
-    const searchParams = useSearchParams();
-    const router = useRouter();
-    const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
+    const searchParams = useSearchParams()
+    const router = useRouter()
+    const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "")
 
     const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault();
+        e.preventDefault()
         if (searchQuery.trim()) {
-            router.push(`/products?q=${encodeURIComponent(searchQuery.trim())}`);
+            router.push(`/products?q=${encodeURIComponent(searchQuery.trim())}`)
         }
-    };
+    }
 
     return (
         <form onSubmit={handleSearch} className="relative flex">
             <div className="absolute flex flex-col h-full px-5 items-center justify-center">
-                <SearchIcon className='w-4 h-4' />
+                <SearchIcon className="w-4 h-4" />
             </div>
             <input
                 type="text"
@@ -45,109 +45,146 @@ const SearchComponent = () => {
                 Search
             </button>
         </form>
-    );
-};
-
+    )
+}
 
 export const Header = () => {
-    const [isCartOpen, setIsCartOpen] = useState(false);
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [showCategories, setShowCategories] = useState(false);
-    const { wishlist } = useWishlist();
-    const { cartItems } = useCart();
+    const [isCartOpen, setIsCartOpen] = useState(false)
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const [showCategories, setShowCategories] = useState(false)
+    const { wishlist } = useWishlist()
+    const { cartItems } = useCart()
+    const [showSubcategories, setShowSubcategories] = useState(false)
+    const [activeCategory, setActiveCategory] = useState<string | null>(null);
+    const [showSubcategoryModal, setShowSubcategoryModal] = useState(false);
 
+    const handleCategoryClick = (categoryId: string) => {
+        setActiveCategory(categoryId);
+        setShowSubcategoryModal(true);
+    };
 
+    const handleBackToCategories = () => {
+        setShowSubcategoryModal(false);
+        setActiveCategory(null);
+    };
     interface Category {
-        id: string;
-        name: string;
-        slug: string;
-        description: string;
-        image_url: string;
+        id: string
+        name: string
+        slug: string
+        description: string
+        image_url: string
         topProducts: {
-            id: string;
-            name: string;
-            slug: string;
-        }[];
+            id: string
+            name: string
+            slug: string
+        }[]
     }
 
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [categories, setCategories] = useState<Category[]>([])
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        const cachedCategories = localStorage.getItem('categories');
+        const cachedCategories = localStorage.getItem("categories")
         if (cachedCategories) {
-            const parsedCategories = JSON.parse(cachedCategories);
-            setCategories(parsedCategories);
-            setIsLoading(false);
+            const parsedCategories = JSON.parse(cachedCategories)
+            setCategories(parsedCategories)
+            setIsLoading(false)
             console.log(parsedCategories)
             console.log(typeof parsedCategories)
-
         }
 
         const fetchCategories = async () => {
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`);
-                const data = await response.json();
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`)
+                const data = await response.json()
                 if (Array.isArray(data.categories)) {
-                    localStorage.setItem('categories', JSON.stringify(data.categories));
-                    setCategories(data.categories);
+                    localStorage.setItem("categories", JSON.stringify(data.categories))
+                    setCategories(data.categories)
                     console.log(typeof data.categories)
-                    setIsLoading(false);
-
+                    setIsLoading(false)
                 }
             } catch (error: unknown) {
                 if (error instanceof Error) {
-                    console.error('Error fetching categories:', error.message);
+                    console.error("Error fetching categories:", error.message)
                 }
             }
-        };
+        }
 
-        fetchCategories();
-    }, []);
+        fetchCategories()
+    }, [])
 
-
+    const demoCategories: Category[] = [
+        {
+            id: "1",
+            name: "POP/SURFACE LIGHT",
+            slug: "pop-surface-light",
+            description: "Surface mounted lighting solutions",
+            image_url: "/categories/pop-light.jpg",
+            topProducts: [
+                { id: "p1", name: "POP Spotlight", slug: "pop-spotlight" },
+                { id: "p2", name: "Surface / Cantilever", slug: "surface-cantilever" },
+            ],
+        },
+        {
+            id: "2",
+            name: "CHANDELIERS",
+            slug: "chandeliers",
+            description: "Elegant chandelier lighting",
+            image_url: "/categories/chandeliers.jpg",
+            topProducts: [
+                { id: "c1", name: "Nordic/Simple Chandeliers", slug: "nordic-simple-chandeliers" },
+                { id: "c2", name: "Crystal Chandeliers", slug: "crystal-chandeliers" },
+                { id: "c3", name: "Chandelier with Fan", slug: "chandelier-with-fan" },
+            ],
+        },
+    ]
 
     useEffect(() => {
-        if (isMenuOpen) {
-            document.body.style.overflow = 'hidden';
+        setCategories(demoCategories)
+        setIsLoading(false)
+    }, [])
+
+    useEffect(() => {
+        if (isMenuOpen || showSubcategories) {
+            document.body.style.overflow = "hidden"
         } else {
-            document.body.style.overflow = 'unset';
+            document.body.style.overflow = "unset"
         }
         return () => {
-            document.body.style.overflow = 'unset';
-        };
-    }, [isMenuOpen]);
+            document.body.style.overflow = "unset"
+        }
+    }, [isMenuOpen, showSubcategories])
 
-    const { user, logout } = useAuth();
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const dropdownRef = useRef<HTMLDivElement>(null);
+    const { user, logout } = useAuth()
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+    const dropdownRef = useRef<HTMLDivElement>(null)
 
     // Close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setIsDropdownOpen(false);
+                setIsDropdownOpen(false)
             }
-        };
+        }
 
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => document.removeEventListener("mousedown", handleClickOutside)
+    }, [])
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            const target = event.target as HTMLElement;
-            if (!target.closest('.group')) {
-                setShowCategories(false);
+            const target = event.target as HTMLElement
+            if (!target.closest(".group")) {
+                setShowCategories(false)
             }
-        };
+        }
 
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => document.removeEventListener("mousedown", handleClickOutside)
+    }, [])
 
     return (
-        <header className="bg-white shadow-sm">
+        <header className="bg-white  top-0 w-full z-10 shadow-sm">
             <div className="hidden md:block">
                 <div className="container mx-auto px-4 py-4">
                     <div className="flex items-center justify-between">
@@ -156,9 +193,7 @@ export const Header = () => {
                         </Link>
 
                         <div className="flex-1 max-w-xl mx-8">
-                            <Suspense fallback={
-                                <div className="w-full h-10 bg-gray-100 animate-pulse rounded-[2rem]" />
-                            }>
+                            <Suspense fallback={<div className="w-full h-10 bg-gray-100 animate-pulse rounded-[2rem]" />}>
                                 <SearchComponent />
                             </Suspense>
                         </div>
@@ -178,7 +213,6 @@ export const Header = () => {
 
                                         {isDropdownOpen && (
                                             <div className="absolute right-1/2 translate-x-1/2 mt-5 top-full   w-56 bg-white rounded-lg shadow-xl py-3 z-20 border border-gray-100">
-
                                                 <div className="py-2">
                                                     <Link
                                                         href="/profile"
@@ -200,8 +234,8 @@ export const Header = () => {
                                                 <div className="border-t border-gray-100 pt-2">
                                                     <button
                                                         onClick={() => {
-                                                            logout();
-                                                            setIsDropdownOpen(false);
+                                                            logout()
+                                                            setIsDropdownOpen(false)
                                                         }}
                                                         className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 w-full"
                                                     >
@@ -220,11 +254,7 @@ export const Header = () => {
                                 )}
                             </div>
                             <div className="flex items-center gap-4">
-
-                                <button
-                                    onClick={() => setIsCartOpen(true)}
-                                    className="relative bg-[#EDF0F8] p-3 rounded-[50%]"
-                                >
+                                <button onClick={() => setIsCartOpen(true)} className="relative bg-[#EDF0F8] p-3 rounded-[50%]">
                                     <ShoppingBag size={20} strokeWidth={1.5} />
                                     <span className="absolute top-0 -right-2 border-2 border-white bg-[#184193] text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center">
                                         {cartItems.length}
@@ -235,13 +265,10 @@ export const Header = () => {
                                     <span className="absolute top-0 -right-2 border-2 border-white bg-[#184193] text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center">
                                         {wishlist.length}
                                     </span>
-
                                 </Link>
-
                             </div>
                         </div>
                     </div>
-
 
                     <div className="flex relative flex-col items-center justify-center gap-8 mt-4">
                         <div className="flex flex-row items-center justify-center gap-8 mt-4">
@@ -251,25 +278,32 @@ export const Header = () => {
                                     className="flex items-center gap-2 text-sm py-3 px-4 border border-[#184193] rounded-[2rem]"
                                 >
                                     All Categories
-                                    <svg className={`w-4 h-4 transition-transform ${showCategories ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    <svg
+                                        className={`w-4 h-4 transition-transform ${showCategories ? "rotate-180" : ""}`}
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            d="M6 9L12 15L18 9"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
                                     </svg>
                                 </button>
-
-
                             </div>
-
 
                             <nav className="flex-1">
                                 <ul className="flex gap-8">
-                                    {isLoading ? (
-                                        Array.from({ length: 4 }).map((_, index) => (
+                                    {isLoading
+                                        ? Array.from({ length: 4 }).map((_, index) => (
                                             <li key={index}>
                                                 <div className="animate-pulse bg-gray-200 rounded-lg h-6 w-24"></div>
                                             </li>
                                         ))
-                                    ) : (
-                                        categories.slice(0, 4).map(category => (
+                                        : categories.slice(0, 4).map((category) => (
                                             <li key={category.id}>
                                                 <Link
                                                     href={`/products/category/${category.slug}`}
@@ -278,17 +312,18 @@ export const Header = () => {
                                                     {category.name}
                                                 </Link>
                                             </li>
-                                        ))
-                                    )}
+                                        ))}
                                 </ul>
                             </nav>
 
-                            <div className={`absolute top-[4.5rem] left-0 w-full z-50 transition-all duration-300 ${showCategories ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+                            <div
+                                className={`absolute top-[4.5rem] left-0 w-full z-50 transition-all duration-300 ${showCategories ? "opacity-100 visible" : "opacity-0 invisible"}`}
+                            >
                                 <div className="container mx-auto px-6 rounded-lg py-6 bg-white max-w-5xl">
-                                    <div className="grid grid-cols-5 gap-8">
-                                        {isLoading ? (
-                                            Array.from({ length: 5 }).map((_, index) => (
-                                                <div key={index} className="space-y-4">
+                                    <div className="grid grid-cols-4 gap-8">
+                                        {isLoading
+                                            ? Array.from({ length: 5 }).map((_, index) => (
+                                                <div key={index} className="space-y-2">
                                                     <div className=" pb-2">
                                                         <div className="h-8 bg-gray-200 rounded animate-pulse w-3/4"></div>
                                                     </div>
@@ -299,24 +334,23 @@ export const Header = () => {
                                                     </div>
                                                 </div>
                                             ))
-                                        ) : (
-                                            categories.map((category) => (
-                                                <div key={category.id} className="space-y-4">
+                                            : categories.map((category) => (
+                                                <div key={category.id} className="space-y-2">
                                                     <div className=" pb-2">
                                                         <Link
                                                             href={`/products/category/${category.slug}`}
-                                                            className="text-lg font-medium hover:text-[#184193]"
+                                                            className="text-sm font-bold"
                                                             onClick={() => setShowCategories(false)}
                                                         >
                                                             {category.name}
                                                         </Link>
                                                     </div>
-                                                    <div className="grid gap-2">
+                                                    <div className="grid gap-3">
                                                         {category.topProducts?.slice(0, 5).map((product) => (
                                                             <Link
                                                                 key={product.id}
                                                                 href={`/products/category/${category.slug}/${product.slug}`}
-                                                                className="text-sm text-gray-600 hover:text-[#184193]"
+                                                                className="text-sm text-[#170F49] font-medium  italic"
                                                                 onClick={() => setShowCategories(false)}
                                                             >
                                                                 {product.name}
@@ -324,19 +358,14 @@ export const Header = () => {
                                                         ))}
                                                     </div>
                                                 </div>
-                                            ))
-                                        )}
+                                            ))}
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
-
-
                 </div>
             </div>
-
 
             <div className="md:hidden">
                 <div className="flex items-center justify-between px-4 py-3">
@@ -352,15 +381,15 @@ export const Header = () => {
                         </Link>
                         <button onClick={() => setIsCartOpen(true)} className="relative p-2">
                             <ShoppingBag size={24} />
-                            <span className="absolute top-0 right-0 bg-[#184193] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                            <span className="absolute top-0 right-0 bg-[#184193] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                                {cartItems.length}
+                            </span>
                         </button>
                     </div>
                 </div>
 
                 <div className="px-4 pb-3">
-                    <Suspense fallback={
-                        <div className="w-full h-10 bg-gray-100 animate-pulse rounded-full" />
-                    }>
+                    <Suspense fallback={<div className="w-full h-10 bg-gray-100 animate-pulse rounded-full" />}>
                         <SearchComponent />
                     </Suspense>
                 </div>
@@ -368,138 +397,84 @@ export const Header = () => {
                 {isMenuOpen && (
                     <div className="fixed inset-0 bg-white z-50 flex flex-col">
                         <div className="flex justify-between items-center p-4 border-b">
-                            <h2 className="text-lg font-semibold">
-                                {showCategories ? 'Categories' : 'Menu'}
-                            </h2>
-                            <button
-                                onClick={() => showCategories ? setShowCategories(false) : setIsMenuOpen(false)}
-                                className="p-2"
-                            >
-                                {showCategories ? '←' : '✕'}
+                            <h2 className="text-base font-bold">Categories</h2>
+                            <button onClick={() => setIsMenuOpen(false)} className="p-2">
+                                <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none">
+                                    <path d="M6 18L18 6M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
                             </button>
                         </div>
+
                         <div className="flex-1 overflow-y-auto">
-                            <nav className="p-4">
-                                {!showCategories ? (
+                            <div className="p-4">
+                                {isLoading ? (
                                     <div className="space-y-6">
-                                        <div>
-                                            <h3 className="text-sm font-bold text-black mb-3">MENU</h3>
-                                            <ul className="space-y-4">
-                                                <li>
-                                                    <Link
-                                                        href="/"
-                                                        className="flex items-center justify-between py-2 text-[15px]"
-                                                        onClick={() => setIsMenuOpen(false)}
-                                                    >
-                                                        Home
-                                                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                                                            <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                                        </svg>
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link
-                                                        href="/wishlist"
-                                                        className="flex items-center justify-between py-2 text-[15px]"
-                                                        onClick={() => setIsMenuOpen(false)}
-                                                    >
-                                                        Wishlist
-                                                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                                                            <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                                        </svg>
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link
-                                                        href="/cart"
-                                                        className="flex items-center justify-between py-2 text-[15px]"
-                                                        onClick={() => setIsMenuOpen(false)}
-                                                    >
-                                                        Cart
-                                                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                                                            <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                                        </svg>
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <Link
-                                                        href="/products"
-                                                        className="flex items-center justify-between py-2 text-[15px]"
-                                                        onClick={() => setIsMenuOpen(false)}
-                                                    >
-                                                        All Products
-                                                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                                                            <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                                        </svg>
-                                                    </Link>
-                                                </li>
-                                                <li>
-                                                    <button
-                                                        onClick={() => setShowCategories(true)}
-                                                        className="flex items-center  font-medium justify-between py-2 text-[15px] w-full"
-                                                    >
-                                                        Categories
-                                                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                                                            <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-                                                        </svg>
-                                                    </button>
-                                                </li>
-
-                                            </ul>
-                                        </div>
-
-                                        <div>
-                                            <h3 className="text-sm font-bold text-black mb-3">ACCOUNT</h3>
-                                            <ul className="space-y-4">
-                                                <li>
-                                                    <Link
-                                                        href="/auth/login"
-                                                        className="flex items-center justify-between py-2 text-[15px]"
-                                                        onClick={() => setIsMenuOpen(false)}
-                                                    >
-                                                        Login / Register
-                                                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                                                            <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                                        </svg>
-                                                    </Link>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                        {Array.from({ length: 6 }).map((_, index) => (
+                                            <div key={index} className="space-y-4">
+                                                <div className="h-6 bg-gray-200 rounded animate-pulse w-3/4"></div>
+                                            </div>
+                                        ))}
                                     </div>
                                 ) : (
-                                    <ul className="space-y-4">
-                                        {categories.map(category => (
-                                            <li key={category.id}>
-                                                <Link
-                                                    href={`/products/category/${category.slug}`}
-                                                    className="flex items-center justify-between py-2 text-[15px]"
-                                                    onClick={() => {
-                                                        setShowCategories(false);
-                                                        setIsMenuOpen(false);
-                                                    }}
+                                    <div className="space-y-6">
+                                        {categories.map((category) => (
+                                            <div key={category.id} className="space-y-4">
+                                                <button
+                                                    onClick={() => handleCategoryClick(category.id)}
+                                                    className="text-base font-bold w-full text-left flex items-center justify-between hover:text-[#FF5722]"
                                                 >
                                                     {category.name}
-                                                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                                                        <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                                    </svg>
-                                                </Link>
-                                            </li>
+                                                    <ChevronDown size={20} className="transform -rotate-90" />
+                                                </button>
+                                            </div>
                                         ))}
-                                    </ul>
+                                    </div>
                                 )}
-                            </nav>
+                            </div>
                         </div>
                     </div>
                 )}
+
+                {showSubcategoryModal && activeCategory && (
+                    <div className="fixed inset-0 bg-white z-[60] flex flex-col">
+                        <div className="flex justify-between items-center p-4 border-b  border-[#60606020]">
+                            <button onClick={handleBackToCategories} className="flex items-center gap-2 text-[#184193]">
+                                <svg className="w-6 h-6 transform rotate-90" viewBox="0 0 24 24" fill="none">
+                                    <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                                Back
+                            </button>
+                            <h2 className="text-base font-bold">
+                                {categories.find(c => c.id === activeCategory)?.name}
+                            </h2>
+                            <div className="w-6"></div>
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto">
+                            <div className="p-4">
+                                <div className="space-y-4">
+                                    {categories.find(c => c.id === activeCategory)?.topProducts.map((product) => (
+                                        <Link
+                                            key={product.id}
+                                            href={`/products/category/${categories.find(c => c.id === activeCategory)?.slug}/${product.slug}`}
+                                            className="block py-3 text-gray-600 border-b  border-[#60606020] hover:text-[#184193]"
+                                            onClick={() => {
+                                                setIsMenuOpen(false);
+                                                setShowSubcategoryModal(false);
+                                            }}
+                                        >
+                                            {product.name}
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {isCartOpen && <CartPanel isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />}
             </div>
-            <CartPanel
-                isOpen={isCartOpen}
-                onClose={() => setIsCartOpen(false)}
-            />
+            <CartPanel isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
         </header>
-    );
-};
-
-
-
-
+    )
+}
