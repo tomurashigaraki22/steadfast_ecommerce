@@ -49,13 +49,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             });
 
             const data: AuthResponse = await response.json();
+            console.log(data)
 
             if (!response.ok) {
                 throw new Error((data as { error?: string }).error || 'Login failed');
             }
 
-            // Store in cookies instead of localStorage
-            Cookies.set('token', data.token, { expires: 70000 }); // Expires in 7 days
+            Cookies.set('token', data.token, { expires: 70000 }); 
             Cookies.set('user', JSON.stringify(data.user), { expires: 70000 });
             setUser(data.user);
 
@@ -249,17 +249,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     return (
-        <AuthContext.Provider value={{ 
-            user, 
-            login, 
+        <AuthContext.Provider value={{
+            user,
+            login,
             signup,
             verifyEmail,
-            updateProfile, // Add this
-            logout, 
+            updateProfile,
+            logout,
             changePassword,
-            forgotPassword, // <-- Add this
+            forgotPassword,
             isAuthenticated: !!user,
-            isLoading 
+            isLoading
         }}>
             {children}
         </AuthContext.Provider>

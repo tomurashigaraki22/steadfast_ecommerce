@@ -6,11 +6,9 @@ import { Modal } from '@/components/ui/Modal';
 import { AuthWrapper } from '@/components/auth/AuthWrapper';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { SocialButton } from '@/components/auth/SocialButton';
 import Link from 'next/link';
 import { Check, X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-;
 
 interface PasswordRequirement {
     label: string;
@@ -19,26 +17,38 @@ interface PasswordRequirement {
 
 export default function SignupPage() {
     const [isLoading, setIsLoading] = useState(false);
-    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [modalType, setModalType] = useState<'success' | 'error'>('success');
+    const [modalMessage, setModalMessage] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState<string | null>(null); // <-- Add error state
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [error, setError] = useState<string | null>(null);
     const [passwordRequirements, setPasswordRequirements] = useState<PasswordRequirement[]>([
         { label: 'Minimum 8 characters', isValid: false },
-        { label: 'One lowercase character', isValid: false },
-        { label: 'One uppercase character', isValid: false },
-        { label: 'One number', isValid: false },
-        { label: 'One special character', isValid: false },
+        { label: 'At least one letter', isValid: false },
+        { label: 'At least one number', isValid: false },
     ]);
+    const [isFormValid, setIsFormValid] = useState(false);
 
     const validatePassword = (value: string) => {
         setPassword(value);
-        setPasswordRequirements([
+        const requirements = [
             { label: 'Minimum 8 characters', isValid: value.length >= 8 },
-            { label: 'One lowercase character', isValid: /[a-z]/.test(value) },
-            { label: 'One uppercase character', isValid: /[A-Z]/.test(value) },
-            { label: 'One number', isValid: /[0-9]/.test(value) },
-            { label: 'One special character', isValid: /[!@#$%^&*(),.?":{}|<>]/.test(value) },
-        ]);
+            { label: 'At least one letter', isValid: /[a-zA-Z]/.test(value) },
+            { label: 'At least one number', isValid: /[0-9]/.test(value) },
+        ];
+        setPasswordRequirements(requirements);
+
+        const allRequirementsMet = requirements.every(req => req.isValid);
+        const passwordsMatch = value === confirmPassword;
+        setIsFormValid(allRequirementsMet && passwordsMatch);
+    };
+
+    const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setConfirmPassword(value);
+        const allRequirementsMet = passwordRequirements.every(req => req.isValid);
+        setIsFormValid(allRequirementsMet && value === password);
     };
 
     const router = useRouter();
@@ -46,8 +56,24 @@ export default function SignupPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        const allRequirementsMet = passwordRequirements.every(req => req.isValid);
+        if (!allRequirementsMet) {
+            setModalType('error');
+            setModalMessage('Password must meet all requirements');
+            setShowModal(true);
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            setModalType('error');
+            setModalMessage('Passwords do not match');
+            setShowModal(true);
+            return;
+        }    
+
         setIsLoading(true);
-        setError(null); // Reset error on submit
+        setError(null);
 
         const form = e.target as HTMLFormElement;
         const formData = {
@@ -61,19 +87,21 @@ export default function SignupPage() {
             const result = await signup(formData);
 
             if (result.success) {
-                setShowSuccessModal(true);
+                setModalType('success');
+                setModalMessage('Your account has been created successfully. Redirecting to verification...');
+                setShowModal(true);
                 setTimeout(() => {
                     router.push(`/auth/verify-email?email=${formData.email}`);
                 }, 2000);
             } else {
-                setError(result.error || 'Signup failed');
+                setModalType('error');
+                setModalMessage(result.error || 'Signup failed');
+                setShowModal(true);
             }
         } catch (error: unknown) {
-            if (error instanceof Error) {
-                setError(error.message || 'Signup failed');
-            } else {
-                setError('Signup failed');
-            }
+            setModalType('error');
+            setModalMessage(error instanceof Error ? error.message : 'Signup failed');
+            setShowModal(true);
         } finally {
             setIsLoading(false);
         }
@@ -82,7 +110,7 @@ export default function SignupPage() {
     return (
         <AuthWrapper
             title="Create Account"
-            subtitle="Sign up to enjoy a seamless experience 👋"
+            subtitle="Sign up to enjoy a seamless experience"
         >
             <form onSubmit={handleSubmit} className="mt-8 space-y-6">
                 <Input
@@ -113,18 +141,29 @@ export default function SignupPage() {
                     name='phoneNumber'
                     required
                 />
-                <div className="space-y-2">
+                <div className="space-y-4">
                     <Input
                         label="Password"
                         type="password"
                         isPassword
                         value={password}
+                        placeholder='Enter your password'
                         onChange={(e) => validatePassword(e.target.value)}
                         required
                         name='password'
                     />
-                    <div className="space-y-2 mt-2">
-                        {passwordRequirements.map((req, index) => (
+                    <Input
+                        label="Confirm Password"
+                        type="password"
+                        isPassword
+                        value={confirmPassword}
+                        placeholder='Confirm your password'
+                        onChange={handleConfirmPasswordChange}
+                        required
+                        name='confirmPassword'
+                    />
+                    <div className="space-y-2">
+                        {(password.length > 0) && passwordRequirements.map((req, index) => (
                             <div key={index} className="flex items-center text-sm">
                                 {req.isValid ? (
                                     <Check className="w-4 h-4 text-green-500 mr-2" />
@@ -146,7 +185,8 @@ export default function SignupPage() {
                     <p className="text-red-500 text-center">{error}</p>
                 )}
 
-                <div className="relative my-6">
+                {/* removed social login for mvp1 */}
+                {/* <div className="relative my-6">
                     <div className="absolute inset-0 flex items-center">
                         <div className="w-full border-t border-gray-300" />
                     </div>
@@ -159,7 +199,7 @@ export default function SignupPage() {
                     <SocialButton provider="google" label="Sign up with Google" />
                     <SocialButton provider="facebook" label="Sign up with Facebook" />
                     <SocialButton provider="apple" label="Sign up with Apple" />
-                </div>
+                </div> */}
 
                 <p className="text-center text-sm text-gray-600">
                     Already have an account?{' '}
@@ -170,12 +210,12 @@ export default function SignupPage() {
             </form>
 
             <Modal
-                isOpen={showSuccessModal}
-                onClose={() => setShowSuccessModal(false)}
-                type="success"
-                title="Account Created!"
-                message="Your account has been created successfully. Redirecting to verification..."
-                autoClose
+                isOpen={showModal}
+                onClose={() => setShowModal(false)}
+                type={modalType}
+                title={modalType === 'success' ? 'Account Created!' : 'Error'}
+                message={modalMessage}
+                autoClose={modalType === 'success'}
                 autoCloseTime={2000}
             />
         </AuthWrapper>

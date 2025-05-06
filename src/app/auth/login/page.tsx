@@ -42,7 +42,7 @@ export default function LoginPage() {
     return (
         <AuthWrapper
             title="Log in to your account"
-            subtitle="Sign into your user account to continue ✨"
+            subtitle="Sign into your user account to continue"
         >
             <form onSubmit={handleSubmit} className="mt-8 space-y-6">
                 <Input
@@ -59,6 +59,7 @@ export default function LoginPage() {
                     required
                     isPassword={true}
                     value={formData.password}
+                    placeholder='Enter your password'
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 />
 
@@ -79,7 +80,9 @@ export default function LoginPage() {
                     Sign in →
                 </Button>
 
-                <div className="relative my-6">
+
+                {/* disabled the social login for v1 */}
+                {/* <div className="relative my-6">
                     <div className="absolute inset-0 flex items-center">
                         <div className="w-full border-t border-gray-300" />
                     </div>
@@ -92,7 +95,7 @@ export default function LoginPage() {
                     <SocialButton provider="google" label="Sign in with Google" />
                     <SocialButton provider="facebook" label="Sign in with Facebook" />
                     <SocialButton provider="apple" label="Sign in with Apple" />
-                </div>
+                </div> */}
 
                 <p className="text-center text-sm text-gray-600">
                     Don&lsquo;t have an account?{' '}

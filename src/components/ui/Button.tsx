@@ -4,7 +4,6 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'secondary_outline';
   isLoading?: boolean;
   rounded?: boolean;
-
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -21,8 +20,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
-        className={`${baseStyles} ${rounded == true ? 'rounded-full' : 'rounded-lg'} ${variants[variant]} cursor-pointer ${className}`}
-        disabled={isLoading}
+        className={`${baseStyles} ${rounded == true ? 'rounded-full' : 'rounded-lg'} ${variants[variant]} cursor-pointer ${(isLoading || props.disabled) ? 'opacity-70' : ''} ${className}`}
+        disabled={isLoading || props.disabled}
         {...props}
       >
         {isLoading ? (

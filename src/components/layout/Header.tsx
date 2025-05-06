@@ -113,37 +113,7 @@ export const Header = () => {
         fetchCategories()
     }, [])
 
-    const demoCategories: Category[] = [
-        {
-            id: "1",
-            name: "POP/SURFACE LIGHT",
-            slug: "pop-surface-light",
-            description: "Surface mounted lighting solutions",
-            image_url: "/categories/pop-light.jpg",
-            topProducts: [
-                { id: "p1", name: "POP Spotlight", slug: "pop-spotlight" },
-                { id: "p2", name: "Surface / Cantilever", slug: "surface-cantilever" },
-            ],
-        },
-        {
-            id: "2",
-            name: "CHANDELIERS",
-            slug: "chandeliers",
-            description: "Elegant chandelier lighting",
-            image_url: "/categories/chandeliers.jpg",
-            topProducts: [
-                { id: "c1", name: "Nordic/Simple Chandeliers", slug: "nordic-simple-chandeliers" },
-                { id: "c2", name: "Crystal Chandeliers", slug: "crystal-chandeliers" },
-                { id: "c3", name: "Chandelier with Fan", slug: "chandelier-with-fan" },
-            ],
-        },
-    ]
-
-    useEffect(() => {
-        setCategories(demoCategories)
-        setIsLoading(false)
-    }, [])
-
+   
     useEffect(() => {
         if (isMenuOpen || showSubcategories) {
             document.body.style.overflow = "hidden"
