@@ -13,7 +13,7 @@ import { FavoritesHelper } from '@/lib/favorites';
 import { useWishlist } from '@/context/WishlistContext';
 import { useCart } from '@/context/CartContext';
 
- interface ProductCardProps {
+interface ProductCardProps {
     productId: string;
     title: string;
     brand: string;
@@ -45,7 +45,7 @@ export const ProductCard = ({
     images,
     isNew,
     discount,
-    padButton = false, 
+    padButton = false,
     titleHeight = false
 }: ProductCardProps) => {
     const router = useRouter();
@@ -54,8 +54,7 @@ export const ProductCard = ({
     const [isLoading, setIsLoading] = useState(false);
     const { addToCart, isInCart } = useCart();
     const [isAdded, setIsAdded] = useState(false);
-
-    useEffect(() => {
+     useEffect(() => {
         setIsAdded(isInCart(productId));
     }, [productId, isInCart]);
 
@@ -75,42 +74,43 @@ export const ProductCard = ({
     };
 
     const handleProductClick = () => {
+
         router.push(`/products/v/${productId}`);
     };
 
     useEffect(() => {
         setIsWishlisted(isInWishlist(productId));
-      }, [productId, isInWishlist]);
-    
-      const toggleWishlist = async () => {
-        try {
-          setIsLoading(true);
-          if (isWishlisted) {
-            removeFromWishlist(productId);
-          } else {
-            addToWishlist({
-              productId,
-              title,
-              image: images[0],
-              description: title,
-              price,
-              category,
-              brand,
-              rating,
-              stock: 1,
-              thumbnail: images[0],
+    }, [productId, isInWishlist]);
 
-            });
-          }
-          setIsWishlisted(!isWishlisted);
+    const toggleWishlist = async () => {
+        try {
+            setIsLoading(true);
+            if (isWishlisted) {
+                removeFromWishlist(productId);
+            } else {
+                addToWishlist({
+                    productId,
+                    title,
+                    image: images[0],
+                    description: title,
+                    price,
+                    category,
+                    brand,
+                    rating,
+                    stock: 1,
+                    thumbnail: images[0],
+
+                });
+            }
+            setIsWishlisted(!isWishlisted);
         } catch (error) {
-          console.error('Error updating wishlist:', error);
+            console.error('Error updating wishlist:', error);
         } finally {
-          setIsLoading(false);
+            setIsLoading(false);
         }
-      };
- 
- 
+    };
+
+
 
     return (
         <div className="flex flex-col">

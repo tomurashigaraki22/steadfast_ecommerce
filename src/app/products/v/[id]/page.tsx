@@ -14,12 +14,12 @@ import { ActionButton } from '@/components/ui/ActionButton';
 import { BookmarkIcon } from '@/components/icons/bookmark';
 import { Footer } from '@/components/layout/Footer';
 import { ProductTabs } from '@/components/product/ProductTabs';
-import { ProductGrid } from '@/components/product/ProductGrid';
- 
+
 interface Product {
     productId: string;
     name: string;
     brand: string;
+    title?: string;
     price: number;
     rating: number | 0;
     image: string;
@@ -28,8 +28,13 @@ interface Product {
     dateCreated: string;
     dateUpdated: string;
     stock: number;
+    review_count: number;
     category: string;
     totalSold: number;
+    specifications?: Array<{ key: string; value: string }>;
+    highlights?: Array<{ key: string; value: string }>;
+    whats_in_box?: string[];
+    description?: string;
     discount?: {
         amount: number;
         percentage: number;
@@ -53,11 +58,12 @@ export default function ProductDetailPage() {
 
     useEffect(() => {
         const fetchProducts = async () => {
-             try {
+            try {
                 setIsLoading(true);
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
                 const data = await response.json();
-                 setProducts(data.products || []);
+                setProducts(data.products || []);
+                console.log(data.products);
             } catch (error) {
                 console.error('Error fetching products:', error);
             } finally {
@@ -93,10 +99,8 @@ export default function ProductDetailPage() {
     };
 
     const product = products.find(p => parseInt(p.productId) === parseInt(productId));
-    console.log("PRODUCT: ", product)
-    console.log("PRID: ", productId)
 
-    
+    console.log(product);
     if (!product && !isPageLoading) {
         return <div>Product not found</div>;
     }
@@ -106,9 +110,55 @@ export default function ProductDetailPage() {
             <>
                 <TopBanner theme="dark" />
                 <Header />
-                <main className="container mx-auto px-4 pt-8">
-                    <div className="flex items-center justify-center min-h-[60vh]">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#184193]"></div>
+                <main className="container mx-auto px-4 pt-8 pb-[5rem]">
+                    <div className="animate-pulse">
+                        <div className="h-6 w-64 bg-gray-200 rounded mb-8" />
+
+                        <div className="flex flex-col md:flex-row gap-8">
+                            <div className="md:w-1/2">
+                                <div className="relative aspect-square mb-4 bg-gray-200 rounded-lg" />
+                                <div className="grid grid-cols-3 gap-4">
+                                    {[1, 2, 3].map((index) => (
+                                        <div key={index} className="aspect-square bg-gray-200 rounded-lg" />
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="md:w-1/2 space-y-4">
+                                <div className="flex justify-between items-center">
+                                    <div className="w-32 h-6 bg-gray-200 rounded" />
+                                    <div className="flex gap-4">
+                                        {[1, 2, 3].map((index) => (
+                                            <div key={index} className="w-10 h-10 bg-gray-200 rounded-xl" />
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="h-8 w-3/4 bg-gray-200 rounded" />
+                                <div className="h-4 w-1/4 bg-gray-200 rounded" />
+                                <div className="space-y-2">
+                                    <div className="h-4 w-full bg-gray-200 rounded" />
+                                    <div className="h-4 w-full bg-gray-200 rounded" />
+                                    <div className="h-4 w-2/3 bg-gray-200 rounded" />
+                                </div>
+
+                                <div className="h-8 w-1/3 bg-gray-200 rounded" />
+
+                                <div>
+                                    <div className="h-6 w-48 bg-gray-200 rounded mb-4" />
+                                    <div className="flex gap-4">
+                                        {[1, 2, 3].map((index) => (
+                                            <div key={index} className="w-24 h-10 bg-gray-200 rounded-full" />
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="flex gap-4 pt-4">
+                                    <div className="w-32 h-12 bg-gray-200 rounded-xl" />
+                                    <div className="flex-1 h-12 bg-gray-200 rounded-xl" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </main>
                 <Footer />
@@ -116,61 +166,57 @@ export default function ProductDetailPage() {
         );
     }
 
-    const breadCrumb = [
-        { label: 'Home', href: '/' },
-        { label: 'Products', href: '/products' },
-        { label: product?.name || 'Product Details' }
-    ];
-
     return (
         <>
             <TopBanner theme="dark" />
             <Header />
             <main className="container mx-auto px-4 pt-8">
-                <Breadcrumb items={breadCrumb} />
+                <Breadcrumb items={[
+                    { label: 'Home', href: '/' },
+                    { label: 'Products', href: '/products' },
+                    { label: product?.title || 'Product Details' }
+                ]} />
 
                 <div className="flex flex-col md:flex-row gap-8 mt-8">
-                    {/* Product Images */}
                     <div className="md:w-1/2">
                         <div className="relative aspect-square mb-4">
-                        {product && (
-                            <Image
-                                src={product.images[0]}
-                                alt={product.name}
-                                fill
-                                className="object-cover rounded-lg"
-                            />
-                        )}
-                        </div>
-                        <div className="grid grid-cols-3 gap-4">
-                        {product && product.images.slice(1).map((image, index) => (
-                            <div key={index} className="relative aspect-square">
+                            {product && (
                                 <Image
-                                    src={image}
-                                    alt={`${product.name} view ${index + 1}`}
+                                    src={product.images[0]}
+                                    alt={product.title || 'Product Image'}
                                     fill
                                     className="object-cover rounded-lg"
-                                    sizes="(max-width: 768px) 33vw, 25vw"
-                                    priority={index === 0}
                                 />
-                            </div>
-                        ))}
+                            )}
+                        </div>
+                        <div className="grid grid-cols-3 gap-4">
+                            {product && product.images.slice(0, 3).map((image, index) => (
+                                <div key={index} className="relative aspect-square">
+                                    <Image
+                                        src={image}
+                                        alt={`${product.title} view ${index + 1}`}
+                                        fill
+                                        className="object-cover rounded-lg"
+                                        sizes="(max-width: 768px) 33vw, 25vw"
+                                        priority={index === 0}
+                                    />
+                                </div>
+                            ))}
                         </div>
                     </div>
 
-                    {/* Product Info */}
                     <div className="md:w-1/2">
                         <div className="flex flex-col md:flex-row gap-5 md:gap-0 md:items-center justify-between mb-4">
                             <div className="flex items-center gap-2">
                                 <div className="flex">
                                     <StarRating rating={product?.rating || 0} />
                                 </div>
-                                <span className="text-sm text-gray-600">{product?.rating} Reviews</span>
+                                <span className="text-sm text-gray-600">{product?.review_count || 0} Reviews</span>
                             </div>
                             <div className="flex items-center gap-4">
                                 <button className="flex items-center gap-1 bg-[#FFF0F0] text-[#D46F77] px-3 py-2 rounded-xl">
                                     <Heart size={16} className="text-[#D46F77]" />
-                                    <span className="text-sm text-[#D46F77] ">109</span>
+                                    <span className="text-sm text-[#D46F77]">{product?.review_count || 0}</span>
                                 </button>
                                 <button
                                     className={`flex items-center bg-[#EDF0F8] text-[#000] px-3 py-2 rounded-xl ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -179,7 +225,8 @@ export default function ProductDetailPage() {
                                     disabled={isLoading}>
                                     <BookmarkIcon
                                         className={isWishlisted ? 'text-black-500' : 'text-black'}
-                                        isFilled={isWishlisted} />
+                                        isFilled={isWishlisted}
+                                    />
                                 </button>
                                 <button className="flex items-center bg-[#EDF0F8] text-[#000] px-3 py-2 rounded-xl">
                                     <Share2 size={20} className="text-black" />
@@ -187,15 +234,13 @@ export default function ProductDetailPage() {
                             </div>
                         </div>
 
-                        <h1 className="text-2xl font-semibold mb-2">{product?.name}</h1>
-                        <p className="text-gray-400 text-sm mb-4">POP/Surface Light</p>
-                        <p className="text-gray-600 mb-8 leading-relaxed">
-                            Buy one or buy a few and make every space where you sit more convenient. Light and easy to move around with removable tray top; handy for serving snacks.
-                        </p>
+                        <h1 className="text-2xl font-semibold mb-2">{product?.title}</h1>
+                        <p className="text-gray-400 text-sm mb-4">{product?.category}</p>
+                        <p className="text-gray-600 mb-8 leading-relaxed line-clamp-5">{product?.description}</p>
 
                         <p className="text-2xl font-semibold mb-8">NGN {product?.price.toLocaleString()}.00</p>
 
-                        <div className="mb-8">
+                        {/* <div className="mb-8">
                             <h3 className="font-medium mb-4">Choose your variation</h3>
                             <div className="flex gap-4">
                                 {['400', '500', '600'].map((size) => (
@@ -211,7 +256,7 @@ export default function ProductDetailPage() {
                                     </button>
                                 ))}
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className="flex gap-4">
                             <div className="flex items-center bg-[#F4F4F4] rounded-xl w-32">
@@ -219,7 +264,7 @@ export default function ProductDetailPage() {
                                     onClick={() => quantity > 1 && setQuantity(quantity - 1)}
                                     className="px-4 py-3 text-lg"
                                 >
-                                    −
+                                    -
                                 </button>
                                 <span className="flex-1 text-center">{quantity}</span>
                                 <button
@@ -242,17 +287,10 @@ export default function ProductDetailPage() {
                 </div>
 
                 {product && (
-                    <ProductTabs productId={product.productId} />
+                    <ProductTabs product={product} />
                 )}
             </main>
-            {/* <ProductGrid
-                title="Similar Items You Might Also Like"
-                products={demoProducts.slice(0, 4).map(product => ({
-                    ...product,
-                    images: product.image ? [product.image] : [] // Ensure images array exists
-                }))}
-                isLoading={isLoading} />
-            <Footer /> */}
+            <Footer />
         </>
     );
 }

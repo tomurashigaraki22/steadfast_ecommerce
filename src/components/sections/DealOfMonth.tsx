@@ -33,6 +33,7 @@ interface DealOfMonthProps {
 export const DealOfMonth = ({ products }: DealOfMonthProps) => {
     const [isLoading, setIsLoading] = useState(true);
 
+    console.log(products);
     useEffect(() => {
         if (products && products.length != 0) {
             setIsLoading(false);
@@ -40,7 +41,7 @@ export const DealOfMonth = ({ products }: DealOfMonthProps) => {
     }, [products]);
 
     return (
-        <section className="pt-[3rem] py-[2rem]">
+        <section className="md:pt-[3rem] py-[2rem]">
             <div className="container mx-auto px-4">
                 <h2 className="text-lg md:text-xl font-semibold text-center mb-8">Deal of the Month</h2>
 
@@ -82,6 +83,7 @@ export const DealOfMonth = ({ products }: DealOfMonthProps) => {
                                 <ProductCard
                                     key={`${product.productId}-${index}`}
                                     {...product}
+                                    productId={product.productId}
                                 />
                             ))
                         )}

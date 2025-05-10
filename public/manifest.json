@@ -1,0 +1,27 @@
+{
+    "name": "Steadfast PWA",
+    "short_name": "Steadfast",
+    "icons": [
+        {
+            "src": "https://steadfast.com/icon.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "https://steadfast.com/icon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "start_url": "/",
+    "display": "standalone",
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "prefer_related_applications": false,
+    "scope": "/",
+    "description": "Steadfast Lighting Solutions",
+    "orientation": "portrait-primary",
+    "categories": ["shopping", "lifestyle"]
+}

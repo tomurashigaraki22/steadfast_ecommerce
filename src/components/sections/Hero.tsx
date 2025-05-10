@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 export const Hero = () => {
     const router = useRouter();
     return (
-        <section className="relative py-[3rem] md:py-[7rem]">
+        <section className="relative py-[2.5rem] md:py-[7rem]">
             <div className="absolute inset-0">
                 <Image
                     src="/hero.png"
@@ -27,10 +27,9 @@ export const Hero = () => {
                             Elevate your home with quality lighting solutions.
                         </p>
                         <div className="flex justify-center items-center">
-                            <button onClick={() => router.replace('/products')} className="bg-[#184193] text-white px-[2rem] text-base py-4 rounded-full flex items-center space-x-2 hover:bg-blue-700 transition-colors ">
+                            <button onClick={() => router.replace('/products')} className="bg-[#184193] text-white px-6 md:px-[2rem] text-base py-3 md:py-4 rounded-full flex items-center space-x-2 hover:bg-blue-700 transition-colors ">
                                 <span className='md:hidden'>Shop Now</span>
                                 <span className='hidden md:flex'>Explore Categories</span>
-
                                 <ArrowRight size={20} />
                             </button>
                         </div>

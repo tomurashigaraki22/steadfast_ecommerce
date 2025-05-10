@@ -1,4 +1,5 @@
-import { useState } from 'react';
+"use client";
+import { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 import { ProductCard } from './ProductCard';
 import { ProductFilter, FilterOption } from './ProductFilter';
@@ -55,11 +56,20 @@ export const ProductGrid = ({
     const [activeFilters, setActiveFilters] = useState<Record<string, FilterValue>>({});
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [loading, setIsLoading] = useState(isLoading);
 
     const totalPages = Math.ceil(products.length / maxRecord);
     const startIndex = (currentPage - 1) * maxRecord;
     const endIndex = startIndex + maxRecord;
+    console.log(products)
+
     const currentProducts = products.slice(startIndex, endIndex);
+    console.log(currentProducts)
+    useEffect(() => {
+        if (products && products.length > 0) {
+            setIsLoading(false);
+        }
+    }, [products])
 
     const handleFilterChange = (filterId: string, value: FilterValue) => {
         const newFilters = {
@@ -167,12 +177,12 @@ export const ProductGrid = ({
                             <NoProducts />
                         )}
                         <div className={`grid grid-cols-2 ${filters && isFilterOpen ? 'md:grid-cols-3' : 'md:grid-cols-4'} gap-3 space-y-2 md:space-y-0 md:gap-6`}>
-                            {isLoading ? (
+                            {loading ? (
                                 Array.from({ length: 12 }).map((_, index) => (
                                     <div key={index} className="animate-pulse bg-gray-200 rounded-[1rem] h-[20rem] md:h-[25rem]"></div>
                                 ))
                             ) : (
-                                currentProducts.map((product,index) => (
+                                currentProducts.map((product, index) => (
                                     <ProductCard
                                         key={index}
                                         enableSales={enableSales}

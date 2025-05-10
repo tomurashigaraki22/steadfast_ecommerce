@@ -47,7 +47,7 @@ interface Category {
 export default function ProductsPage() {
     const params = useParams();
     const categorySlug = params.category as string;
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [products, setProducts] = useState<Product[]>([]);
     const [productFilters, setProductFilters] = useState<FilterOption[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
@@ -57,10 +57,6 @@ export default function ProductsPage() {
         if (cachedCategories) {
             const parsedCategories = JSON.parse(cachedCategories);
             setCategories(parsedCategories);
-            setIsLoading(false);
-            console.log(parsedCategories)
-            console.log(typeof parsedCategories)
-
         }
 
         const fetchCategories = async () => {
@@ -70,15 +66,13 @@ export default function ProductsPage() {
                 if (Array.isArray(data.categories)) {
                     localStorage.setItem('categories', JSON.stringify(data.categories));
                     setCategories(data.categories);
-                    console.log(typeof data.categories)
 
                 }
+
             } catch (error: unknown) {
                 if (error instanceof Error) {
                     console.error('Error fetching categories:', error.message);
                 }
-            } finally {
-                setIsLoading(false);
             }
         };
 
@@ -205,12 +199,11 @@ export default function ProductsPage() {
                 }
                 return filter;
             }));
+            setIsLoading(false);
 
         } catch (error) {
             console.error('Error fetching products:', error);
             setProducts([]);
-        } finally {
-            setIsLoading(false);
         }
     };
 
@@ -220,26 +213,23 @@ export default function ProductsPage() {
 
     const handleFilterChange = async (filters: Record<string, FilterValue>) => {
         setIsLoading(true);
-        try {
-            await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 500));
 
-            const filteredProducts = products.filter(product => {
-                console.log('Filters:', filters);
-                console.log('Product:', product);
-                return true;
-            });
+        const filteredProducts = products.filter(product => {
+            console.log('Filters:', filters);
+            console.log('Product:', product);
+            return true;
+        });
 
-            setProducts(filteredProducts);
-        } finally {
-            setIsLoading(false);
-        }
+        setProducts(filteredProducts);
+
     };
 
     return (
         <>
             <TopBanner theme={'dark'} />
             <Header />
-            
+
             <ProductGrid
                 title={categories.find(cat => cat.slug === categorySlug)?.name || "Category"}
                 subtitle={categorySlug}

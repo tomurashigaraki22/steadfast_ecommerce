@@ -33,7 +33,6 @@ export const metadata = {
     statusBarStyle: 'default',
     title: 'Steadfast Store',
   },
-  // Remove the viewport property from here
 }
 
 export const viewport = {
@@ -52,9 +51,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${montserrat.variable}`}>
-      <body
-        className={`${montserrat.className}`}
-      >
+      <body className={`${montserrat.className}`}>
         <Suspense fallback={<div>Loading...</div>}>
           <AuthProvider>
             <CartProvider>

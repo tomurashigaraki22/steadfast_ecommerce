@@ -51,6 +51,8 @@ export default function Home() {
         const newArrivalsData = await newArrivalsResponse.json();
         const exploreData = await exploreResponse.json();
 
+
+ 
         const mapProduct = (product: any) => ({
           ...product,
           dateCreated: product.dateCreated || new Date().toISOString(),
@@ -61,6 +63,7 @@ export default function Home() {
         });
 
         if (Array.isArray(dealsData.products)) {
+
           const mappedDeals = dealsData.products.map(mapProduct);
           localStorage.setItem('deals', JSON.stringify(mappedDeals));
           setDeals(mappedDeals);
@@ -77,7 +80,8 @@ export default function Home() {
           const mappedExplore = exploreData.products.map(mapProduct);
           localStorage.setItem('exploreProducts', JSON.stringify(mappedExplore));
           setExploreProducts(mappedExplore);
-        }
+         }
+
       } catch (error) {
         console.error('Error fetching products:', error);
       }

@@ -100,7 +100,7 @@ export const Header = () => {
                 if (Array.isArray(data.categories)) {
                     localStorage.setItem("categories", JSON.stringify(data.categories))
                     setCategories(data.categories)
-                    console.log(typeof data.categories)
+                    console.log(data.categories)
                     setIsLoading(false)
                 }
             } catch (error: unknown) {
@@ -113,7 +113,7 @@ export const Header = () => {
         fetchCategories()
     }, [])
 
-   
+
     useEffect(() => {
         if (isMenuOpen || showSubcategories) {
             document.body.style.overflow = "hidden"
@@ -129,7 +129,6 @@ export const Header = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
     const dropdownRef = useRef<HTMLDivElement>(null)
 
-    // Close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -277,8 +276,7 @@ export const Header = () => {
                                             <li key={category.id}>
                                                 <Link
                                                     href={`/products/category/${category.slug}`}
-                                                    className="text-sm py-1.5 px-4 line-clamp-1"
-                                                >
+                                                    className="text-sm py-1.5 px-4" >
                                                     {category.name}
                                                 </Link>
                                             </li>
@@ -304,7 +302,7 @@ export const Header = () => {
                                                     </div>
                                                 </div>
                                             ))
-                                            : categories.map((category) => (
+                                            : categories.slice(0,8).map((category) => (
                                                 <div key={category.id} className="space-y-2">
                                                     <div className=" pb-2">
                                                         <Link
