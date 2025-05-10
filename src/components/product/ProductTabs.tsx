@@ -37,23 +37,21 @@ export const ProductTabs = ({ product }: ProductTabsProps) => {
         <div className="mt-16">
             <div className="border-b border-gray-200">
                 <nav className="flex gap-8">
-                    <button 
+                    <button
                         onClick={() => setActiveTab('description')}
-                        className={`pb-4 font-medium ${
-                            activeTab === 'description' 
-                                ? 'text-[#184193] border-b-2 border-[#184193]' 
-                                : 'text-gray-500'
-                        }`}
+                        className={`pb-4 font-medium ${activeTab === 'description'
+                            ? 'text-[#184193] border-b-2 border-[#184193]'
+                            : 'text-gray-500'
+                            }`}
                     >
                         Description
                     </button>
-                    <button 
+                    <button
                         onClick={() => setActiveTab('reviews')}
-                        className={`pb-4 font-medium ${
-                            activeTab === 'reviews' 
-                                ? 'text-[#184193] border-b-2 border-[#184193]' 
-                                : 'text-gray-500'
-                        }`}
+                        className={`pb-4 font-medium ${activeTab === 'reviews'
+                            ? 'text-[#184193] border-b-2 border-[#184193]'
+                            : 'text-gray-500'
+                            }`}
                     >
                         Reviews
                     </button>
@@ -73,9 +71,10 @@ export const ProductTabs = ({ product }: ProductTabsProps) => {
                                 <h3 className="font-medium mb-4">Specifications</h3>
                                 <div className="space-y-4">
                                     {product.specifications.map((spec, index) => (
-                                        <div key={index} className="flex justify-between">
-                                            <span className="text-gray-600">{spec.key}</span>
-                                            <span className="font-medium">{spec.value}</span>
+                                        <div key={index} className="flex gap-5">
+                                            <span className="font-medium">{spec.key}</span>
+                                            <span className="text-gray-600">-</span>
+                                            <span className="text-gray-600">{spec.value}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -87,9 +86,10 @@ export const ProductTabs = ({ product }: ProductTabsProps) => {
                                 <h3 className="font-medium mb-4">Highlights</h3>
                                 <div className="space-y-4">
                                     {product.highlights.map((highlight, index) => (
-                                        <div key={index} className="flex justify-between">
-                                            <span className="text-gray-600">{highlight.key}</span>
-                                            <span className="font-medium">{highlight.value}</span>
+                                        <div key={index} className="flex gap-5">
+                                            <span className="font-medium">{highlight.key}</span>
+                                            <span className="text-gray-600">-</span>
+                                            <span className="text-gray-600">{highlight.value}</span>
                                         </div>
                                     ))}
                                 </div>
