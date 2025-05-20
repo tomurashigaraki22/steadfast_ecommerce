@@ -94,7 +94,7 @@ export const ProductGrid = ({
                     <div className="flex justify-between mb-5 items-center">
                         <div>
                             {title && <h2 className="text-lg font-semibold">{title}</h2>}
-                            {subtitle && <p className="text-sm text-gray-600 mt-1">{subtitle}</p>}
+                            {subtitle && <p className="text-sm max-w-sm line-clamp-2 text-gray-600 mt-1">{subtitle}</p>}
                         </div>
                         {filters && (
                             <button

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useEffect } from 'react';
 import { FavoritesHelper } from '@/lib/favorites';
 import { useParams } from 'next/navigation';
@@ -14,6 +14,8 @@ import { ActionButton } from '@/components/ui/ActionButton';
 import { BookmarkIcon } from '@/components/icons/bookmark';
 import { Footer } from '@/components/layout/Footer';
 import { ProductTabs } from '@/components/product/ProductTabs';
+import { useCart } from '@/context/CartContext';
+import { useIsMobile } from '@/lib/mobile';
 
 interface Product {
     productId: string;
@@ -48,11 +50,27 @@ export default function ProductDetailPage() {
     const [quantity, setQuantity] = useState(1);
     const [isAdded, setIsAdded] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [products, setProducts] = useState<Product[]>([]);
+    const [product, setProducts] = useState<Product>();
     const [isPageLoading, setIsPageLoading] = useState(true);
     const [magnifyPosition, setMagnifyPosition] = useState({ x: 0, y: 0 });
     const [isHovering, setIsHovering] = useState(false);
+    const isMobile = useIsMobile();
+    const enterTimeout = useRef<NodeJS.Timeout | null>(null);
+    const leaveTimeout = useRef<NodeJS.Timeout | null>(null);
 
+    const handleMouseEnter = () => {
+        if (leaveTimeout.current) clearTimeout(leaveTimeout.current);
+        enterTimeout.current = setTimeout(() => {
+            setIsHovering(true);
+        }, 10);
+    };
+
+    const handleMouseLeave = () => {
+        if (enterTimeout.current) clearTimeout(enterTimeout.current);
+        leaveTimeout.current = setTimeout(() => {
+            setIsHovering(false);
+        }, 0);
+    };
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
         const x = ((e.clientX - left) / width) * 100;
@@ -76,9 +94,10 @@ export default function ProductDetailPage() {
                     setIsPageLoading(false);
                 }
 
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`);
                 const data = await response.json();
-                const newProducts = data.products || [];
+                console.log(data)
+                const newProducts = data.product;
 
                 setProducts(newProducts);
                 localStorage.setItem('products', JSON.stringify(newProducts));
@@ -116,14 +135,35 @@ export default function ProductDetailPage() {
         }
     };
 
+    const { addToCart, isInCart, removeFromCart } = useCart();
+
+    useEffect(() => {
+        setIsAdded(isInCart(productId));
+    }, [productId, isInCart]);
+
     const handleAddToCart = () => {
-        setIsAdded(!isAdded);
-        console.log('Added to cart');
+        if (product) {
+            if (isAdded) {
+                removeFromCart(product.productId);
+                setIsAdded(false);
+            } else {
+                addToCart({
+                    productId: product.productId,
+                    title: product.title || product.name,
+                    price: product.price,
+                    image: product.images[0],
+                    quantity: quantity,
+                    category: product.category,
+                    brand: product.brand,
+                    rating: product.rating,
+                    thumbnail: product.images[0],
+                });
+                setIsAdded(true);
+            }
+        }
     };
 
-    const product = products.find(p => parseInt(p.productId) === parseInt(productId));
 
-    console.log(product);
     if (!product && !isPageLoading) {
         return <div>Product not found</div>;
     }
@@ -204,8 +244,8 @@ export default function ProductDetailPage() {
                     <div className="md:w-2/5">
                         <div
                             className="relative aspect-square mb-4 cursor-crosshair"
-                            onMouseEnter={() => setIsHovering(true)}
-                            onMouseLeave={() => setIsHovering(false)}
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
                             onMouseMove={handleMouseMove}
                         >
                             {product && (
@@ -237,12 +277,12 @@ export default function ProductDetailPage() {
                         </div>
                     </div>
 
-                    {isHovering ? (
+                    {(isHovering && !isMobile) ? (
                         <div className="md:w-3/5 md:h-[30rem] overflow-hidden">
-                            <div className="col-span-3 relative aspect-square rounded-lg overflow-hidden">
+                            <div className="col-span-3 relative aspect-square rounded-lg overflow-hidden transition-opacity duration-200 opacity-100">
                                 {product && (
                                     <div
-                                        className="absolute w-full h-full"
+                                        className="absolute w-full h-full transition-opacity duration-200"
                                         style={{
                                             backgroundImage: `url(${product.images[0]})`,
                                             backgroundPosition: `${magnifyPosition.x}% ${magnifyPosition.y}%`,
@@ -255,7 +295,6 @@ export default function ProductDetailPage() {
                         </div>
                     ) : (
                         <div className="md:w-3/5">
-
 
                             <div className="flex flex-col md:flex-row gap-5 md:gap-0 md:items-center justify-between mb-4">
                                 <div className="flex items-center gap-2">

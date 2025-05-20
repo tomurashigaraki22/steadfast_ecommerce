@@ -51,7 +51,7 @@ export default function ProductsPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [productFilters, setProductFilters] = useState<FilterOption[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
-
+    const [categoryData, setCategoryData] = useState<Category | null>(null);
     useEffect(() => {
         const cachedCategories = localStorage.getItem('categories');
         if (cachedCategories) {
@@ -169,9 +169,11 @@ export default function ProductsPage() {
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/category/${categorySlug}`);
             const data = await response.json();
+            const cateogry_data = data.category;
             const products = data.products || [];
 
             setProducts(products);
+            setCategoryData(cateogry_data)
 
             const validProducts = products.filter((p: Product) => p && p.rating != null);
             const prices = validProducts.map((p: Product) => p.price);
@@ -234,8 +236,8 @@ export default function ProductsPage() {
             <Header />
 
             <ProductGrid
-                title={categories.find(cat => cat.slug === categorySlug)?.name || "Category"}
-                subtitle={categorySlug}
+                title={categories.find(cat => cat.id == categorySlug)?.name || "Category"}
+                subtitle={categories.find(cat => cat.id == categorySlug)?.description || "Category"}
                 products={products}
                 filters={productFilters as import('@/components/product/ProductFilter').FilterOption[]}
                 onFilterChange={handleFilterChange}

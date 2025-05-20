@@ -57,6 +57,7 @@ export const ProductCard = ({
     }, [productId, isInCart]);
 
     const handleAddToCart = () => {
+        
         addToCart({
             productId,
             title,
