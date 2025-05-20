@@ -170,6 +170,7 @@ export default function ProductsPage() {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/category/${categorySlug}`);
             const data = await response.json();
             const products = data.products || [];
+
             setProducts(products);
 
             const validProducts = products.filter((p: Product) => p && p.rating != null);
@@ -204,6 +205,8 @@ export default function ProductsPage() {
         } catch (error) {
             console.error('Error fetching products:', error);
             setProducts([]);
+            setIsLoading(false);
+
         }
     };
 

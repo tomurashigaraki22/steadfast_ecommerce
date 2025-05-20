@@ -68,7 +68,7 @@ export default function ProductDetailPage() {
         const fetchProducts = async () => {
             try {
                 setIsLoading(true);
-                
+
                 const cachedProducts = localStorage.getItem('products');
                 if (cachedProducts) {
                     const parsedProducts = JSON.parse(cachedProducts);
@@ -79,12 +79,12 @@ export default function ProductDetailPage() {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
                 const data = await response.json();
                 const newProducts = data.products || [];
-                
+
                 setProducts(newProducts);
                 localStorage.setItem('products', JSON.stringify(newProducts));
             } catch (error) {
                 console.error('Error fetching products:', error);
-                
+
                 const cachedProducts = localStorage.getItem('products');
                 if (cachedProducts) {
                     setProducts(JSON.parse(cachedProducts));
@@ -218,7 +218,6 @@ export default function ProductDetailPage() {
                             )}
                         </div>
                         <div className="grid grid-cols-3 gap-4">
-
                             {product && product.images.slice(0, 3).map((image, index) => (
                                 <div key={index} className="relative aspect-square">
                                     <Image
@@ -228,10 +227,13 @@ export default function ProductDetailPage() {
                                         className="object-cover rounded-lg"
                                         sizes="(max-width: 768px) 33vw, 25vw"
                                         priority={index === 0}
+                                        onError={(e) => {
+                                            const target = e.target as HTMLImageElement;
+                                            target.src = '/logo.png';
+                                        }}
                                     />
                                 </div>
-                            ))
-                            }
+                            ))}
                         </div>
                     </div>
 
@@ -308,7 +310,7 @@ export default function ProductDetailPage() {
                         </div> */}
 
                             <div className="flex gap-4">
-                                <div className="flex items-center bg-[#F4F4F4] rounded-xl w-32">
+                                <div className="flex w-45 items-center bg-[#F4F4F4] rounded-xl ">
                                     <button
                                         onClick={() => quantity > 1 && setQuantity(quantity - 1)}
                                         className="px-4 py-3 text-lg"

@@ -173,33 +173,34 @@ export const ProductGrid = ({
                     )}
 
                     <div className="flex-1">
-                        {products.length === 0 && !isLoading && (
+                        {products.length === 0 && !isLoading ? (
                             <NoProducts />
+                        ) : (
+                            <div className={`grid grid-cols-2 ${filters && isFilterOpen ? 'md:grid-cols-3' : 'md:grid-cols-4'} gap-3 space-y-2 md:space-y-0 md:gap-6`}>
+                                {loading ? (
+                                    Array.from({ length: 12 }).map((_, index) => (
+                                        <div key={index} className="animate-pulse bg-gray-200 rounded-[1rem] h-[20rem] md:h-[25rem]"></div>
+                                    ))
+                                ) : (
+                                    currentProducts.map((product, index) => (
+                                        <ProductCard
+                                            key={index}
+                                            enableSales={enableSales}
+                                            productId={product.productId}
+                                            title={product.title}
+                                            brand={product.brand}
+                                            category={product.category}
+                                            price={product.price}
+                                            rating={product.rating}
+                                            image={product.image}
+                                            images={product.images}
+                                            isNew={product.isNew}
+                                            discount={product.discount}
+                                        />
+                                    ))
+                                )}
+                            </div>
                         )}
-                        <div className={`grid grid-cols-2 ${filters && isFilterOpen ? 'md:grid-cols-3' : 'md:grid-cols-4'} gap-3 space-y-2 md:space-y-0 md:gap-6`}>
-                            {loading ? (
-                                Array.from({ length: 12 }).map((_, index) => (
-                                    <div key={index} className="animate-pulse bg-gray-200 rounded-[1rem] h-[20rem] md:h-[25rem]"></div>
-                                ))
-                            ) : (
-                                currentProducts.map((product, index) => (
-                                    <ProductCard
-                                        key={index}
-                                        enableSales={enableSales}
-                                        productId={product.productId}
-                                        title={product.title}
-                                        brand={product.brand}
-                                        category={product.category}
-                                        price={product.price}
-                                        rating={product.rating}
-                                        image={product.image}
-                                        images={product.images}
-                                        isNew={product.isNew}
-                                        discount={product.discount}
-                                    />
-                                ))
-                            )}
-                        </div>
 
                         {totalPages > 1 && (
                             <Pagination

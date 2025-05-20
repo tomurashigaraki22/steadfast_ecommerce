@@ -50,13 +50,10 @@ const ShopByCategory = () => {
 
         fetchCategories();
     }, []);
-
-
     return (
         <section className="space-y-4 py-[1rem] md:py-[2rem]">
             <div className="container mx-auto px-4 lg:px-[5rem]">
                 <h2 className="text-lg md:text-xl font-semibold text-center mb-12">Shop by Categories</h2>
-
                 <div className="">
                     <div className="md:hidden">
                         <Swiper
@@ -66,9 +63,7 @@ const ShopByCategory = () => {
                             pagination={{
                                 clickable: true,
                                 dynamicBullets: true,
-                            }}
-                            className="mySwiper pb-10"
-                        >
+                            }} className="mySwiper pb-10">
                             {isLoading ? (
                                 Array.from({ length: 6 }).map((_, index) => (
                                     <SwiperSlide key={index}>

@@ -105,7 +105,7 @@ export default function Home() {
       <Header />
       <Hero />
       <DealOfMonth products={deals} />
-      <ShopByCategory />
+      <ShopByCategory /> 
       <ProductGrid
         title="Explore Products"
         subtitle=""
