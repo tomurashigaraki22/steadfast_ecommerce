@@ -52,7 +52,9 @@ export default function Home() {
         const exploreData = await exploreResponse.json();
 
 
- 
+        console.log(dealsData);
+
+
         const mapProduct = (product: any) => ({
           ...product,
           dateCreated: product.dateCreated || new Date().toISOString(),
@@ -80,7 +82,7 @@ export default function Home() {
           const mappedExplore = exploreData.products.map(mapProduct);
           localStorage.setItem('exploreProducts', JSON.stringify(mappedExplore));
           setExploreProducts(mappedExplore);
-         }
+        }
 
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -105,7 +107,7 @@ export default function Home() {
       <Header />
       <Hero />
       <DealOfMonth products={deals} />
-      <ShopByCategory /> 
+      <ShopByCategory />
       <ProductGrid
         title="Explore Products"
         subtitle=""

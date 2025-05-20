@@ -98,9 +98,11 @@ export const Header = () => {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`)
                 const data = await response.json()
                 if (Array.isArray(data.categories)) {
-                    localStorage.setItem("categories", JSON.stringify(data.categories))
-                    setCategories(data.categories)
-                    console.log(data.categories)
+                    const sortedCategories = data.categories.sort((a: { topProducts?: { length: number }[] }, b: { topProducts?: { length: number }[] }) =>
+                        (b.topProducts?.length || 0) - (a.topProducts?.length || 0)
+                    )
+                    localStorage.setItem("categories", JSON.stringify(sortedCategories))
+                    setCategories(sortedCategories)
                     setIsLoading(false)
                 }
             } catch (error: unknown) {
@@ -302,7 +304,7 @@ export const Header = () => {
                                                     </div>
                                                 </div>
                                             ))
-                                            : categories.slice(0,8).map((category) => (
+                                            : categories.slice(0, 8).map((category) => (
                                                 <div key={category.id} className="space-y-2">
                                                     <div className=" pb-2">
                                                         <Link
@@ -314,7 +316,7 @@ export const Header = () => {
                                                         </Link>
                                                     </div>
                                                     <div className="grid gap-3">
-                                                        {category.topProducts?.slice(0, 5).map((product) => (
+                                                        {category.topProducts?.slice(0, 3).map((product) => (
                                                             <Link
                                                                 key={product.id}
                                                                 href={`/products/category/${category.slug}/${product.slug}`}

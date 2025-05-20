@@ -13,7 +13,7 @@ export const CategoryCard = ({ name, image_url, slug, className = '', id }: Cate
 
  
     return (
-        <Link href={'/products/category/' + slug} className={`flex flex-col  items-center justify-center relative ${className}`}>
+        <Link href={'/products/category/' + id} className={`flex flex-col  items-center justify-center relative ${className}`}>
             <div className="relative w-[10rem] h-[10rem] overflow-hidden aspect-square rounded-full border border-[#00000020] mb-3">
                 <Image
                     src={image_url}

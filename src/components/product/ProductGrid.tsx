@@ -61,11 +61,9 @@ export const ProductGrid = ({
     const totalPages = Math.ceil(products.length / maxRecord);
     const startIndex = (currentPage - 1) * maxRecord;
     const endIndex = startIndex + maxRecord;
-    console.log(products)
-
+ 
     const currentProducts = products.slice(startIndex, endIndex);
-    console.log(currentProducts)
-    useEffect(() => {
+     useEffect(() => {
         if (products && products.length > 0) {
             setIsLoading(false);
         }

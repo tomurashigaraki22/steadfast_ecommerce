@@ -33,7 +33,6 @@ interface DealOfMonthProps {
 export const DealOfMonth = ({ products }: DealOfMonthProps) => {
     const [isLoading, setIsLoading] = useState(true);
 
-    console.log(products);
     useEffect(() => {
         if (products && products.length != 0) {
             setIsLoading(false);

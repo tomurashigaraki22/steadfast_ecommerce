@@ -25,8 +25,6 @@ const ShopByCategory = () => {
             const parsedCategories = JSON.parse(cachedCategories);
             setCategories(parsedCategories);
             setIsLoading(false);
-            console.log(parsedCategories)
-            console.log(typeof parsedCategories)
 
         }
 
@@ -37,7 +35,6 @@ const ShopByCategory = () => {
                 if (Array.isArray(data.categories)) {
                     localStorage.setItem('categories', JSON.stringify(data.categories));
                     setCategories(data.categories);
-                    console.log(typeof data.categories)
                     setIsLoading(false);
 
                 }
