@@ -101,6 +101,7 @@ export const Header = () => {
                     const sortedCategories = data.categories.sort((a: { topProducts?: { length: number }[] }, b: { topProducts?: { length: number }[] }) =>
                         (b.topProducts?.length || 0) - (a.topProducts?.length || 0)
                     )
+                    console.log(sortedCategories)
                     localStorage.setItem("categories", JSON.stringify(sortedCategories))
                     setCategories(sortedCategories)
                     setIsLoading(false)
@@ -277,7 +278,7 @@ export const Header = () => {
                                         : categories.slice(0, 4).map((category) => (
                                             <li key={category.id}>
                                                 <Link
-                                                    href={`/products/category/${category.slug}`}
+                                                    href={`/products/category/${category.id}`}
                                                     className="text-sm py-1.5 px-4" >
                                                     {category.name}
                                                 </Link>
@@ -308,7 +309,7 @@ export const Header = () => {
                                                 <div key={category.id} className="space-y-2">
                                                     <div className=" pb-2">
                                                         <Link
-                                                            href={`/products/category/${category.slug}`}
+                                                            href={`/products/category/${category.id}`}
                                                             className="text-sm font-bold"
                                                             onClick={() => setShowCategories(false)}
                                                         >
@@ -319,11 +320,11 @@ export const Header = () => {
                                                         {category.topProducts?.slice(0, 3).map((product) => (
                                                             <Link
                                                                 key={product.id}
-                                                                href={`/products/category/${category.slug}/${product.slug}`}
-                                                                className="text-sm text-[#170F49] font-medium  italic"
+                                                                href={`/products/category/${category.id}/${product.slug}`}
+                                                                className="text-[.8rem] text-[#2f2e2e] font-medium line-clamp-1 "
                                                                 onClick={() => setShowCategories(false)}
                                                             >
-                                                                {product.name}
+                                                                {product.name}  
                                                             </Link>
                                                         ))}
                                                     </div>
@@ -426,7 +427,7 @@ export const Header = () => {
                                     {categories.find(c => c.id === activeCategory)?.topProducts.map((product) => (
                                         <Link
                                             key={product.id}
-                                            href={`/products/category/${categories.find(c => c.id === activeCategory)?.slug}/${product.slug}`}
+                                            href={`/products/category/${categories.find(c => c.id === activeCategory)?.id}/${product.id}`}
                                             className="block py-3 text-gray-600 border-b  border-[#60606020] hover:text-[#184193]"
                                             onClick={() => {
                                                 setIsMenuOpen(false);

@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { useEffect } from 'react';
-import { FavoritesHelper } from '@/lib/favorites';
+import { useWishlist } from '@/context/WishlistContext';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import { Heart, Share2 } from 'lucide-react';
@@ -47,6 +47,7 @@ export default function ProductDetailPage() {
     const productId = params.id as string;
     const [selectedVariant, setSelectedVariant] = useState('500');
     const [isWishlisted, setIsWishlisted] = useState(false);
+    const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
     const [quantity, setQuantity] = useState(1);
     const [isAdded, setIsAdded] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -79,54 +80,28 @@ export default function ProductDetailPage() {
     };
 
     useEffect(() => {
-        setIsWishlisted(FavoritesHelper.isProductFavorite(productId));
-    }, [productId]);
-
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                setIsLoading(true);
-
-                const cachedProducts = localStorage.getItem('products');
-                if (cachedProducts) {
-                    const parsedProducts = JSON.parse(cachedProducts);
-                    setProducts(parsedProducts);
-                    setIsPageLoading(false);
-                }
-
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`);
-                const data = await response.json();
-                console.log(data)
-                const newProducts = data.product;
-
-                setProducts(newProducts);
-                localStorage.setItem('products', JSON.stringify(newProducts));
-            } catch (error) {
-                console.error('Error fetching products:', error);
-
-                const cachedProducts = localStorage.getItem('products');
-                if (cachedProducts) {
-                    setProducts(JSON.parse(cachedProducts));
-                }
-            } finally {
-                setIsLoading(false);
-                setIsPageLoading(false);
-            }
-        };
-
-        fetchProducts();
-    }, [productId]);
+        setIsWishlisted(isInWishlist(productId));
+    }, [productId, isInWishlist]);
 
     const toggleWishlist = async () => {
         try {
             setIsLoading(true);
-
             if (isWishlisted) {
-                FavoritesHelper.removeFromFavorites(productId);
+                removeFromWishlist(productId);
             } else {
-                FavoritesHelper.addToFavorites(productId);
+                addToWishlist({
+                    productId,
+                    title: product?.title || '',
+                    image: product?.images[0] || '',
+                    description: product?.description || '',
+                    price: product?.price || 0,
+                    category: product?.category || '',
+                    brand: product?.brand || '',
+                    rating: product?.rating || 0,
+                    stock: product?.stock || 0,
+                    thumbnail: product?.images[0] || ''
+                });
             }
-
             setIsWishlisted(!isWishlisted);
         } catch (error) {
             console.error('Error updating wishlist:', error);
