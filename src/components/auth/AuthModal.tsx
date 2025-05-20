@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { SocialButton } from '@/components/auth/SocialButton';
 import { Modal } from '@/components/ui/Modal';
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface AuthModalProps {
     isOpen: boolean;
@@ -14,42 +15,80 @@ interface AuthModalProps {
 }
 
 export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
+    const { login, signup, isAuthenticated, user } = useAuth();
     const [isLogin, setIsLogin] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
- 
-     useEffect(() => {
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+
+    useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
+            if (isAuthenticated && user) {
+                onClose(true);
+            }
         } else {
             document.body.style.overflow = 'auto';
         }
 
-         return () => {
+        return () => {
             document.body.style.overflow = 'auto';
         };
-    }, [isOpen]);
+    }, [isOpen, isAuthenticated, user]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         try {
-            setShowSuccessModal(true);
-            setTimeout(() => {
-                onClose(true);
-            }, 2000);
+            const result = isLogin 
+                ? await login({ email, password })
+                : await signup({
+                    email,
+                    password,
+                    first_name: firstName,
+                    last_name: lastName,
+                    phone_number: phoneNumber
+                });
+
+            if (result.success) {
+                setShowSuccessModal(true);
+                setTimeout(() => {
+                    onClose(true);
+                }, 2000);
+            } else {
+                setErrorMessage(result.error || 'Authentication failed');
+                setShowErrorModal(true);
+            }
         } catch (error) {
-            console.error('Auth failed:', error);
-            onClose(false);
+            setErrorMessage(error instanceof Error ? error.message : 'Authentication failed');
+            setShowErrorModal(true);
         } finally {
             setIsLoading(false);
         }
     };
 
+    if (isAuthenticated && user) {
+        return (
+            <Modal
+                isOpen={isOpen}
+                onClose={() => onClose(false)}
+                type="info"
+                title="Authenticating"
+                message="Please wait while we prepare your checkout..."
+                autoClose
+                autoCloseTime={2000}
+            />
+        );
+    }
+
     return (
-        <div
-            className={`fixed inset-0 z-[100] ${isOpen ? 'block' : 'hidden'}`}
-        >
+        <div className={`fixed inset-0 z-[100] ${isOpen ? 'block' : 'hidden'}`}>
             <div className="fixed inset-0 bg-black/50 touch-none z-[101]" onClick={() => onClose(false)} />
             <div className="fixed inset-x-0 bottom-0 top-0 md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-full md:w-[480px] bg-white md:rounded-2xl md:max-h-[80vh] h-full md:h-auto overflow-y-auto z-[102]">
                 <div className="p-6 md:p-8">
@@ -61,98 +100,80 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                     </button>
 
                     <div className="text-center mb-8">
-                        <h2 className="text-base md:text-lg font-semibold mb-2">
-                            {isLogin ? "Log in to your account" : "Create Account"}
-                        </h2>
-                        <p className="text-sm md:text-base text-gray-600">
-                            {isLogin
-                                ? "Sign into your user account to continue ✨"
-                                : "Sign up to enjoy a seamless experience 👋"}
-                        </p>
+                        <h2 className="text-base md:text-lg font-semibold mb-2">{isLogin ? 'Sign In' : 'Create Account'}</h2>
+                        <p className="text-sm md:text-base text-gray-600">Continue to checkout</p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-4">
                         {!isLogin && (
                             <>
                                 <Input
-                                    label="First Name"
                                     type="text"
-                                    placeholder="Jessica"
+                                    placeholder="First Name"
+                                    value={firstName}
+                                    onChange={(e) => setFirstName(e.target.value)}
                                     required
                                 />
                                 <Input
-                                    label="Last Name"
                                     type="text"
-                                    placeholder="Jackson"
+                                    placeholder="Last Name"
+                                    value={lastName}
+                                    onChange={(e) => setLastName(e.target.value)}
                                     required
                                 />
                                 <Input
-                                    label="Phone Number"
                                     type="tel"
-                                    placeholder="+234"
+                                    placeholder="Phone Number"
+                                    value={phoneNumber}
+                                    onChange={(e) => setPhoneNumber(e.target.value)}
                                     required
                                 />
                             </>
                         )}
                         <Input
-                            label="Email Address"
                             type="email"
-                            placeholder="jess@mail.com"
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             required
                         />
                         <Input
-                            label="Password"
                             type="password"
-                            required
                             isPassword={true}
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
                         />
-
-                        {isLogin && (
-                            <div className="flex items-center justify-between">
-                                <label className="flex items-center">
-                                    <input type="checkbox" className="h-4 w-4 text-blue-600" />
-                                    <span className="ml-2 text-xs text-gray-600">Remember Me</span>
-                                </label>
-                                <Link
-                                    href="/auth/forgot-password"
-                                    className="text-xs text-blue-600 hover:text-blue-500"
-                                >
-                                    Forgot Password?
-                                </Link>
-                            </div>
-                        )}
-
-                        <Button type="submit" isLoading={isLoading} className="w-full">
-                            {isLogin ? "Sign in →" : "Create Account"}
+                        <Button
+                            type="submit"
+                            className="w-full"
+                            disabled={isLoading}
+                        >
+                            {isLogin ? 'Sign In' : 'Create Account'}
                         </Button>
-
-                        <div className="relative my-6">
-                            <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-gray-300" />
-                            </div>
-                            <div className="relative flex justify-center text-sm">
-                                <span className="px-2 bg-white text-gray-500">OR</span>
-                            </div>
-                        </div>
-
-                        <div className="space-y-3">
-                            <SocialButton provider="google" label={`Sign ${isLogin ? 'in' : 'up'} with Google`} />
-                            <SocialButton provider="facebook" label={`Sign ${isLogin ? 'in' : 'up'} with Facebook`} />
-                            <SocialButton provider="apple" label={`Sign ${isLogin ? 'in' : 'up'} with Apple`} />
-                        </div>
-
-                        <p className="text-center text-sm text-gray-600">
-                            {isLogin ? "Don't have an account? " : "Already have an account? "}
-                            <button
-                                type="button"
-                                onClick={() => setIsLogin(!isLogin)}
-                                className="text-blue-600 text-sm hover:text-blue-500"
-                            >
-                                {isLogin ? "Create an account" : "Sign in"}
-                            </button>
-                        </p>
                     </form>
+
+                    <div className="mt-4 text-center">
+                        <button
+                            onClick={() => setIsLogin(!isLogin)}
+                            className="text-sm text-gray-600 hover:text-gray-900"
+                        >
+                            {isLogin ? 'Need an account? Sign up' : 'Already have an account? Sign in'}
+                        </button>
+                    </div>
+
+                    <div className="mt-4">
+                        <Button
+                            onClick={() => onClose(true)}
+                            variant="secondary"
+                            className="w-full"
+                        >
+                            Continue as guest
+                        </Button>
+                    </div>
                 </div>
+
                 <Modal
                     isOpen={showSuccessModal}
                     onClose={() => setShowSuccessModal(false)}
@@ -164,9 +185,15 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                     autoClose
                     autoCloseTime={2000}
                 />
+
+                <Modal
+                    isOpen={showErrorModal}
+                    onClose={() => setShowErrorModal(false)}
+                    type="error"
+                    title="Authentication Failed"
+                    message={errorMessage}
+                />
             </div>
-
-
         </div>
     );
 };

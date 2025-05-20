@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { AuthWrapper } from '@/components/auth/AuthWrapper';
 import { Input } from '@/components/ui/Input';
@@ -15,12 +15,60 @@ export default function VerifyEmailPage() {
     const [showModal, setShowModal] = useState(false);
     const [modalType, setModalType] = useState<'success' | 'error'>('success');
     const [modalMessage, setModalMessage] = useState('');
+    const [countdown, setCountdown] = useState(0);
     const router = useRouter();
-
     
     const searchParams = useSearchParams();
-    const email = searchParams.get('email')
-    const { verifyEmail } = useAuth();
+    const email = searchParams.get('email');
+    const { verifyEmail, resendVerificationCode } = useAuth();
+
+    useEffect(() => {
+        const lastResend = localStorage.getItem('lastResendTime');
+        if (lastResend) {
+            const timeLeft = 30 - Math.floor((Date.now() - parseInt(lastResend)) / 1000);
+            if (timeLeft > 0) {
+                setCountdown(timeLeft);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        let timer: NodeJS.Timeout;
+        if (countdown > 0) {
+            timer = setInterval(() => {
+                setCountdown(prev => prev - 1);
+            }, 1000);
+        }
+        return () => clearInterval(timer);
+    }, [countdown]);
+
+    const handleResendCode = async () => {
+        if (countdown > 0 || !email) return;
+
+        try {
+            setIsLoading(true);
+            const result = await resendVerificationCode(email);
+
+            if (result.success) {
+                localStorage.setItem('lastResendTime', Date.now().toString());
+                setCountdown(30);
+                setModalType('success');
+                setModalMessage('Verification code has been resent to your email');
+                setShowModal(true);
+            } else {
+                setModalType('error');
+                setModalMessage(result.error || 'Failed to resend code');
+                setShowModal(true);
+            }
+        } catch (error) {
+            console.error('Resend failed:', error);
+            setModalType('error');
+            setModalMessage('Failed to resend verification code');
+            setShowModal(true);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -56,18 +104,8 @@ export default function VerifyEmailPage() {
         }
     };
 
-    const handleResendCode = async () => {
-        try {
-            // TODO: Add resend code logic here
-        } catch (error) {
-            console.error('Resend failed:', error);
-        }
-    };
-
     return (
-        <AuthWrapper
-            title="Verify Email Address"
-        >
+        <AuthWrapper title="Verify Email Address">
             <form onSubmit={handleSubmit} className="mt-8 space-y-6">
                 <Input
                     label="Enter Code"
@@ -83,9 +121,10 @@ export default function VerifyEmailPage() {
                     <button
                         type="button"
                         onClick={handleResendCode}
-                        className="text-blue-600 hover:text-blue-500"
+                        disabled={countdown > 0 || isLoading}
+                        className={`text-blue-600 hover:text-blue-500 ${(countdown > 0 || isLoading) ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
-                        Resend Code
+                        {countdown > 0 ? `Resend Code (${countdown}s)` : 'Resend Code'}
                     </button>
                 </div>
 

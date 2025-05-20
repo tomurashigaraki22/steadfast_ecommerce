@@ -18,6 +18,7 @@ interface AuthContextType {
     isLoading: boolean;
     changePassword: (passwords: { oldPassword: string; newPassword: string }) => Promise<{ success: boolean; error?: string }>;
     forgotPassword: (email: string) => Promise<{ success: boolean; error?: string }>; // <-- Add this
+    resendVerificationCode: (email: string) => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,12 +27,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
+    const fetchAndUpdateUser = async () => {
+        try {
+            const token = Cookies.get('token');
+            if (!token) return null;
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/get-user`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            console.log(token)
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to fetch user');
+            }
+
+            setUser(data.user);
+            Cookies.set('user', JSON.stringify(data.user), { expires: 70000 });
+            return data.user;
+        } catch (error) {
+            console.error('Error fetching user:', error);
+            return null;
+        }
+    };
+
     useEffect(() => {
         try {
             const savedUser = Cookies.get('user');
-            console.log('Saved user:', savedUser); // Add this line to check the value of savedUser
             if (savedUser) {
-                setUser(JSON.parse(savedUser));
+                const userData = JSON.parse(savedUser);
+                fetchAndUpdateUser();
             }
         } catch (error) {
             console.error('Error loading user:', error);
@@ -55,8 +86,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 throw new Error((data as { error?: string }).error || 'Login failed');
             }
 
-            Cookies.set('token', data.token, { expires: 70000 }); 
+            Cookies.set('token', data.token, { expires: 70000 });
             Cookies.set('user', JSON.stringify(data.user), { expires: 70000 });
+
             setUser(data.user);
 
             return { success: true };
@@ -248,6 +280,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
+    const resendVerificationCode = async (email: string) => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/resend-otp`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to resend verification code');
+            }
+
+            return { success: true };
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return {
+                    success: false,
+                    error: error.message
+                };
+            } else {
+                return {
+                    success: false,
+                    error: 'Failed to resend verification code'
+                };
+            }
+        }
+    };
+
     return (
         <AuthContext.Provider value={{
             user,
@@ -256,6 +318,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             verifyEmail,
             updateProfile,
             logout,
+            resendVerificationCode,
             changePassword,
             forgotPassword,
             isAuthenticated: !!user,

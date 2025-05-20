@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Percent, X } from 'lucide-react';
@@ -14,38 +14,7 @@ import { Button } from '@/components/ui/Button';
 import { AuthModal } from '@/components/auth/AuthModal';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
-
- 
-interface Coupon {
-    code: string;
-    type: 'percentage' | 'fixed';
-    value: number;
-    minAmount?: number;
-    description: string;
-}
-
-const demoCoupons: Coupon[] = [
-    {
-        code: 'SAVE10',
-        type: 'percentage',
-        value: 10,
-        minAmount: 50000,
-        description: '10% off on orders above ₦50,000'
-    },
-    {
-        code: 'FLAT5K',
-        type: 'fixed',
-        value: 5000,
-        minAmount: 30000,
-        description: '₦5,000 off on orders above ₦30,000'
-    },
-    {
-        code: 'NEW2024',
-        type: 'percentage',
-        value: 15,
-        description: '15% off on all orders'
-    }
-];
+import { CouponHelper, type Coupon } from '@/lib/coupons';
 
 export default function CartPage() {
     const router = useRouter();
@@ -54,8 +23,11 @@ export default function CartPage() {
     const [showPromoInput, setShowPromoInput] = useState(false);
     const [itemToRemove, setItemToRemove] = useState<string | null>(null);
     const [showAuthModal, setShowAuthModal] = useState(false);
+    const [checkoutType, setCheckoutType] = useState<'guest' | 'signup' | null>(null);
     const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
     const [couponError, setCouponError] = useState('');
+    const [availableCoupons, setAvailableCoupons] = useState<Coupon[]>([]);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const freeShippingThreshold = 53000;
@@ -74,29 +46,47 @@ export default function CartPage() {
     };
     const handleAuthComplete = (isSuccessful?: boolean) => {
         setShowAuthModal(false);
-        if (isSuccessful) {
+        if (isSuccessful || checkoutType === 'guest') {
             router.push('/checkout');
         }
     };
 
 
-    const handleApplyCoupon = () => {
+    useEffect(() => {
+        const fetchCoupons = async () => {
+            const coupons = await CouponHelper.getAllCoupons();
+            setAvailableCoupons(coupons);
+        };
+        fetchCoupons();
+    }, []);
+
+    const handleApplyCoupon = async () => {
         setCouponError('');
-        const coupon = demoCoupons.find(c => c.code.toLowerCase() === promoCode.toLowerCase());
+        try {
+            const verification = await CouponHelper.verifyCoupon(promoCode, subtotal);
 
-        if (!coupon) {
-            setCouponError('Invalid coupon code');
-            return;
+            if (!verification.valid) {
+                setCouponError(verification.message || 'Invalid coupon code');
+                return;
+            }
+
+            if (verification.coupon) {
+                const coupon: Coupon = {
+                    id: verification.coupon.id,
+                    code: verification.coupon.code,
+                    type: verification.coupon.type as 'percentage' | 'fixed',
+                    value: verification.coupon.value,
+                    description: verification.coupon.description,
+                    minAmount: null,
+                    is_available: true
+                };
+                setAppliedCoupon(coupon);
+                setShowPromoInput(false);
+                setPromoCode('');
+            }
+        } catch (error) {
+            setCouponError('Failed to verify coupon');
         }
-
-        if (coupon.minAmount && subtotal < coupon.minAmount) {
-            setCouponError(`This coupon requires a minimum purchase of ₦${coupon.minAmount.toLocaleString()}`);
-            return;
-        }
-
-        setAppliedCoupon(coupon);
-        setShowPromoInput(false);
-        setPromoCode('');
     };
     const calculateDiscount = () => {
         if (!appliedCoupon) return 0;
@@ -109,6 +99,17 @@ export default function CartPage() {
     const handleRemoveClick = (productId: string) => {
         setItemToRemove(productId);
     };
+
+    const handleCheckout = () => {
+        if (isAuthenticated) {
+            setShowAuthModal(true);
+        } else {
+            setCheckoutType(null);
+            setShowAuthModal(true);
+        }
+    };
+
+ 
 
     const discount = calculateDiscount();
     const estimatedTotal = subtotal - discount;
@@ -266,7 +267,7 @@ export default function CartPage() {
                             </button>
 
                             {showPromoInput && (
-                                <div className="mb-3  space-y-2">
+                                <div className="mb-3 space-y-2">
                                     <div className="flex gap-2">
                                         <input
                                             type="text"
@@ -287,7 +288,7 @@ export default function CartPage() {
                                     )}
                                     <div className="text-sm space-y-1 p-4">
                                         <p className="font-medium">Available Coupons: (click to add)</p>
-                                        {demoCoupons.map((coupon) => (
+                                        {availableCoupons.map((coupon) => (
                                             <div
                                                 key={coupon.code}
                                                 className="flex my-3 justify-between text-gray-600 cursor-pointer hover:text-gray-900"
@@ -330,7 +331,7 @@ export default function CartPage() {
                                     </div>
                                 </div>
                                 <Button
-                                    onClick={() => setShowAuthModal(true)}
+                                    onClick={handleCheckout}
                                     className="w-full py-3 px-4 bg-[#184193] text-white rounded-xl mt-4"
                                 >
                                     Proceed to checkout

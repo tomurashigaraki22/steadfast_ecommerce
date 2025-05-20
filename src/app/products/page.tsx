@@ -1,6 +1,8 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { TopBanner } from '@/components/layout/TopBanner';
 import { Header } from '@/components/layout/Header';
@@ -43,132 +45,30 @@ interface Category {
     image_url: string;
 }
 export default function ProductsPage() {
+    return (
+        <>
+            <TopBanner theme={'dark'} />
+            <Header />
+            <Suspense fallback={<div className="flex items-center justify-center min-h-[400px]"><div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></div></div>}>
+                <ProductList />
+            </Suspense>
+        </>
+    );
+}
+
+function ProductList() {
+    const searchParams = useSearchParams();
     const [isLoading, setIsLoading] = useState(false);
     const [products, setProducts] = useState<Product[]>([]);
     const [productFilters, setProductFilters] = useState<FilterOption[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
-
-    useEffect(() => {
-        const cachedCategories = localStorage.getItem('categories');
-        if (cachedCategories) {
-            const parsedCategories = JSON.parse(cachedCategories);
-            setCategories(parsedCategories);
-            setIsLoading(false);
-            console.log(parsedCategories)
-            console.log(typeof parsedCategories)
-
-        }
-
-        const fetchCategories = async () => {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`);
-                const data = await response.json();
-                if (Array.isArray(data.categories)) {
-                    localStorage.setItem('categories', JSON.stringify(data.categories));
-                    setCategories(data.categories);
-                    console.log(typeof data.categories)
-                    setIsLoading(false);
-
-                }
-            } catch (error: unknown) {
-                if (error instanceof Error) {
-                    console.error('Error fetching categories:', error.message);
-                }
-            }
-        };
-
-        fetchCategories();
-    }, []);
-
-    useEffect(() => {
-        if (!products || products.length === 0) return;
-
-        const prices = products.map(p => p.price).filter(Boolean);
-        const validRatings = products
-            .map(p => p.rating)
-            .filter((rating): rating is number => rating !== null && !isNaN(rating));
-        const ratingsSet = new Set<number>(validRatings);
-        const ratings = Array.from(ratingsSet).sort((a, b) => b - a);
-
-        const dynamicFilters: FilterOption[] = [
-            {
-                id: 'category',
-                label: 'Category',
-                type: 'checkbox',
-                options: categories.map(category => ({
-                    value: category.id,
-                    label: category.name,
-                    amount: products.filter(p => p.categoryId === category.id).length
-                }))
-            },
-            {
-                id: 'popularity',
-                label: 'Most Popular',
-                type: 'radio',
-                options: [
-                    {
-                        value: 'most-popular',
-                        label: 'Most Popular',
-                        amount: products.filter(p =>
-                            p.rating >= 4 &&
-                            (p.totalSold / p.stock) >= 0.7
-                        ).length
-                    },
-                    {
-                        value: 'least-popular',
-                        label: 'Least Popular',
-                        amount: products.filter(p =>
-                            p.rating < 4 ||
-                            (p.totalSold / p.stock) < 0.3
-                        ).length
-                    },
-                    {
-                        value: 'newest', label: 'Newest', amount: products.filter(p => {
-                            const createDate = new Date(p.dateCreated);
-                            const threeMonthsAgo = new Date();
-                            threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-                            return createDate > threeMonthsAgo;
-                        }).length
-                    },
-                    {
-                        value: 'oldest', label: 'Oldest', amount: products.filter(p => {
-                            const createDate = new Date(p.dateCreated);
-                            const sixMonthsAgo = new Date();
-                            sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-                            return createDate <= sixMonthsAgo;
-                        }).length
-                    },
-                    { value: 'highest-rated', label: 'Highest Rated', amount: products.filter(p => p.rating >= 4).length }
-                ]
-            },
-            {
-                id: 'price',
-                label: 'Price Range',
-                type: 'range',
-                range: {
-                    min: Math.min(...prices),
-                    max: Math.max(...prices)
-                }
-            },
-            {
-                id: 'rating',
-                label: 'Rating',
-                type: 'rating',
-                options: ratings.length > 0 ? ratings.map((rating: number) => ({
-                    value: rating.toString(),
-                    label: `${rating}★ & above`,
-                    amount: products.filter(p => p.rating >= rating).length
-                })) : []
-            }
-        ];
-
-        setProductFilters(dynamicFilters);
-    }, [products]);
+    const searchQuery = searchParams.get('q') || '';
 
     const fetchProducts = async () => {
         setIsLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
+            
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products${searchQuery ? `?q=${searchQuery}` : ''}`);
             const data = await response.json();
             const products = data.products || [];
             setProducts(products);
@@ -202,15 +102,15 @@ export default function ProductsPage() {
             }));
             setIsLoading(false);
 
-
         } catch (error) {
             console.error('Error fetching products:', error);
+            setIsLoading(false);
         }
     };
 
     useEffect(() => {
         fetchProducts();
-    }, []);
+    }, [searchParams]);
 
     const handleFilterChange = async (filters: Record<string, FilterValue>) => {
         setIsLoading(true);
@@ -230,17 +130,14 @@ export default function ProductsPage() {
     };
 
     return (
-        <>
-            <TopBanner theme={'dark'} />
-            <Header />
-            <ProductGrid
-                title="All Products"
-                products={products}
-                filters={productFilters as import('@/components/product/ProductFilter').FilterOption[]}
-                onFilterChange={handleFilterChange}
-                isLoading={isLoading}
-                maxRecord={12}
-            />
-        </>
+        <ProductGrid
+            title="All Products"
+            subtitle={searchQuery && `Search results for "${searchQuery}"`}
+            products={products}
+            filters={productFilters as import('@/components/product/ProductFilter').FilterOption[]}
+            onFilterChange={handleFilterChange}
+            isLoading={isLoading}
+            maxRecord={12}
+        />
     );
 }

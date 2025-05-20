@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Pen } from 'lucide-react';
@@ -27,17 +27,27 @@ interface ProfileTabProps {
 export function ProfileTab({ user }: ProfileTabProps) {
     const { updateProfile } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
-    const [profile, setProfile] = useState({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        phone: user.phone,
-        address: user.address
+    const [profile, setProfile] = useState<UserProfile>({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        address: ''
     });
     const [isLoading, setIsLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [modalType, setModalType] = useState<'success' | 'error'>('success');
     const [modalMessage, setModalMessage] = useState('');
+
+    useEffect(() => {
+        setProfile({
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            phone: user.phone,
+            address: user.address
+        });
+    }, [user]);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -45,7 +55,8 @@ export function ProfileTab({ user }: ProfileTabProps) {
 
         try {
             const result = await updateProfile({
-                username: `${profile.firstName} ${profile.lastName}`,
+                first_name: profile.firstName,
+                last_name: profile.lastName,
                 email: profile.email,
                 phone_number: profile.phone,
                 address: profile.address

@@ -33,8 +33,8 @@ export default function ProfilePage() {
             case 'personal':
                 return <ProfileTab
                     user={{
-                        firstName: userData?.username?.split(" ")[0] || '',
-                        lastName: userData?.username?.split(" ")[1] || '',
+                        firstName: userData?.first_name || '',
+                        lastName: userData?.last_name || '',
                         email: userData?.email || '',
                         phone: userData?.phone_number || '',
                         address: userData?.address || ''
