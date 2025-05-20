@@ -71,14 +71,15 @@ export default function SignupPage() {
             setModalMessage('Passwords do not match');
             setShowModal(true);
             return;
-        }    
+        }
 
         setIsLoading(true);
         setError(null);
 
         const form = e.target as HTMLFormElement;
         const formData = {
-            username: `${form.firstName.value} ${form.lastName.value}`,
+            first_name: `${form.firstName.value}`,
+            last_name: `${form.lastName.value}`,
             email: form.email.value,
             password: password,
             phone_number: form.phoneNumber.value

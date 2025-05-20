@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useWishlist } from '@/context/WishlistContext';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import { Heart, Share2 } from 'lucide-react';
+import { Heart, Loader2, Share2 } from 'lucide-react';
 import { TopBanner } from '@/components/layout/TopBanner';
 import { Header } from '@/components/layout/Header';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
@@ -78,11 +78,44 @@ export default function ProductDetailPage() {
         const y = ((e.clientY - top) / height) * 100;
         setMagnifyPosition({ x, y });
     };
+ 
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                setIsLoading(true);
 
+                const cachedProducts = localStorage.getItem('products');
+                if (cachedProducts) {
+                    const parsedProducts = JSON.parse(cachedProducts);
+                    setProducts(parsedProducts);
+                    setIsPageLoading(false);
+                }
+
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`);
+                const data = await response.json();
+                console.log(data)
+                const newProducts = data.product;
+
+                setProducts(newProducts);
+                localStorage.setItem('products', JSON.stringify(newProducts));
+            } catch (error) {
+                console.error('Error fetching products:', error);
+
+                const cachedProducts = localStorage.getItem('products');
+                if (cachedProducts) {
+                    setProducts(JSON.parse(cachedProducts));
+                }
+            } finally {
+                setIsLoading(false);
+                setIsPageLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, [productId]);
     useEffect(() => {
         setIsWishlisted(isInWishlist(productId));
     }, [productId, isInWishlist]);
-
     const toggleWishlist = async () => {
         try {
             setIsLoading(true);
@@ -109,7 +142,6 @@ export default function ProductDetailPage() {
             setIsLoading(false);
         }
     };
-
     const { addToCart, isInCart, removeFromCart } = useCart();
 
     useEffect(() => {
@@ -138,6 +170,32 @@ export default function ProductDetailPage() {
         }
     };
 
+
+    const [isSharing, setIsSharing] = useState(false);
+
+    const handleShare = async () => {
+        if (isSharing) return;
+
+        setIsSharing(true);
+        const shareData = {
+            title: `Check out this product on Steadfast: ${product?.title || 'Product'}`,
+            text: product?.description || '',
+            url: window.location.href
+        };
+
+        try {
+            if (navigator.share) {
+                await navigator.share(shareData);
+            } else {
+                await navigator.clipboard.writeText(`${shareData.title}\n${shareData.url}`);
+                alert('Link copied to clipboard!');
+            }
+        } catch (error) {
+            console.error('Error sharing:', error);
+        } finally {
+            setIsSharing(false);
+        }
+    };
 
     if (!product && !isPageLoading) {
         return <div>Product not found</div>;
@@ -293,8 +351,12 @@ export default function ProductDetailPage() {
                                             isFilled={isWishlisted}
                                         />
                                     </button>
-                                    <button className="flex items-center bg-[#EDF0F8] text-[#000] px-3 py-2 rounded-xl">
-                                        <Share2 size={20} className="text-black" />
+                                    <button 
+                                        onClick={handleShare}
+                                        disabled={isSharing}
+                                        className={`flex items-center bg-[#EDF0F8] text-[#000] px-3 py-2 rounded-xl ${isSharing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    >
+                                       {!isSharing ? <Share2 size={20} className={`text-black`} /> : <Loader2 size={20} className={`text-black  animate-spin`} /> }
                                     </button>
                                 </div>
                             </div>
