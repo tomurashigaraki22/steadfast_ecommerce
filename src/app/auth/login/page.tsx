@@ -7,8 +7,7 @@ import { AuthWrapper } from '@/components/auth/AuthWrapper';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
-import { SocialButton } from '@/components/auth/SocialButton';
-import Link from 'next/link';
+ import Link from 'next/link';
 ;
 
 export default function LoginPage() {

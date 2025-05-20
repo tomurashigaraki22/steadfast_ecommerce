@@ -9,7 +9,6 @@ import { StarRating } from '@/components/ui/StarRating';
 import { ActionButton } from '../ui/ActionButton';
 import { HeartIcon } from '@/components/icons/Heart';
 import { useState } from 'react';
-import { FavoritesHelper } from '@/lib/favorites';
 import { useWishlist } from '@/context/WishlistContext';
 import { useCart } from '@/context/CartContext';
 
@@ -41,7 +40,6 @@ export const ProductCard = ({
     category,
     rating,
     enableSales = true,
-    image,
     images,
     isNew,
     discount,

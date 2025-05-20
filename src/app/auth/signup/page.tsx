@@ -29,6 +29,7 @@ export default function SignupPage() {
         { label: 'At least one number', isValid: false },
     ]);
     const [isFormValid, setIsFormValid] = useState(false);
+    console.log('isformvalid:' + isFormValid)
 
     const validatePassword = (value: string) => {
         setPassword(value);

@@ -8,7 +8,6 @@ import { TopBanner } from '@/components/layout/TopBanner';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
-import { ProductGrid } from '@/components/product/ProductGrid';
 import { StarIcon } from '@/components/icons/ShopIcons';
 import { ConfirmationModal } from '@/components/ui/ConfirmationModal';
 import { Button } from '@/components/ui/Button';
@@ -16,15 +15,7 @@ import { AuthModal } from '@/components/auth/AuthModal';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 
-interface CartItem {
-    productId: string;
-    title: string;
-    price: number;
-    image: string;
-    quantity: number;
-    wattage?: string;
-    color?: string;
-}
+ 
 interface Coupon {
     code: string;
     type: 'percentage' | 'fixed';

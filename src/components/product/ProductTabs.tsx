@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { ProductDescription } from './ProductDescription';
 import { ProductReviews } from './ProductReviews';
 
 interface Product {
@@ -98,7 +97,7 @@ export const ProductTabs = ({ product }: ProductTabsProps) => {
 
                         {product.whats_in_box && product.whats_in_box.length > 0 && (
                             <div className="mb-8">
-                                <h3 className="font-medium mb-4">What's in the Box</h3>
+                                <h3 className="font-medium mb-4">What&apos;s in the Box</h3>
                                 <ul className="list-disc list-inside space-y-2">
                                     {product.whats_in_box.map((item, index) => (
                                         <li key={index} className="text-gray-600">{item}</li>
