@@ -6,7 +6,7 @@ export interface User {
     username: string;
     phone_number?: string;
     is_verified: boolean;
-    address?: string;   
+    address?: string;
 }
 
 export interface Product {
@@ -34,8 +34,12 @@ export interface LoginCredentials {
     password: string;
 }
 
-export interface SignupCredentials extends User {
-    
+export interface SignupCredentials {
+    first_name: string;
+    last_name: string;
+    email: string;
+    password: string;
+    phone_number: string;
 }
 
 export interface VerifyEmailCredentials {
