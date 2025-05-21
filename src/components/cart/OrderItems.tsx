@@ -57,7 +57,7 @@ export default function OrderItems({
     const freeShippingThreshold = 53000;
 
 
- 
+
 
     useEffect(() => {
         const fetchCoupons = async () => {
@@ -113,9 +113,9 @@ export default function OrderItems({
     };
 
     const [isLoading, setIsLoading] = useState(false);
-    
 
- 
+
+
     const handlePayment = async () => {
         setIsLoading(true);
         try {
@@ -139,7 +139,7 @@ export default function OrderItems({
                     address: user?.address || '',
                     name: user ? `${user.first_name} ${user.last_name}` : '',
                     phone_number: user?.phone_number || '',
-                    total_amount: estimatedTotal,
+                    total_amount: totalprice,
                     payment_status: 'unpaid',
                     notes: orderNote,
                     coupon_id: appliedCoupon?.code || null,
@@ -170,11 +170,12 @@ export default function OrderItems({
         }
     };
 
-    
+
     const discount = calculateDiscount();
     const estimatedTotal = subtotal - discount;
     const shippingSaving = subtotal >= freeShippingThreshold ? freeShippingThreshold : 0;
     const totalSaving = discount + shippingSaving;
+    const totalprice = shippingSaving
 
     return (
         <div className="flex flex-col lg:flex-row gap-8">
@@ -353,6 +354,16 @@ export default function OrderItems({
                                 <span>Shipping:</span>
                                 <span className='text-black'>
                                     {selectedState ? `₦${parseInt(deliveryFee).toLocaleString()} (${deliveryDuration})` : 'Select state to calculate'}
+                                </span>
+                            </div>
+                            <div className="flex py-1 pb-6 justify-between text-gray-500">
+                                <span>Pickup Location:</span>
+                                <span className='text-black'>
+                                    {selectedState ? (
+                                        <>
+                                            {pickupLocation || 'No location selected'}
+                                        </>
+                                    ) : 'Select state to calculate'}
                                 </span>
                             </div>
                             <div className="flex flex-col gap-2 py-3 border-t border-[#E0E5EB]">

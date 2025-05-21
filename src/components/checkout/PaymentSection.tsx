@@ -15,7 +15,7 @@ type PaymentSectionProps = {
 };
 
 export const PaymentSection = ({ pickupLocation, deliveryInfo }: PaymentSectionProps) => {
-    console.log(deliveryInfo)
+    // console.log(pickupLocation)
     return (
         <>
             <OrderItems
