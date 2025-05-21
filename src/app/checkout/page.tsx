@@ -14,12 +14,15 @@ export default function CheckoutPage() {
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedState, setSelectedState] = useState('');
     const [selectedCity, setSelectedCity] = useState('');
+    const [shippingDetails, setShippingDetails] = useState<any>(null);
     const [pickupData, setPickupData] = useState<{
         pickup: any;
         fee: string;
         duration: string;
     } | null>(null);
     const [deliveryInfo, setDeliveryInfo] = useState<{ fee: string; duration: string }>({ fee: '', duration: '' });
+
+    // console.log(shippingDetails)
 
     const handleBack = () => {
         window.scrollTo(0, 0);
@@ -88,6 +91,7 @@ export default function CheckoutPage() {
                             <ShippingAddressSection
                                 onStateSelect={setSelectedState}
                                 onCitySelect={setSelectedCity}
+                                onShippingDetailsChange={setShippingDetails}
                             />
                         )}
                         {currentStep === 2 && (
@@ -99,6 +103,7 @@ export default function CheckoutPage() {
                         )}
                         {currentStep === 3 && (
                             <PaymentSection
+                                shippingDetails={shippingDetails}
                                 pickupLocation={{
                                     state: selectedState,
                                     city: selectedCity,

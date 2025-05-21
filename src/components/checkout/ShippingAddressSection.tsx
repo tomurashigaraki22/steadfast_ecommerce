@@ -12,6 +12,7 @@ const STORAGE_KEY = 'shipping_details';
 type ShippingAddressSectionProps = {
     onStateSelect: (state: string) => void;
     onCitySelect: (city: string) => void;
+    onShippingDetailsChange: (details: typeof defaultAddress) => void;
 };
 
 const defaultAddress = {
@@ -34,7 +35,7 @@ type CityOption = {
     label: string;
 };
 
-export const ShippingAddressSection = ({ onStateSelect, onCitySelect }: ShippingAddressSectionProps) => {
+export const ShippingAddressSection = ({ onStateSelect, onCitySelect, onShippingDetailsChange }: ShippingAddressSectionProps) => {
     const { user, isAuthenticated } = useAuth();
     const [isEditing, setIsEditing] = useState(!isAuthenticated);
     const [shippingDetails, setShippingDetails] = useState(defaultAddress);
@@ -51,6 +52,7 @@ export const ShippingAddressSection = ({ onStateSelect, onCitySelect }: Shipping
         const savedDetails = localStorage.getItem(STORAGE_KEY);
         if (savedDetails) {
             const parsedDetails = JSON.parse(savedDetails);
+            onShippingDetailsChange(parsedDetails);
             setShippingDetails(parsedDetails);
             if (parsedDetails.state) {
                 const stateOption = { value: parsedDetails.state, label: parsedDetails.state };
@@ -72,6 +74,8 @@ export const ShippingAddressSection = ({ onStateSelect, onCitySelect }: Shipping
                 address: user.address || ''
             };
             setShippingDetails(userDetails);
+            onShippingDetailsChange(userDetails);
+
             localStorage.setItem(STORAGE_KEY, JSON.stringify(userDetails));
 
             if (user.state) {
@@ -89,6 +93,7 @@ export const ShippingAddressSection = ({ onStateSelect, onCitySelect }: Shipping
     const updateShippingDetails = (newDetails: typeof shippingDetails) => {
         setShippingDetails(newDetails);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(newDetails));
+        onShippingDetailsChange(newDetails);
     };
 
     const updateCities = (stateName: string) => {
@@ -226,7 +231,7 @@ export const ShippingAddressSection = ({ onStateSelect, onCitySelect }: Shipping
                         <label className="block text-sm text-gray-500 mb-1">State</label>
                         <p className="text-gray-900">{shippingDetails.state}</p>
                     </div>
-                    <div className='bg-[#18419310] py-2 px-5 rounded-lg'>        
+                    <div className='bg-[#18419310] py-2 px-5 rounded-lg'>
                         <label className="block text-sm text-gray-500 mb-1">City</label>
                         <p className="text-gray-900">{shippingDetails.city}</p>
                     </div>

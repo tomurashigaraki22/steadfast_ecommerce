@@ -32,7 +32,8 @@ interface OrderItemsProps {
     selectedCity: string;
     pickupLocation: string | null;
     deliveryFee: string;
-    deliveryDuration: string;
+    deliveryDuration: string; 
+    shippingDetails: any;
 }
 
 export default function OrderItems({
@@ -40,7 +41,8 @@ export default function OrderItems({
     selectedCity,
     pickupLocation,
     deliveryFee,
-    deliveryDuration
+    deliveryDuration,
+    shippingDetails
 }: OrderItemsProps) {
     const router = useRouter();
     const { cartItems, updateQuantity, removeFromCart } = useCart();
@@ -50,13 +52,13 @@ export default function OrderItems({
     const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
     const [couponError, setCouponError] = useState('');
     const [availableCoupons, setAvailableCoupons] = useState<Coupon[]>([]);
-    const { user, getToken } = useAuth();
+    const { user, getToken } = useAuth(); 
     const [orderNote, setOrderNote] = useState('');
 
     const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const freeShippingThreshold = 53000;
 
-
+    console.log('Shipping Details:', shippingDetails);
 
 
     useEffect(() => {
@@ -136,9 +138,12 @@ export default function OrderItems({
                         product_id: item.productId,
                         quantity: item.quantity
                     })),
-                    address: user?.address || '',
-                    name: user ? `${user.first_name} ${user.last_name}` : '',
-                    phone_number: user?.phone_number || '',
+                    address: shippingDetails?.address || '',
+                    name: shippingDetails ? `${shippingDetails.firstName} ${shippingDetails.lastName}` : '',
+                    first_name: shippingDetails ? `${shippingDetails.firstName}` : '',
+                    last_name: shippingDetails ? `${shippingDetails.lastName}` : '',
+                    phone_number: shippingDetails?.phone || '',
+                    email: shippingDetails?.email || '',
                     total_amount: totalprice,
                     payment_status: 'unpaid',
                     notes: orderNote,
@@ -149,7 +154,7 @@ export default function OrderItems({
                         location: pickupLocation
                     },
                     delivery_info: {
-                        fee: deliveryFee,
+                        fee: subtotal >= freeShippingThreshold ? 0 : deliveryFee,
                         duration: deliveryDuration
                     }
                 })
@@ -161,12 +166,11 @@ export default function OrderItems({
 
             const data = await response.json();
             console.log(data)
-            // router.push(`/payment/${data.order_id}`);
+            router.push(`/payment/${data.order_id}`);
         } catch (error) {
-            console.error('Error creating order:', error);
-            alert('Failed to process order. Please try again.');
-        } finally {
             setIsLoading(false);
+            console.error(error);
+            alert('Failed to process order. Please try again.');
         }
     };
 
@@ -175,7 +179,7 @@ export default function OrderItems({
     const estimatedTotal = subtotal - discount;
     const shippingSaving = subtotal >= freeShippingThreshold ? freeShippingThreshold : 0;
     const totalSaving = discount + shippingSaving;
-    const totalprice = shippingSaving
+    const totalprice = subtotal;
 
     return (
         <div className="flex flex-col lg:flex-row gap-8">

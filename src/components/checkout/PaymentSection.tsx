@@ -3,6 +3,7 @@
 import OrderItems from '../cart/OrderItems';
 
 type PaymentSectionProps = {
+    shippingDetails: any;
     pickupLocation: {
         state: string;
         city: string;
@@ -14,16 +15,20 @@ type PaymentSectionProps = {
     };
 };
 
-export const PaymentSection = ({ pickupLocation, deliveryInfo }: PaymentSectionProps) => {
-    // console.log(pickupLocation)
+export const PaymentSection = ({ pickupLocation, deliveryInfo,shippingDetails }: PaymentSectionProps) => {
+    const pickupLocationValue = typeof pickupLocation.location === 'string' 
+        ? pickupLocation.location 
+        : pickupLocation.location?.value || null;
+ 
     return (
         <>
             <OrderItems
                 selectedState={pickupLocation.state}
                 selectedCity={pickupLocation.city}
-                pickupLocation={pickupLocation.location}
+                pickupLocation={pickupLocationValue}
                 deliveryFee={deliveryInfo.fee}
                 deliveryDuration={deliveryInfo.duration}
+                shippingDetails={shippingDetails}
             />
         </>
     );
