@@ -1,0 +1,269 @@
+[
+    {
+      "state": "LAGOS",
+      "location": "LAGOS",
+      "fee": "4000",
+      "duration": "1 Day",
+      "pickups": ["Home Delivery"]
+    },
+    {
+      "state": "ABIA",
+      "location": "UMUAHIA",
+      "fee": "6000",
+      "duration": "6 Days",
+      "pickups": ["Liberty Park Aba", "Young Shall Grow Park Umuahia"]
+    },
+    {
+      "state": "ADAMAWA",
+      "location": "YOLA",
+      "fee": "8000",
+      "duration": "8 Days",
+      "pickups": ["Jimeta Park Yola", "Mubi Motor Park Adamawa"]
+    },
+    {
+      "state": "AKWA IBOM",
+      "location": "UYO",
+      "fee": "6000",
+      "duration": "7 Days",
+      "pickups": ["Itam Park", "Ibom Express Uyo", "Eket Main Park", "Young Shall Grow Park @ Slaughter Uyo"]
+    },
+    {
+      "state": "ANAMBRA",
+      "location": "AWKA",
+      "fee": "6000",
+      "duration": "5 Days",
+      "pickups": ["Chisco Park - Onitsha", "Anambra Exp", "Unizik Junction Awka", "Otolo Nnewi", "Tracker Motor Park"]
+    },
+    {
+      "state": "BAUCHI",
+      "location": "BAUCHI",
+      "fee": "8000",
+      "duration": "8 Days",
+      "pickups": ["Awala Motor Park"]
+    },
+    {
+      "state": "BAYELSA",
+      "location": "BAYELSA",
+      "fee": "6000",
+      "duration": "6 Days",
+      "pickups": ["Keki Motor Park Bayelsa"]
+    },
+    {
+      "state": "BENUE",
+      "location": "MAKURDI",
+      "fee": "7000",
+      "duration": "8 Days",
+      "pickups": ["Flight Park Makurdi", "Gboko Park Benue", "Otukpo Park Benue"]
+    },
+    {
+      "state": "BORNO",
+      "location": "MAIDUGURI",
+      "fee": "8000",
+      "duration": "8 Days",
+      "pickups": ["Tashan Kano Maiduguri"]
+    },
+    {
+      "state": "CROSS RIVER",
+      "location": "CALABAR",
+      "fee": "7000",
+      "duration": "8 Days",
+      "pickups": ["Young Shall Grow Park Calabar", "No 1 Border Road Ikom"]
+    },
+    {
+      "state": "DELTA",
+      "location": "ASABA",
+      "fee": "6000",
+      "duration": "5 Days",
+      "pickups": ["Deltaline Koka Asaba", "Airport Junction Warri", "Lagos Asaba Road Ogwashi"]
+    },
+    {
+      "state": "DELTA",
+      "location": "ASABA",
+      "fee": "6000",
+      "duration": "5 Days",
+      "pickups": ["Amukpe Roundabout Sapele", "Otowodo Park Ughelli", "Oromi Junction", "Lagos Park Agbor"]
+    },
+    {
+      "state": "EBONYI",
+      "location": "ABAKALIKI",
+      "fee": "7000",
+      "duration": "8 Days",
+      "pickups": ["New International Park Opp Int' Mkt", "Spare and Do Park Abakaliki"]
+    },
+    {
+      "state": "EDO",
+      "location": "BENIN",
+      "fee": "6000",
+      "duration": "5 Days",
+      "pickups": ["Descope Motor Park Iyaro Benin", "New Market Park Ekpoma", "Osaledon Park Auchi"]
+    },
+    {
+      "state": "EKITI",
+      "location": "EKITI",
+      "fee": "6000",
+      "duration": "4 Days",
+      "pickups": ["Old Garage Ado Ekiti Terminal"]
+    },
+    {
+      "state": "ENUGU",
+      "location": "ENUGU",
+      "fee": "6000",
+      "duration": "5 Days",
+      "pickups": ["Holyghost Motor Park Enugu", "Ifesinachi Park Nsukka"]
+    },
+    {
+      "state": "GOMBE",
+      "location": "GOMBE",
+      "fee": "8000",
+      "duration": "8 Days",
+      "pickups": ["Mega Park Gombe", "Lagos Park For Gombe"]
+    },
+    {
+      "state": "IMO",
+      "location": "OWERRI",
+      "fee": "6000",
+      "duration": "5 Days",
+      "pickups": ["Rivers Joy Park", "Egbu Road Owerri"]
+    },
+    {
+      "state": "JIGAWA",
+      "location": "DUTSE",
+      "fee": "8000",
+      "duration": "8 Days",
+      "pickups": ["Investment Park Jigawa", "Rigin Motor Park Jigawa"]
+    },
+    {
+      "state": "KADUNA",
+      "location": "KADUNA",
+      "fee": "8000",
+      "duration": "8 Days",
+      "pickups": ["Mando Park Kaduna", "EL-Rufai Park Zaria"]
+    },
+    {
+      "state": "KANO",
+      "location": "KANO",
+      "fee": "8000",
+      "duration": "8 Days",
+      "pickups": ["Unguwa Uku Park Kano", "Ring Road", "Karota Park Kano"]
+    },
+    {
+      "state": "KATSINA",
+      "location": "KATSINA",
+      "fee": "8000",
+      "duration": "8 Days",
+      "pickups": ["Nato Motor Park Katsina"]
+    },
+    {
+      "state": "KEBBI",
+      "location": "BIRNIN KB",
+      "fee": "8000",
+      "duration": "8 Days",
+      "pickups": ["Jega Central Motor Park Kebbi"]
+    },
+    {
+      "state": "KOGI",
+      "location": "LOKOJA",
+      "fee": "7000",
+      "duration": "5 Days",
+      "pickups": ["Natako Filling Station Lokoja"]
+    },
+    {
+      "state": "KWARA",
+      "location": "ILORIN",
+      "fee": "5000",
+      "duration": "5 Days",
+      "pickups": ["Genaral Park Ilorin"]
+    },
+    {
+      "state": "NASARAWA",
+      "location": "LAFIA",
+      "fee": "8000",
+      "duration": "8 Days",
+      "pickups": ["Akwanga Park Nasarawa", "New Akurba Garage", "Shandam Road Lafia", "After Flyover By Living Faith Church Keffi"]
+    },
+    {
+      "state": "NIGER",
+      "location": "MINNA",
+      "fee": "7000",
+      "duration": "8 Days",
+      "pickups": ["Kpakungu Motor Park Minna", "Ilorin Garage Bidda", "NSTA Motor Park Minna"]
+    },
+    {
+      "state": "OGUN",
+      "location": "ABK",
+      "fee": "5000",
+      "duration": "4 Days",
+      "pickups": ["Kuto Park Abeokuta", "Lagos Garage", "Ijebu - Ode Express Junction Shagamu"]
+    },
+    {
+      "state": "ONDO",
+      "location": "AKURE",
+      "fee": "6000",
+      "duration": "4 Days",
+      "pickups": ["Ondo Garage Akure", "Matrix Park Ondo"]
+    },
+    {
+      "state": "OSUN",
+      "location": "OSHOGBO",
+      "fee": "6000",
+      "duration": "4 Days",
+      "pickups": ["Old Garage Osogbo", "Campus Gate Ile - Ife"]
+    },
+    {
+      "state": "OYO",
+      "location": "IBADAN",
+      "fee": "5000",
+      "duration": "4 Days",
+      "pickups": ["Challenge Terminal Ibadan", "World Oil Filling Station Iwo Road Ibadan", "Owode Park Oyo"]
+    },
+    {
+      "state": "PLATEAU",
+      "location": "JOS",
+      "fee": "8000",
+      "duration": "8 Days",
+      "pickups": ["NTA Park Jos", "Obata Nudo Park Jos"]
+    },
+    {
+      "state": "RIVERS",
+      "location": "PORTHARCOURT",
+      "fee": "6000",
+      "duration": "5 Days",
+      "pickups": ["Waterline Motor Park Portharcourt"]
+    },
+    {
+      "state": "SOKOTO",
+      "location": "SOKOTO",
+      "fee": "8000",
+      "duration": "8 Days",
+      "pickups": ["Hajiya Halimah Park Sokoto"]
+    },
+    {
+      "state": "TARABA",
+      "location": "JALINGO",
+      "fee": "8000",
+      "duration": "8 Days",
+      "pickups": ["Road Block Park Jalingo"]
+    },
+    {
+      "state": "YOBE",
+      "location": "YOBE",
+      "fee": "8000",
+      "duration": "8 Days",
+      "pickups": ["Yobe Central Garage", "Wazobia Park Yobe"]
+    },
+    {
+      "state": "ZAMFARA",
+      "location": "LAFIA",
+      "fee": "8000",
+      "duration": "8 Days",
+      "pickups": ["Gusau General Park Zamfara"]
+    },
+    {
+      "state": "FCT",
+      "location": "ABUJA",
+      "fee": "7000",
+      "duration": "5 Days",
+      "pickups": ["Jabi Motor Park Abuja"]
+    }
+  ]
+  

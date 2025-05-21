@@ -6,6 +6,9 @@ import { Percent, X } from 'lucide-react';
 import { ConfirmationModal } from '@/components/ui/ConfirmationModal';
 import { Button } from '@/components/ui/Button';
 import { useRouter } from 'next/navigation';
+import { useCart } from '@/context/CartContext';
+import { CouponHelper } from '@/lib/coupons';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface CartItem {
     productId: string;
@@ -20,120 +23,64 @@ interface Coupon {
     code: string;
     type: 'percentage' | 'fixed';
     value: number;
-    minAmount?: number;
+    minAmount: number | null;
     description: string;
 }
 
-const demoCoupons: Coupon[] = [
-    {
-        code: 'SAVE10',
-        type: 'percentage',
-        value: 10,
-        minAmount: 50000,
-        description: '10% off on orders above ₦50,000'
-    },
-    {
-        code: 'FLAT5K',
-        type: 'fixed',
-        value: 5000,
-        minAmount: 30000,
-        description: '₦5,000 off on orders above ₦30,000'
-    },
-    {
-        code: 'NEW2024',
-        type: 'percentage',
-        value: 15,
-        description: '15% off on all orders'
-    }
-];
-
 export default function OrderItems() {
     const router = useRouter();
-    const [cartItems, setCartItems] = useState<CartItem[]>([]);
+    const { cartItems, updateQuantity, removeFromCart } = useCart();
     const [promoCode, setPromoCode] = useState('');
     const [showPromoInput, setShowPromoInput] = useState(false);
-
-    useEffect(() => {
-        // Demo data - replace with actual cart data
-        setCartItems([
-            {
-                productId: '1',
-                title: 'Cantilever Light',
-                price: 8990,
-                image: '/product1.png',
-                quantity: 1,
-                wattage: '36 WATT',
-                color: 'White'
-            },
-            {
-                productId: '2',
-                title: 'Tablet Apple iPad Pro M2',
-                price: 8900,
-                image: '/product2.png',
-                quantity: 1,
-                color: 'Black',
-                wattage: '256 GB'
-            },
-            {
-                productId: '3',
-                title: 'Smart Watch Series 7',
-                price: 4250,
-                image: '/product3.png',
-                quantity: 2,
-                color: 'White',
-                wattage: '44 mm'
-            },
-            {
-                productId: '4',
-                title: 'Cantilever Light',
-                price: 8990,
-                image: '/product4.png',
-                quantity: 1,
-                wattage: '36 WATT',
-                color: 'Black'
-            }
-        ]);
-    }, []);
-
-
-
-    const handlePayment = () => {
-        router.push('/payment');
-    };
-
     const [itemToRemove, setItemToRemove] = useState<string | null>(null);
-    const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const freeShippingThreshold = 53000;
     const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
     const [couponError, setCouponError] = useState('');
+    const [availableCoupons, setAvailableCoupons] = useState<Coupon[]>([]);
+    const { user,getToken } = useAuth();
+    const [orderNote, setOrderNote] = useState('');
 
-    const updateQuantity = (productId: string, newQuantity: number) => {
-        setCartItems(items =>
-            items.map(item =>
-                item.productId === productId
-                    ? { ...item, quantity: Math.max(1, newQuantity) }
-                    : item
-            )
-        );
-    };
-    const handleApplyCoupon = () => {
+    const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const freeShippingThreshold = 53000;
+
+
+    console.log(cartItems)
+
+
+    useEffect(() => {
+        const fetchCoupons = async () => {
+            const coupons = await CouponHelper.getAllCoupons();
+            setAvailableCoupons(coupons);
+        };
+        fetchCoupons();
+    }, []);
+
+    const handleApplyCoupon = async () => {
         setCouponError('');
-        const coupon = demoCoupons.find(c => c.code.toLowerCase() === promoCode.toLowerCase());
+        try {
+            const verification = await CouponHelper.verifyCoupon(promoCode, subtotal);
 
-        if (!coupon) {
-            setCouponError('Invalid coupon code');
-            return;
+            if (!verification.valid) {
+                setCouponError(verification.message || 'Invalid coupon code');
+                return;
+            }
+
+            if (verification.coupon) {
+                const coupon: Coupon = {
+                    code: verification.coupon.code,
+                    type: verification.coupon.type as 'percentage' | 'fixed',
+                    value: verification.coupon.value,
+                    description: verification.coupon.description,
+                    minAmount: null
+                };
+                setAppliedCoupon(coupon);
+                setShowPromoInput(false);
+                setPromoCode('');
+            }
+        } catch (error) {
+            setCouponError('Failed to verify coupon');
         }
-
-        if (coupon.minAmount && subtotal < coupon.minAmount) {
-            setCouponError(`This coupon requires a minimum purchase of ₦${coupon.minAmount.toLocaleString()}`);
-            return;
-        }
-
-        setAppliedCoupon(coupon);
-        setShowPromoInput(false);
-        setPromoCode('');
     };
+
     const calculateDiscount = () => {
         if (!appliedCoupon) return 0;
         return appliedCoupon.type === 'percentage'
@@ -141,23 +88,76 @@ export default function OrderItems() {
             : appliedCoupon.value;
     };
 
-
     const handleRemoveClick = (productId: string) => {
         setItemToRemove(productId);
     };
 
     const handleRemoveConfirm = () => {
         if (itemToRemove) {
-            setCartItems(items => items.filter(item => item.productId !== itemToRemove));
+            removeFromCart(itemToRemove);
             setItemToRemove(null);
         }
     };
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handlePayment = async () => {
+        setIsLoading(true);
+        try {
+            const headers: Record<string, string> = {
+                'Content-Type': 'application/json'
+            };
+            const token = getToken();
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders`, {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({
+                    ...(token ? {} : { tempuser: true }),
+                    cart: cartItems.map(item => ({
+                        product_id: item.productId,
+                        quantity: item.quantity
+                    })),
+                    address: user?.address || '',
+                    name: user ? `${user.first_name} ${user.last_name}` : '',
+                    phone_number: user?.phone_number || '',
+                    total_amount: estimatedTotal,
+                    payment_status: 'unpaid',
+                    notes: orderNote,
+                    pickup_location: {
+                        state: selectedState,
+                        city: selectedCity,
+                        location: pickupLocation
+                    },
+                    delivery_info: {
+                        fee: deliveryFee,
+                        duration: deliveryDuration
+                    }
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to create order');
+            }
+
+            const data = await response.json();
+            // router.push(`/payment/${data.order_id}`);
+        } catch (error) {
+            console.error('Error creating order:', error);
+            alert('Failed to process order. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    
     const discount = calculateDiscount();
     const estimatedTotal = subtotal - discount;
-
     const shippingSaving = subtotal >= freeShippingThreshold ? freeShippingThreshold : 0;
     const totalSaving = discount + shippingSaving;
-
 
     return (
         <div className="flex flex-col lg:flex-row gap-8">
@@ -194,7 +194,7 @@ export default function OrderItems() {
                                         Color: <span className="text-black">{item.color}</span>
                                     </p>
                                     <p className="text-xs text-gray-500">
-                                        Variation: <span className="text-black">{item.wattage}</span>
+                                        Variation: <span className="text-black">{item.description}</span>
                                     </p>
                                     <div className="flex items-center border-2 border-[#EDF0F8] rounded-xl w-fit mt-2 md:hidden">
                                         <button
@@ -299,7 +299,7 @@ export default function OrderItems() {
                             )}
                             <div className="text-sm space-y-1 p-4">
                                 <p className="font-medium">Available Coupons: (click to add)</p>
-                                {demoCoupons.map((coupon) => (
+                                {availableCoupons.map((coupon) => (
                                     <div
                                         key={coupon.code}
                                         className="flex my-3 justify-between text-gray-600 cursor-pointer hover:text-gray-900"
@@ -336,6 +336,16 @@ export default function OrderItems() {
                                 <span>Shipping:</span>
                                 <span className='text-black'>Calculated at checkout</span>
                             </div>
+                            <div className="flex flex-col gap-2 py-3 border-t border-[#E0E5EB]">
+                                <label htmlFor="orderNote" className="text-gray-500">Order Note (optional):</label>
+                                <textarea
+                                    id="orderNote"
+                                    value={orderNote}
+                                    onChange={(e) => setOrderNote(e.target.value)}
+                                    placeholder="Add any special instructions or notes for your order"
+                                    className="w-full p-3 border-2 border-[#EDF0F8] bg-white outline-0 rounded-xl text-sm min-h-[100px] resize-none"
+                                />
+                            </div>
                             <div className="flex pt-6 justify-between border-t border-[#E0E5EB] font-medium">
                                 <span>Estimated total:</span>
                                 <span>₦{estimatedTotal.toLocaleString()}</span>
@@ -344,10 +354,10 @@ export default function OrderItems() {
                         <Button
                             onClick={handlePayment}
                             rounded={true}
-                            disabled={cartItems.length === 0}
+                            disabled={cartItems.length === 0 || isLoading}
                             className="w-full py-3 px-4 bg-[#184193] text-white rounded-full mt-4"
                         >
-                            Proceed to payment
+                            {isLoading ? 'Processing...' : 'Proceed to payment'}
                         </Button>
 
 

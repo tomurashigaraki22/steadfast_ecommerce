@@ -7,6 +7,8 @@ export interface User {
     phone_number?: string;
     is_verified: boolean;
     address?: string;
+    city?: string;
+    state?: string;
 }
 
 export interface Product {

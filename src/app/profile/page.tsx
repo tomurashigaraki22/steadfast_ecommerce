@@ -9,14 +9,12 @@ import { SecurityTab } from './components/SecurityTab';
 import { NotificationsTab } from './components/NotificationsTab';
 import { ProfileTab } from './components/ProfileTab';
 import { LogoutTab } from './components/LogoutTab';
-import Cookies from 'js-cookie';
-import { User } from '@/types/user';
-
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function ProfilePage() {
     const [activeTab, setActiveTab] = useState('personal');
-    const cookieUser = Cookies.get('user');
-    const userData: User | null = cookieUser ? JSON.parse(cookieUser) : null;
+    const { user } = useAuth();
+    
     const breadcrumbItems = [
         { label: 'Home', href: '/' },
         { label: 'Profile' }
@@ -33,11 +31,11 @@ export default function ProfilePage() {
             case 'personal':
                 return <ProfileTab
                     user={{
-                        firstName: userData?.first_name || '',
-                        lastName: userData?.last_name || '',
-                        email: userData?.email || '',
-                        phone: userData?.phone_number || '',
-                        address: userData?.address || ''
+                        firstName: user?.first_name || '',
+                        lastName: user?.last_name || '',
+                        email: user?.email || '',
+                        phone: user?.phone_number || '',
+                        address: user?.address || ''
                     }}
                 />;
             case 'security':

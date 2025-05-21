@@ -17,8 +17,9 @@ interface AuthContextType {
     isAuthenticated: boolean;
     isLoading: boolean;
     changePassword: (passwords: { oldPassword: string; newPassword: string }) => Promise<{ success: boolean; error?: string }>;
-    forgotPassword: (email: string) => Promise<{ success: boolean; error?: string }>; // <-- Add this
+    forgotPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
     resendVerificationCode: (email: string) => Promise<{ success: boolean; error?: string }>;
+    getToken: () => string | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -57,18 +58,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    useEffect(() => {
+    const fetchInitialUser = async ({ token }: { token: string }) => {
         try {
-            const savedUser = Cookies.get('user');
-            if (savedUser) {
-                const userData = JSON.parse(savedUser);
-                fetchAndUpdateUser();
+            if (!token) return null;
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/get-user`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            console.log(token)
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to fetch user');
             }
+
+            setUser(data.user);
+            Cookies.set('user', JSON.stringify(data.user), { expires: 70000 });
+            return data.user;
         } catch (error) {
-            console.error('Error loading user:', error);
-        } finally {
-            setIsLoading(false);
+            console.error('Error fetching user:', error);
+            return null;
         }
+    };
+
+    useEffect(() => {
+
+        fetchAndUpdateUser();
     }, []);
 
     const login = async (credentials: LoginCredentials) => {
@@ -88,8 +109,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             Cookies.set('token', data.token, { expires: 70000 });
             Cookies.set('user', JSON.stringify(data.user), { expires: 70000 });
-
-            setUser(data.user);
+            fetchInitialUser({ token: data.token });
 
             return { success: true };
         } catch (error: unknown) {
@@ -310,6 +330,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
+    const getToken = () => {
+        return Cookies.get('token') || null;
+    };
+
     return (
         <AuthContext.Provider value={{
             user,
@@ -322,7 +346,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             changePassword,
             forgotPassword,
             isAuthenticated: !!user,
-            isLoading
+            isLoading,
+            getToken
         }}>
             {children}
         </AuthContext.Provider>

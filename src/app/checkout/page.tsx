@@ -12,6 +12,12 @@ import { Header } from '@/components/layout/Header';
 export default function CheckoutPage() {
     const router = useRouter();
     const [currentStep, setCurrentStep] = useState(1);
+    const [selectedState, setSelectedState] = useState('');
+    const [pickupData, setPickupData] = useState<{
+        pickup: any;
+        fee: string;
+        duration: string;
+    } | null>(null);
 
     const handleBack = () => {
         window.scrollTo(0, 0);
@@ -24,6 +30,14 @@ export default function CheckoutPage() {
 
     const handleContinue = () => {
         window.scrollTo(0, 0);
+        if (currentStep === 1 && !selectedState) {
+            alert('Please select a state before proceeding');
+            return;
+        }
+        if (currentStep === 2 && !pickupData?.pickup) {
+            alert('Please select a pickup point before proceeding');
+            return;
+        }
         if (currentStep < 3) {
             setCurrentStep(currentStep + 1);
         } else {
@@ -66,10 +80,10 @@ export default function CheckoutPage() {
 
                 </div>
                 <div className={`${currentStep != 3 && 'container mx-auto max-w-3xl'}`}>
-
+       
                     <div className="space-y-6">
-                        {currentStep === 1 && <ShippingAddressSection />}
-                        {currentStep === 2 && <PickupSection />}
+                        {currentStep === 1 && <ShippingAddressSection onStateSelect={setSelectedState} />}
+                        {currentStep === 2 && <PickupSection selectedState={selectedState} onPickupSelect={setPickupData} />}
                         {currentStep === 3 && <PaymentSection />}
                     </div>
 
