@@ -122,7 +122,7 @@ export const ProductCard = ({
                         src={Array.isArray(images) && images.length > 0 ? images[0] : '/product.png'}
                         alt={title || "ProductImage"}
                         fill
-                        className="object-cover transition-transform duration-300 ease-out group-hover:scale-110"
+                        className="object-cover transition-transform duration-600 ease-out group-hover:scale-150"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                 </div>
