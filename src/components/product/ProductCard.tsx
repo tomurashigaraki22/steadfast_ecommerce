@@ -140,7 +140,7 @@ export const ProductCard = ({
                     <button
                         className={`p-2 rounded-full hover:bg-gray-100/80 transition-colors ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                         aria-label="Add to wishlist"
-                        onClick={toggleWishlist}
+                        onClick={toggleWishlist} 
                         disabled={isLoading}
                     >
                         <HeartIcon
