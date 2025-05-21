@@ -13,11 +13,13 @@ export default function CheckoutPage() {
     const router = useRouter();
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedState, setSelectedState] = useState('');
+    const [selectedCity, setSelectedCity] = useState('');
     const [pickupData, setPickupData] = useState<{
         pickup: any;
         fee: string;
         duration: string;
     } | null>(null);
+    const [deliveryInfo, setDeliveryInfo] = useState<{ fee: string; duration: string }>({ fee: '', duration: '' });
 
     const handleBack = () => {
         window.scrollTo(0, 0);
@@ -58,7 +60,7 @@ export default function CheckoutPage() {
                             </div>
                             <span className="text-xs">Add Items</span>
                         </div>
-                        <div className="flex flex-col items-center"> 
+                        <div className="flex flex-col items-center">
                             <div className={`w-8 h-8 ${currentStep >= 1 ? 'bg-[#184193]' : 'bg-gray-200'} rounded-full flex items-center justify-center text-white text-sm font-medium mb-2`}>
                                 2
                             </div>
@@ -80,11 +82,34 @@ export default function CheckoutPage() {
 
                 </div>
                 <div className={`${currentStep != 3 && 'container mx-auto max-w-3xl'}`}>
-       
+
                     <div className="space-y-6">
-                        {currentStep === 1 && <ShippingAddressSection onStateSelect={setSelectedState} />}
-                        {currentStep === 2 && <PickupSection selectedState={selectedState} onPickupSelect={setPickupData} />}
-                        {currentStep === 3 && <PaymentSection />}
+                        {currentStep === 1 && (
+                            <ShippingAddressSection
+                                onStateSelect={setSelectedState}
+                                onCitySelect={setSelectedCity}
+                            />
+                        )}
+                        {currentStep === 2 && (
+                            <PickupSection
+                                selectedState={selectedState}
+                                onPickupSelect={setPickupData}
+                                onDeliveryInfoChange={setDeliveryInfo}
+                            />
+                        )}
+                        {currentStep === 3 && (
+                            <PaymentSection
+                                pickupLocation={{
+                                    state: selectedState,
+                                    city: selectedCity,
+                                    location: pickupData?.pickup
+                                }}
+                                deliveryInfo={{
+                                    fee: deliveryInfo?.fee || '',
+                                    duration: deliveryInfo?.duration || ''
+                                }}
+                            />
+                        )}
                     </div>
 
                     <div className="flex px-2 md:flex-row gap-5  justify-between items-center mt-5">

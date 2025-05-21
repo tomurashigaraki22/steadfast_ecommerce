@@ -27,7 +27,21 @@ interface Coupon {
     description: string;
 }
 
-export default function OrderItems() {
+interface OrderItemsProps {
+    selectedState: string;
+    selectedCity: string;
+    pickupLocation: string | null;
+    deliveryFee: string;
+    deliveryDuration: string;
+}
+
+export default function OrderItems({
+    selectedState,
+    selectedCity,
+    pickupLocation,
+    deliveryFee,
+    deliveryDuration
+}: OrderItemsProps) {
     const router = useRouter();
     const { cartItems, updateQuantity, removeFromCart } = useCart();
     const [promoCode, setPromoCode] = useState('');
@@ -36,15 +50,14 @@ export default function OrderItems() {
     const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
     const [couponError, setCouponError] = useState('');
     const [availableCoupons, setAvailableCoupons] = useState<Coupon[]>([]);
-    const { user,getToken } = useAuth();
+    const { user, getToken } = useAuth();
     const [orderNote, setOrderNote] = useState('');
 
     const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const freeShippingThreshold = 53000;
 
 
-    console.log(cartItems)
-
+ 
 
     useEffect(() => {
         const fetchCoupons = async () => {
@@ -100,7 +113,9 @@ export default function OrderItems() {
     };
 
     const [isLoading, setIsLoading] = useState(false);
+    
 
+ 
     const handlePayment = async () => {
         setIsLoading(true);
         try {
@@ -127,6 +142,7 @@ export default function OrderItems() {
                     total_amount: estimatedTotal,
                     payment_status: 'unpaid',
                     notes: orderNote,
+                    coupon_id: appliedCoupon?.code || null,
                     pickup_location: {
                         state: selectedState,
                         city: selectedCity,
@@ -144,6 +160,7 @@ export default function OrderItems() {
             }
 
             const data = await response.json();
+            console.log(data)
             // router.push(`/payment/${data.order_id}`);
         } catch (error) {
             console.error('Error creating order:', error);
@@ -334,7 +351,9 @@ export default function OrderItems() {
                             )}
                             <div className="flex py-1 pb-6 justify-between text-gray-500">
                                 <span>Shipping:</span>
-                                <span className='text-black'>Calculated at checkout</span>
+                                <span className='text-black'>
+                                    {selectedState ? `₦${parseInt(deliveryFee).toLocaleString()} (${deliveryDuration})` : 'Select state to calculate'}
+                                </span>
                             </div>
                             <div className="flex flex-col gap-2 py-3 border-t border-[#E0E5EB]">
                                 <label htmlFor="orderNote" className="text-gray-500">Order Note (optional):</label>

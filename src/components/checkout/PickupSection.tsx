@@ -7,6 +7,7 @@ import deliveryData from '@/data/deliverydata.json';
 type PickupSectionProps = {
     selectedState: string;
     onPickupSelect: (pickupData: { pickup: string | PickupOption | null; fee: string; duration: string }) => void;
+    onDeliveryInfoChange: (deliveryInfo: { fee: string; duration: string }) => void;
 };
 
 type PickupOption = {
@@ -21,7 +22,7 @@ type StoredPickupData = {
 
 const STORAGE_KEY = 'pickup_details';
 
-export const PickupSection = ({ selectedState, onPickupSelect }: PickupSectionProps) => {
+export const PickupSection = ({ selectedState, onPickupSelect, onDeliveryInfoChange }: PickupSectionProps) => {
     const [selectedPickupPoint, setSelectedPickupPoint] = useState<PickupOption | null>(null);
     const [lagosPickupPoint, setLagosPickupPoint] = useState('');
     const [deliveryInfo, setDeliveryInfo] = useState<{
@@ -65,6 +66,10 @@ export const PickupSection = ({ selectedState, onPickupSelect }: PickupSectionPr
                     duration: stateData.duration,
                     pickups: stateData.pickups
                 });
+                onDeliveryInfoChange({
+                    fee: stateData.fee,
+                    duration: stateData.duration
+                });
                 if (selectedState.toUpperCase() !== 'LAGOS') {
                     setSelectedPickupPoint(null);
                     setLagosPickupPoint('');
@@ -72,7 +77,7 @@ export const PickupSection = ({ selectedState, onPickupSelect }: PickupSectionPr
                 }
             }
         }
-    }, [selectedState]);
+    }, [selectedState, onDeliveryInfoChange]);
 
     const pickupOptions: PickupOption[] = deliveryInfo?.pickups.map(pickup => ({
         value: pickup,

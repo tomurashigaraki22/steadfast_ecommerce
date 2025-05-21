@@ -11,6 +11,7 @@ const STORAGE_KEY = 'shipping_details';
 
 type ShippingAddressSectionProps = {
     onStateSelect: (state: string) => void;
+    onCitySelect: (city: string) => void;
 };
 
 const defaultAddress = {
@@ -33,7 +34,7 @@ type CityOption = {
     label: string;
 };
 
-export const ShippingAddressSection = ({ onStateSelect }: ShippingAddressSectionProps) => {
+export const ShippingAddressSection = ({ onStateSelect, onCitySelect }: ShippingAddressSectionProps) => {
     const { user, isAuthenticated } = useAuth();
     const [isEditing, setIsEditing] = useState(!isAuthenticated);
     const [shippingDetails, setShippingDetails] = useState(defaultAddress);
@@ -120,6 +121,7 @@ export const ShippingAddressSection = ({ onStateSelect }: ShippingAddressSection
         setSelectedCity(option);
         const newDetails = { ...shippingDetails, city: option?.value || '' };
         updateShippingDetails(newDetails);
+        onCitySelect(option?.value || '');
     };
 
     return (
