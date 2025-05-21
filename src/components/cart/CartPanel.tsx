@@ -12,6 +12,7 @@ export const CartPanel = ({ isOpen, onClose }: CartPanelProps) => {
     if (!isOpen) return null;
 
     const { cartItems, removeFromCart, updateQuantity } = useCart();
+    console.log(cartItems);
 
     const handleQuantityChange = (productId: string, increment: boolean) => {
         const item = cartItems.find(item => item.productId === productId);
@@ -103,10 +104,10 @@ export const CartPanel = ({ isOpen, onClose }: CartPanelProps) => {
                         <Link href='/cart' className="flex justify-center w-full bg-[#184193] text-white py-3 rounded-full font-medium mb-4">
                             View Cart
                         </Link>
-                        <button className="w-full hidden md:flex items-center justify-between px-4 py-3 border border-gray-200 rounded-full">
+                        <Link href='/cart' className="w-full hidden md:flex items-center justify-between px-4 py-3 border border-gray-200 rounded-full">
                             <span className="text-sm">Apply promo code</span>
                             <Plus size={16} />
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>

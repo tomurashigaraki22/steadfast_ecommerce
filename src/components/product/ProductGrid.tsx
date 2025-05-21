@@ -81,14 +81,13 @@ export const ProductGrid = ({
 
 
     return (
-        <section className="space-y-4 py-[2rem] relative">
+        <section className="space-y-4 pb-[2rem] md:py-[2rem] relative">
             <div className="container mx-auto px-3 pt-5  md:pt-0">
                 {breadCrumb &&
                     <Breadcrumb
                         items={breadCrumb}
                     />
                 }
-
 
                 {(title || subtitle || filters) && (
                     <div className="flex justify-between mb-5 items-center">

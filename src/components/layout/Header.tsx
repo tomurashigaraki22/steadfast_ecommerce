@@ -387,16 +387,15 @@ export const Header = () => {
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="space-y-6">
+                                    <div className="space-y-4  pb-[5rem]">
                                         {categories.map((category) => (
-                                            <div key={category.id} className="space-y-4">
-                                                <button
-                                                    onClick={() => handleCategoryClick(category.id)}
-                                                    className="text-base font-bold w-full text-left flex items-center justify-between hover:text-[#FF5722]"
+                                            <div key={category.id} className="">
+                                                <Link
+                                                    href={`/products/category/${category.id}`}
+                                                    className="text-[.9rem] font-semibold  text-left flex items-center py-3 px-4 justify-between rounded-lg hover:text-white hover:bg-[#FF5722] transition-all duration-300"
                                                 >
                                                     {category.name}
-                                                    <ChevronDown size={20} className="transform -rotate-90" />
-                                                </button>
+                                                </Link>
                                             </div>
                                         ))}
                                     </div>
@@ -405,7 +404,7 @@ export const Header = () => {
                         </div>
                     </div>
                 )}
-
+ 
                 {showSubcategoryModal && activeCategory && (
                     <div className="fixed inset-0 bg-white z-[60] flex flex-col">
                         <div className="flex justify-between items-center p-4 border-b  border-[#60606020]">
@@ -427,7 +426,7 @@ export const Header = () => {
                                     {categories.find(c => c.id === activeCategory)?.topProducts.map((product) => (
                                         <Link
                                             key={product.id}
-                                            href={`/products/category/${categories.find(c => c.id === activeCategory)?.id}/${product.id}`}
+                                            href={`/products/v/${product.id}`}
                                             className="block py-3 text-gray-600 border-b  border-[#60606020] hover:text-[#184193]"
                                             onClick={() => {
                                                 setIsMenuOpen(false);

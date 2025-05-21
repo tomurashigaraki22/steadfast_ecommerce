@@ -78,7 +78,7 @@ export default function ProductDetailPage() {
         const y = ((e.clientY - top) / height) * 100;
         setMagnifyPosition({ x, y });
     };
- 
+
     useEffect(() => {
         const fetchProducts = async () => {
             try {
@@ -142,24 +142,52 @@ export default function ProductDetailPage() {
             setIsLoading(false);
         }
     };
-    const { addToCart, isInCart, removeFromCart } = useCart();
+    const { addToCart, isInCart, removeFromCart, updateQuantity: updateQuantity, cartItems } = useCart();
+
+
+    const [cartQuantity, setCartQuantity] = useState(1);
+    console.log(cartItems)
 
     useEffect(() => {
-        setIsAdded(isInCart(productId));
-    }, [productId, isInCart]);
+        const itemInCart = cartItems.find(item => item.productId == productId);
+        console.log(itemInCart)
+
+        if (itemInCart) {
+            setCartQuantity(itemInCart.quantity);
+            setIsAdded(true);
+        } else {
+            setCartQuantity(1);
+            setIsAdded(false);
+        }
+    }, [productId, cartItems]);
+
+    const handleQuantityChange = (productId: string, increment: boolean) => {
+        const item = cartItems.find(item => item.productId === productId);
+        if (item) {
+            const newQuantity = increment ? item.quantity + 1 : item.quantity - 1;
+            if (newQuantity > 0) {
+                updateQuantity(productId, newQuantity);
+            }
+        } else {
+            handleAddToCart();
+
+        }
+    };
+
 
     const handleAddToCart = () => {
         if (product) {
             if (isAdded) {
                 removeFromCart(product.productId);
                 setIsAdded(false);
+                setCartQuantity(1);
             } else {
                 addToCart({
                     productId: product.productId,
                     title: product.title || product.name,
                     price: product.price,
                     image: product.images[0],
-                    quantity: quantity,
+                    quantity: cartQuantity,
                     category: product.category,
                     brand: product.brand,
                     rating: product.rating,
@@ -351,12 +379,12 @@ export default function ProductDetailPage() {
                                             isFilled={isWishlisted}
                                         />
                                     </button>
-                                    <button 
+                                    <button
                                         onClick={handleShare}
                                         disabled={isSharing}
                                         className={`flex items-center bg-[#EDF0F8] text-[#000] px-3 py-2 rounded-xl ${isSharing ? 'opacity-50 cursor-not-allowed' : ''}`}
                                     >
-                                       {!isSharing ? <Share2 size={20} className={`text-black`} /> : <Loader2 size={20} className={`text-black  animate-spin`} /> }
+                                        {!isSharing ? <Share2 size={20} className={`text-black`} /> : <Loader2 size={20} className={`text-black  animate-spin`} />}
                                     </button>
                                 </div>
                             </div>
@@ -388,14 +416,14 @@ export default function ProductDetailPage() {
                             <div className="flex gap-4">
                                 <div className="flex w-45 items-center bg-[#F4F4F4] rounded-xl ">
                                     <button
-                                        onClick={() => quantity > 1 && setQuantity(quantity - 1)}
+                                        onClick={() => handleQuantityChange(product?.productId || '', false)}
                                         className="px-4 py-3 text-lg"
                                     >
                                         -
                                     </button>
-                                    <span className="flex-1 text-center">{quantity}</span>
+                                    <span className="flex-1 text-center">{cartQuantity}</span>
                                     <button
-                                        onClick={() => setQuantity(quantity + 1)}
+                                        onClick={() => handleQuantityChange(product?.productId || '', true)}
                                         className="px-4 py-3 text-lg"
                                     >
                                         +
@@ -407,7 +435,7 @@ export default function ProductDetailPage() {
                                     isCart
                                     onClick={handleAddToCart}
                                 >
-                                    {isAdded ? 'ADDED TO CART' : 'ADD TO CART'}
+                                    {isAdded ? 'CLEAR CART' : 'ADD TO CART'}
                                 </ActionButton>
                             </div>
                         </div>

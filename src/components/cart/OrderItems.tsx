@@ -45,7 +45,7 @@ export default function OrderItems({
     shippingDetails
 }: OrderItemsProps) {
     const router = useRouter();
-    const { cartItems, updateQuantity, removeFromCart } = useCart();
+    const { cartItems, updateQuantity, removeFromCart,clearCart } = useCart();
     const [promoCode, setPromoCode] = useState('');
     const [showPromoInput, setShowPromoInput] = useState(false);
     const [itemToRemove, setItemToRemove] = useState<string | null>(null);
@@ -54,7 +54,7 @@ export default function OrderItems({
     const [availableCoupons, setAvailableCoupons] = useState<Coupon[]>([]);
     const { user, getToken } = useAuth(); 
     const [orderNote, setOrderNote] = useState('');
-
+ 
     const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const freeShippingThreshold = 53000;
 
@@ -65,9 +65,20 @@ export default function OrderItems({
         const fetchCoupons = async () => {
             const coupons = await CouponHelper.getAllCoupons();
             setAvailableCoupons(coupons);
+
+            const savedCoupon = localStorage.getItem('appliedCoupon');
+            if (savedCoupon) {
+                try {
+                    const coupon = JSON.parse(savedCoupon);
+                    setAppliedCoupon(coupon);
+                } catch (error) {
+                    console.error('Failed to parse saved coupon');
+                }
+            }
         };
         fetchCoupons();
     }, []);
+
 
     const handleApplyCoupon = async () => {
         setCouponError('');
@@ -88,6 +99,7 @@ export default function OrderItems({
                     minAmount: null
                 };
                 setAppliedCoupon(coupon);
+                localStorage.setItem('appliedCoupon', JSON.stringify(coupon));
                 setShowPromoInput(false);
                 setPromoCode('');
             }
@@ -95,6 +107,7 @@ export default function OrderItems({
             setCouponError('Failed to verify coupon');
         }
     };
+
 
     const calculateDiscount = () => {
         if (!appliedCoupon) return 0;
@@ -166,6 +179,8 @@ export default function OrderItems({
 
             const data = await response.json();
             console.log(data)
+            clearCart();
+            localStorage.removeItem('appliedCoupon');
             router.push(`/payment/${data.order_id}`);
         } catch (error) {
             setIsLoading(false);
@@ -389,7 +404,7 @@ export default function OrderItems({
                             onClick={handlePayment}
                             rounded={true}
                             disabled={cartItems.length === 0 || isLoading}
-                            className="w-full py-3 px-4 bg-[#184193] text-white rounded-full mt-4"
+                            className={`w-full py-3 px-4 bg-[#184193] text-white rounded-full mt-4 ${(isLoading || cartItems.length === 0)? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                             {isLoading ? 'Processing...' : 'Proceed to payment'}
                         </Button>

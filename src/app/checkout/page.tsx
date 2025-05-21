@@ -8,9 +8,12 @@ import { PickupSection } from '@/components/checkout/PickupSection';
 import { PaymentSection } from '@/components/checkout/PaymentSection';
 import { TopBanner } from '@/components/layout/TopBanner';
 import { Header } from '@/components/layout/Header';
+import { useCart } from '@/context/CartContext';
 
 export default function CheckoutPage() {
     const router = useRouter();
+    const { clearCart } = useCart();
+
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedState, setSelectedState] = useState('');
     const [selectedCity, setSelectedCity] = useState('');
@@ -45,7 +48,9 @@ export default function CheckoutPage() {
         }
         if (currentStep < 3) {
             setCurrentStep(currentStep + 1);
+             
         } else {
+            clearCart();
             router.push('/payment');
         }
     };

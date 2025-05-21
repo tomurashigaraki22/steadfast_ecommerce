@@ -56,11 +56,23 @@ export default function CartPage() {
         const fetchCoupons = async () => {
             const coupons = await CouponHelper.getAllCoupons();
             setAvailableCoupons(coupons);
+            
+
+            const savedCoupon = localStorage.getItem('appliedCoupon');
+            if (savedCoupon) {
+                try {
+                    const coupon = JSON.parse(savedCoupon);
+                    setAppliedCoupon(coupon);
+                } catch (error) {
+                    console.error('Failed to parse saved coupon');
+                }
+            }
         };
         fetchCoupons();
     }, []);
 
-    const handleApplyCoupon = async () => {
+
+     const handleApplyCoupon = async () => {
         setCouponError('');
         try {
             const verification = await CouponHelper.verifyCoupon(promoCode, subtotal);
@@ -81,6 +93,7 @@ export default function CartPage() {
                     is_available: true
                 };
                 setAppliedCoupon(coupon);
+                localStorage.setItem('appliedCoupon', JSON.stringify(coupon));
                 setShowPromoInput(false);
                 setPromoCode('');
             }
@@ -88,6 +101,8 @@ export default function CartPage() {
             setCouponError('Failed to verify coupon');
         }
     };
+
+    
     const calculateDiscount = () => {
         if (!appliedCoupon) return 0;
         return appliedCoupon.type === 'percentage'
