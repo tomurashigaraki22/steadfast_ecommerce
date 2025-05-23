@@ -127,3 +127,8 @@ Example: test: add unit tests for auth service
 
 ci: – For changes related to CI/CD configurations
 Example: ci: update GitHub Actions workflow
+
+
+
+
+NEXT_PUBLIC_API_URL = http://localhost:2345
