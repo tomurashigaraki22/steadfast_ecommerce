@@ -36,7 +36,7 @@ export default function CheckoutPage() {
         }
     };
 
-    const handleContinue = () => {
+    const handleContinue = async () => {
         window.scrollTo(0, 0);
         if (currentStep === 1 && !selectedState) {
             alert('Please select a state before proceeding');
@@ -50,7 +50,6 @@ export default function CheckoutPage() {
             setCurrentStep(currentStep + 1);
              
         } else {
-            clearCart();
             router.push('/payment');
         }
     };

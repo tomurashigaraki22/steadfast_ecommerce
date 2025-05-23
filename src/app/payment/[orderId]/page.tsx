@@ -1,48 +1,93 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCart } from '@/context/CartContext';
 
-export default function PaymentPage({ params }: { params: { orderId: string } }) {
+export default function PaymentPage() {
     const router = useRouter();
+    const {clearCart} = useCart();
     const { getToken } = useAuth();
     const [isProcessing, setIsProcessing] = useState(true);
     const [error, setError] = useState('');
+    const [paymentReference, setPaymentReference] = useState('')
+    const params = useParams<{ orderId: string }>()
+    const orderId = params.orderId;
 
     useEffect(() => {
         const processPayment = async () => {
+          try {
+            const headers: Record<string, string> = {
+              "Content-Type": "application/json",
+            }
+            const token = getToken()
+            if (token) {
+              headers["Authorization"] = `Bearer ${token}`
+            }
+    
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/payments/generate`, {
+              method: "POST",
+              headers,
+              body: JSON.stringify({
+                order_id: orderId,
+              }),
+            })
+    
+            if (!response.ok) {
+              throw new Error("Payment processing failed")
+            }
+    
+            const data = await response.json()
+            console.log("Data: ", data)
+            console.log("Redirecting to: ", `/orders/${orderId}`)
+            clearCart()
+            window.location.href = data.data.payment_url
+            setIsProcessing(false)
+            router.push(`/orders/${orderId}`)
+          } catch (error) {
+            setError("Failed to process payment. Please try again.")
+            setIsProcessing(false)
+          }
+        }
+    
+        if (orderId) {
+          processPayment()
+        }
+      }, [orderId, router, clearCart, getToken])
+
+      useEffect(() => {
+        const verifyPayment = async (reference: string) => {
             try {
                 const headers: Record<string, string> = {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${process.env.NEXT_PUBLIC_PAYSTACK_SECRET_KEY}`
                 };
-                const token = getToken();
-                if (token) {
-                    headers['Authorization'] = `Bearer ${token}`;
-                }
 
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pay`, {
-                    method: 'POST',
-                    headers,
-                    body: JSON.stringify({
-                        order_id: params.orderId
-                    })
+                const response = await fetch(`https://api.paystack.co/transaction/verify/${reference}`, {
+                    method: 'GET',
+                    headers
                 });
 
-                if (!response.ok) {
-                    throw new Error('Payment processing failed');
-                }
-
                 const data = await response.json();
-                router.push(`/orders/${params.orderId}`);
+
+                if (response.ok && data.status && data.data.status === 'success') {
+                    // Handle successful verification
+                    console.log('Payment verified successfully:', data);
+                    clearCart();
+                    router.push(`/orders/${params.orderId}`);
+                } else {
+                    console.error('Payment verification failed:', data);
+                }
             } catch (error) {
-                setError('Failed to process payment. Please try again.');
-                setIsProcessing(false);
+                console.error('Error verifying payment:', error);
             }
         };
 
-        processPayment();
-    }, [params.orderId]);
+        if (paymentReference !== "") {
+            verifyPayment(paymentReference);
+        }
+    }, [paymentReference]);
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -63,7 +108,8 @@ export default function PaymentPage({ params }: { params: { orderId: string } })
                         <button
                             onClick={() => {
                                 setIsProcessing(true);
-                                setError('');
+                                setError('Payment processing failed');
+                                setIsProcessing(false)
                             }}
                             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#184193] hover:bg-[#123472] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#184193]"
                         >
