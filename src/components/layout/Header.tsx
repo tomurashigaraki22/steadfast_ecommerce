@@ -320,7 +320,7 @@ export const Header = () => {
                                                         {category.topProducts?.slice(0, 3).map((product) => (
                                                             <Link
                                                                 key={product.id}
-                                                                href={`/products/category/${category.id}/${product.slug}`}
+                                                                href={`/products/v/${product.id}`}
                                                                 className="text-[.8rem] text-[#2f2e2e] font-medium line-clamp-1 "
                                                                 onClick={() => setShowCategories(false)}
                                                             >

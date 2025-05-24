@@ -84,7 +84,8 @@ export default function ProductDetailPage() {
             try {
                 setIsLoading(true);
 
-                const cachedProducts = localStorage.getItem('products');
+                const cacheKey = `products_${productId}`;
+                const cachedProducts = localStorage.getItem(cacheKey);
                 if (cachedProducts) {
                     const parsedProducts = JSON.parse(cachedProducts);
                     setProducts(parsedProducts);
@@ -92,25 +93,34 @@ export default function ProductDetailPage() {
                 }
 
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
                 const data = await response.json();
-                console.log(data)
+                if (!data || !data.product) {
+                    throw new Error('Invalid product data');
+                }
                 const newProducts = data.product;
 
                 setProducts(newProducts);
-                localStorage.setItem('products', JSON.stringify(newProducts));
+                localStorage.setItem(cacheKey, JSON.stringify(newProducts));
             } catch (error) {
                 console.error('Error fetching products:', error);
 
-                const cachedProducts = localStorage.getItem('products');
+                const cacheKey = `products_${productId}`;
+                const cachedProducts = localStorage.getItem(cacheKey);
                 if (cachedProducts) {
-                    setProducts(JSON.parse(cachedProducts));
+                    try {
+                        setProducts(JSON.parse(cachedProducts));
+                    } catch (parseError) {
+                        console.error('Error parsing cached products:', parseError);
+                    }
                 }
             } finally {
                 setIsLoading(false);
                 setIsPageLoading(false);
             }
         };
-
         fetchProducts();
     }, [productId]);
     useEffect(() => {
