@@ -78,7 +78,7 @@ export const ProductGrid = ({
         onFilterChange?.(newFilters);
     };
 
-
+ 
 
     return (
         <section className="space-y-4 pb-[2rem] md:py-[2rem] relative">

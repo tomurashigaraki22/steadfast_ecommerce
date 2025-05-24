@@ -229,6 +229,7 @@ export default function ProductDetailPage() {
         return <div>Product not found</div>;
     }
 
+
     if (isPageLoading) {
         return (
             <>

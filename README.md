@@ -131,4 +131,4 @@ Example: ci: update GitHub Actions workflow
 
 
 
-NEXT_PUBLIC_API_URL = http://localhost:2345
+ 

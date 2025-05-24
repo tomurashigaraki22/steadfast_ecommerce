@@ -119,10 +119,10 @@ export const ProductCard = ({
             >
                 <div className="relative w-full aspect-square rounded-lg overflow-hidden">
                     <Image
-                        src={Array.isArray(images) && images.length > 0 ? images[0] : '/product.png'}
+                        src={Array.isArray(images) && images.length > 0 ? images[0] : '/logo.png'}
                         alt={title || "ProductImage"}
                         fill
-                        className="object-cover transition-transform duration-600 ease-out group-hover:scale-150"
+                        className="object-contain transition-transform duration-600 ease-out group-hover:scale-150"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                 </div>
