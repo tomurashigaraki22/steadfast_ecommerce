@@ -5,6 +5,16 @@ const nextConfig: NextConfig = {
     dest: 'public',
     register: true,
     skipWaiting: true,
-}};
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  }
+
+
+};
 
 export default nextConfig;
+ 

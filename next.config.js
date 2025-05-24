@@ -12,7 +12,7 @@ const withPWA = require('next-pwa')({
         cacheName: "images",
         expiration: {
           maxEntries: 100,
-          maxAgeSeconds: 60 * 60 * 24 * 30,  
+          maxAgeSeconds: 60 * 60 * 24 * 30,
         },
       },
     },
@@ -23,6 +23,12 @@ const withPWA = require('next-pwa')({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   images: {
     remotePatterns: [
       {

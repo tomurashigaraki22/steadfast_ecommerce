@@ -27,7 +27,7 @@ export default function CartPage() {
     const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
     const [couponError, setCouponError] = useState('');
     const [availableCoupons, setAvailableCoupons] = useState<Coupon[]>([]);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated] = useState(false);
 
     const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const freeShippingThreshold = 53000;
@@ -64,6 +64,7 @@ export default function CartPage() {
                     const coupon = JSON.parse(savedCoupon);
                     setAppliedCoupon(coupon);
                 } catch (error) {
+                    console.log(error)
                     console.error('Failed to parse saved coupon');
                 }
             }
@@ -98,6 +99,7 @@ export default function CartPage() {
                 setPromoCode('');
             }
         } catch (error) {
+            console.log(error)
             setCouponError('Failed to verify coupon');
         }
     };
