@@ -56,6 +56,7 @@ export default function CartPage() {
         const fetchCoupons = async () => {
             const coupons = await CouponHelper.getAllCoupons();
             setAvailableCoupons(coupons);
+            console.log("LLLLL")
             
 
             const savedCoupon = localStorage.getItem('appliedCoupon');
